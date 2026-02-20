@@ -1,18 +1,68 @@
-<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in" (click)="close.emit()">
-  <div class="bg-white rounded-r24 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in" (click)="$event.stopPropagation()">
-    <div class="p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h2>
-        <button (click)="close.emit()" class="text-gdg-muted hover:text-gdg-text text-xl">✕</button>
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 ad-modal-fade"
+     (click)="close.emit()">
+  <div class="bg-white rounded-r24 max-w-3xl w-full max-h-[90vh] overflow-y-auto ad-modal-scale"
+       (click)="$event.stopPropagation()">
+    <div class="ad-hero">
+      <div class="ad-hero-overlay"></div>
+      <div class="ad-hero-badge">
+        {{ languageService.isFrench() ? 'Activité' : 'Activity' }}
       </div>
-      <div class="mb-6 text-6xl text-center">{{ activity.icon }}</div>
-      <p class="text-lg text-gdg-text mb-6">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
-      <h3 class="font-semibold text-lg mb-2">{{ languageService.isFrench() ? 'Ce que vous apprendrez :' : 'What you will learn:' }}</h3>
-      <ul class="list-disc list-inside space-y-2 text-gdg-muted">
-        <li>{{ languageService.isFrench() ? 'Les dernières tendances' : 'Latest trends' }}</li>
-        <li>{{ languageService.isFrench() ? 'Cas pratiques' : 'Practical cases' }}</li>
-        <li>{{ languageService.isFrench() ? 'Échanges avec des experts' : 'Exchanges with experts' }}</li>
-      </ul>
+      <div class="ad-hero-icon">
+        {{ activity.icon }}
+      </div>
+      <button (click)="close.emit()" class="ad-close">✕</button>
+    </div>
+
+    <div class="p-6 md:p-8">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-gdg-text">
+          {{ languageService.isFrench() ? activity.title_fr : activity.title_en }}
+        </h2>
+        <span class="ad-chip">{{ languageService.isFrench() ? 'GDG UTBM' : 'GDG UTBM' }}</span>
+      </div>
+
+      <p class="text-lg text-gdg-text mb-6">
+        {{ languageService.isFrench() ? activity.description_fr : activity.description_en }}
+      </p>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="ad-panel">
+          <h3 class="text-sm uppercase tracking-widest text-gdg-muted mb-3">
+            {{ languageService.isFrench() ? 'Ce que vous apprendrez' : 'What you will learn' }}
+          </h3>
+          <div class="space-y-3">
+            <div class="ad-list-item">
+              <span class="ad-dot"></span>
+              <span>{{ languageService.isFrench() ? 'Les dernières tendances' : 'Latest trends' }}</span>
+            </div>
+            <div class="ad-list-item">
+              <span class="ad-dot"></span>
+              <span>{{ languageService.isFrench() ? 'Cas pratiques' : 'Practical cases' }}</span>
+            </div>
+            <div class="ad-list-item">
+              <span class="ad-dot"></span>
+              <span>{{ languageService.isFrench() ? 'Échanges avec des experts' : 'Exchanges with experts' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-panel">
+          <h3 class="text-sm uppercase tracking-widest text-gdg-muted mb-3">
+            {{ languageService.isFrench() ? 'Pourquoi participer' : 'Why join' }}
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="ad-tag">{{ languageService.isFrench() ? 'Réseau' : 'Networking' }}</span>
+            <span class="ad-tag">{{ languageService.isFrench() ? 'Mentorat' : 'Mentorship' }}</span>
+            <span class="ad-tag">{{ languageService.isFrench() ? 'Projets' : 'Projects' }}</span>
+            <span class="ad-tag">{{ languageService.isFrench() ? 'Communauté' : 'Community' }}</span>
+          </div>
+          <div class="mt-4 text-sm text-gdg-muted">
+            {{ languageService.isFrench()
+            ? 'Des formats courts et dynamiques, pensés pour progresser rapidement.'
+            : 'Short, dynamic formats designed for fast progress.' }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

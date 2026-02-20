@@ -97,6 +97,7 @@ create table if not exists public.event_participants (
   id uuid primary key default gen_random_uuid(),
   event_id uuid not null references public.events(id) on delete cascade,
   user_id uuid references public.profiles(id) on delete set null,
+  email text,
   full_name text not null,
   role text not null check (role in ('student','professional')),
   school text,
@@ -110,6 +111,7 @@ create table if not exists public.event_participants (
 alter table public.event_participants
   add column if not exists event_id uuid,
   add column if not exists user_id uuid,
+  add column if not exists email text,
   add column if not exists full_name text,
   add column if not exists role text,
   add column if not exists school text,

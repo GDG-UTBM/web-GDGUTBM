@@ -1,30 +1,137 @@
-<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in" (click)="close.emit()">
-  <div class="bg-white rounded-r24 max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scale-in" (click)="$event.stopPropagation()">
-    <div class="relative">
-      <div class="h-64 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl">
-        {{ event.image_url ? '' : '📅' }}
-      </div>
-      <button (click)="close.emit()" class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full p-2">
-        ✕
-      </button>
-    </div>
-    <div class="p-6">
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <h2 class="text-2xl font-bold">{{ languageService.isFrench() ? event.title_fr : event.title_en }}</h2>
-          <p class="text-gdg-muted">{{ event.date | date:'dd MMMM yyyy' }}</p>
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 ed-modal-fade" (click)="close.emit()">
+  <div class="bg-white rounded-r24 max-w-5xl w-full max-h-[90vh] overflow-y-auto ed-modal-scale" (click)="$event.stopPropagation()">
+    @if (isLoading()) {
+      <div class="p-10 text-center text-gdg-muted">{{ languageService.isFrench() ? 'Chargement...' : 'Loading...' }}</div>
+    } @else if (event()) {
+      <div class="relative">
+        <div class="ed-hero h-72 md:h-80">
+          @if (event()!.image_url) {
+            <img [src]="event()!.image_url" [alt]="languageService.isFrench() ? event()!.title_fr : event()!.title_en" class="ed-hero-image">
+          } @else {
+            <div class="ed-hero-fallback">
+              <div class="ed-hero-placeholder">
+                <span class="text-sm uppercase tracking-[0.2em] text-white/80">GDG</span>
+                <span class="text-2xl font-semibold text-white">UTBM</span>
+              </div>
+            </div>
+          }
+          <div class="ed-hero-overlay"></div>
         </div>
-        @if (event.partner) {
-          <span class="bg-gdg-blue/10 text-gdg-blue px-3 py-1 rounded-full text-sm">{{ event.partner }}</span>
-        }
+        <button (click)="close.emit()"
+                class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full p-2">
+          ✕
+        </button>
+
+        <div class="absolute left-6 bottom-6 text-white">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/20 border border-white/20">
+              {{ event()!.date | date:'dd/MM/yyyy' }}
+            </span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/20 border border-white/20">
+              {{ eventStatus() === 'upcoming' ? (languageService.isFrench() ? 'À venir' : 'Upcoming') : (languageService.isFrench() ? 'Passé' : 'Past') }}
+            </span>
+            @if (event()!.type) {
+              <span class="text-xs px-3 py-1 rounded-full bg-white/20 border border-white/20">
+                {{ languageService.isFrench()
+                ? (event()!.type === 'conference' ? 'Conférence' : event()!.type === 'workshop' ? 'Atelier' : event()!.type === 'meetup' ? 'Meetup' : 'Coding')
+                : event()!.type }}
+              </span>
+            }
+            @if (event()!.partner) {
+              <span class="text-xs px-3 py-1 rounded-full bg-white/20 border border-white/20">
+                {{ event()!.partner }}
+              </span>
+            }
+          </div>
+          <h2 class="text-2xl md:text-3xl font-bold">
+            {{ languageService.isFrench() ? event()!.title_fr : event()!.title_en }}
+          </h2>
+          <p class="text-white/80 mt-1">{{ event()!.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</p>
+        </div>
       </div>
-      <p class="text-lg text-gdg-text mb-6">{{ languageService.isFrench() ? event.description_fr : event.description_en }}</p>
-      <h3 class="font-semibold text-lg mb-2">{{ languageService.isFrench() ? 'Détails :' : 'Details:' }}</h3>
-      <ul class="list-disc list-inside space-y-2 text-gdg-muted">
-        <li>{{ languageService.isFrench() ? 'Conférence avec experts' : 'Conference with experts' }}</li>
-        <li>{{ languageService.isFrench() ? 'Ateliers pratiques' : 'Hands-on workshops' }}</li>
-        <li>{{ languageService.isFrench() ? 'Networking' : 'Networking' }}</li>
-      </ul>
-    </div>
+
+      <div class="p-6 md:p-8 grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
+        <div class="space-y-6">
+          <p class="text-lg text-gdg-text">
+            {{ languageService.isFrench() ? event()!.description_fr : event()!.description_en }}
+          </p>
+
+          @if (event()!.partners?.length) {
+            <div class="rounded-r16 border border-gdg-line bg-gdg-bg px-4 py-3">
+              <div class="text-xs uppercase tracking-widest text-gdg-muted mb-2">
+                {{ languageService.isFrench() ? 'Partenaires' : 'Partners' }}
+              </div>
+              <div class="flex flex-wrap gap-2">
+                @for (partner of event()!.partners; track partner) {
+                  <span class="text-xs px-3 py-1 rounded-full border border-gdg-line bg-white">
+                    {{ partner }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          @if (event()!.highlights?.length) {
+            <div>
+              <h3 class="text-xl font-semibold mb-3">{{ languageService.isFrench() ? 'Points forts' : 'Highlights' }}</h3>
+              <div class="grid sm:grid-cols-2 gap-3">
+                @for (item of event()!.highlights; track item) {
+                  <div class="rounded-r16 border border-gdg-line bg-gdg-bg px-4 py-3">
+                    <div class="flex items-start gap-3">
+                      <span class="mt-1 w-2 h-2 rounded-full bg-gdg-blue"></span>
+                      <p class="text-gdg-text">{{ item }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (safeVideoUrl()) {
+            <div>
+              <h3 class="text-xl font-semibold mb-3">{{ languageService.isFrench() ? 'Vidéo' : 'Video' }}</h3>
+              <div class="relative w-full overflow-hidden rounded-r16" style="padding-bottom:56.25%">
+                <iframe [src]="safeVideoUrl()" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full"></iframe>
+              </div>
+            </div>
+          }
+        </div>
+
+        <aside class="space-y-4">
+          <div class="rounded-r20 border border-gdg-line bg-gdg-surface p-5">
+            <h4 class="text-sm uppercase tracking-widest text-gdg-muted mb-3">
+              {{ languageService.isFrench() ? 'Résumé' : 'Summary' }}
+            </h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Date' : 'Date' }}</span>
+                <span class="text-gdg-text font-medium">{{ event()!.date | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Lieu' : 'Location' }}</span>
+                <span class="text-gdg-text font-medium">{{ event()!.location || '-' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Type' : 'Type' }}</span>
+                <span class="text-gdg-text font-medium">{{ event()!.type || '-' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Statut' : 'Status' }}</span>
+                <span class="text-gdg-text font-medium">
+                  {{ eventStatus() === 'upcoming' ? (languageService.isFrench() ? 'À venir' : 'Upcoming') : (languageService.isFrench() ? 'Passé' : 'Past') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <a [routerLink]="['/events', event()!.id]"
+             class="btn-primary w-full text-center">
+            {{ languageService.isFrench() ? 'Voir la page' : 'Open event page' }}
+          </a>
+        </aside>
+      </div>
+    } @else {
+      <div class="p-10 text-center text-gdg-muted">{{ languageService.isFrench() ? 'Événement introuvable.' : 'Event not found.' }}</div>
+    }
   </div>
 </div>

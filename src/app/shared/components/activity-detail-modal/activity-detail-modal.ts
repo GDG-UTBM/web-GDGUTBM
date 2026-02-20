@@ -8,6 +8,7 @@ import {Activity} from '../../../core/models/Activity.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './activity-detail-modal.html',
+  styleUrls: ['./activity-detail-modal.scss']
 })
 export class ActivityDetailModalComponent {
   @Input() activity!: Activity;

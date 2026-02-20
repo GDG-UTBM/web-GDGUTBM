@@ -15,7 +15,7 @@
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       @for (event of displayedEvents(); track event.id) {
         <div class="bg-white border border-gdg-line rounded-r24 overflow-hidden hover:shadow-lg transition-all group">
-          <div class="relative h-44">
+          <div class="relative h-48">
             @if (event.image_url) {
               <img [src]="event.image_url" [alt]="event.title_fr" class="w-full h-full object-cover">
             } @else {
@@ -23,6 +23,9 @@
             }
             <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-gdg-text text-xs px-3 py-1 rounded-full">
               {{ event.date | date:'dd/MM/yyyy' }}
+            </div>
+            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-gdg-text text-xs px-3 py-1 rounded-full">
+              {{ event.type ? (languageService.isFrench() ? (event.type === 'conference' ? 'Conférence' : event.type === 'workshop' ? 'Atelier' : event.type === 'meetup' ? 'Meetup' : 'Coding') : event.type) : (languageService.isFrench() ? 'Événement' : 'Event') }}
             </div>
           </div>
           <div class="p-5">
@@ -32,13 +35,22 @@
             <p class="text-sm text-gdg-muted line-clamp-2">
               {{ languageService.isFrench() ? event.description_fr : event.description_en }}
             </p>
+            <div class="mt-3 flex items-center text-xs text-gdg-muted">
+              <span>{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
+            </div>
             <div class="mt-4 flex items-center justify-between">
               <button class="text-gdg-blue text-sm font-medium hover:underline" [routerLink]="['/events', event.id]">
                 {{ languageService.isFrench() ? 'Voir plus →' : 'Learn more →' }}
               </button>
-              <button class="text-xs px-3 py-1 rounded-full border border-gdg-line text-gdg-muted" (click)="openEventDetail(event)">
-                {{ languageService.isFrench() ? 'Aperçu' : 'Preview' }}
-              </button>
+              @if (getEventStatus(event) === 'upcoming') {
+                <button class="btn-primary text-xs px-3 py-2" (click)="openParticipation(event)">
+                  {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
+                </button>
+              } @else {
+                <button class="text-xs px-3 py-1 rounded-full border border-gdg-line text-gdg-muted" (click)="openEventDetail(event)">
+                  {{ languageService.isFrench() ? 'Aperçu' : 'Preview' }}
+                </button>
+              }
             </div>
           </div>
         </div>
@@ -46,7 +58,7 @@
     </div>
 
     <div class="text-center mt-12">
-      <button (click)="openAllEvents()" class="btn-secondary px-8 py-3">
+      <button (click)="goToAllEvents()" class="btn-secondary px-8 py-3">
         {{ languageService.isFrench() ? 'Voir tous les événements' : 'View all events' }}
       </button>
     </div>
@@ -55,15 +67,15 @@
 
 @if (selectedEvent()) {
   <app-event-detail-modal
-    [event]="selectedEvent()!"
+    [eventId]="selectedEvent()!.id"
     (close)="closeEventDetail()">
   </app-event-detail-modal>
 }
 
-@if (showAllEvents()) {
-  <app-all-events-modal
-    [events]="allEvents()"
-    (close)="closeAllEvents()"
-    (eventClick)="openEventDetail($event)">
-  </app-all-events-modal>
+@if (showParticipationModal() && selectedParticipationEvent()) {
+  <app-participation-modal
+    [eventId]="selectedParticipationEvent()!.id"
+    [eventTitle]="languageService.isFrench() ? selectedParticipationEvent()!.title_fr : selectedParticipationEvent()!.title_en"
+    (close)="closeParticipation()">
+  </app-participation-modal>
 }

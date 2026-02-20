@@ -33,6 +33,7 @@ export class ParticipationModalComponent implements OnInit {
     public languageService: LanguageService
   ) {
     this.participationForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
       fullName: ['', Validators.required],
       role: ['student', Validators.required],
       school: [''],
@@ -47,6 +48,7 @@ export class ParticipationModalComponent implements OnInit {
       const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
       const role = profile.role === 'professional' ? 'professional' : 'student';
       this.participationForm.patchValue({
+        email: profile.email || '',
         fullName,
         role,
         school: profile.school || '',
@@ -95,6 +97,7 @@ export class ParticipationModalComponent implements OnInit {
       await this.participantsService.addParticipant({
         event_id: this.eventId,
         user_id: user?.id ?? null,
+        email: formValue.email,
         full_name: formValue.fullName,
         role: formValue.role,
         school: formValue.role === 'student' ? formValue.school : null,

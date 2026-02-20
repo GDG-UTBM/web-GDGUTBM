@@ -110,6 +110,9 @@
                 }
               </p>
               <p class="text-xs text-gdg-muted">
+                {{ participant.email || '-' }}
+              </p>
+              <p class="text-xs text-gdg-muted">
                 @if (participant.role === 'student') {
                   {{ participant.school || '-' }} · {{ participant.study_level || '-' }}
                 } @else {

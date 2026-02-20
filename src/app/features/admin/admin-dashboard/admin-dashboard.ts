@@ -7,6 +7,7 @@ import { EventsService } from '../../../core/services/events.service';
 import { LanguageService } from '../../../core/services/language.service';
 import {ActivitiesService} from '../../../core/services/activities.service';
 import { ParticipantsService } from '../../../core/services/participants.service';
+import { NotificationsService } from '../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,6 +30,7 @@ export class AdminDashboardComponent implements OnInit {
     private eventsService: EventsService,
     private activitiesService: ActivitiesService,
     private participantsService: ParticipantsService,
+    private notificationsService: NotificationsService,
     public languageService: LanguageService
   ) {}
 
@@ -73,7 +75,13 @@ export class AdminDashboardComponent implements OnInit {
     return this.participants().filter(p => p.status === 'pending').length;
   }
 
-  updateParticipantStatus(id: string, status: 'approved' | 'rejected') {
-    this.participantsService.updateStatus(id, status);
+  async updateParticipantStatus(id: string, status: 'approved' | 'rejected') {
+    try {
+      await this.participantsService.updateStatus(id, status);
+      await this.notificationsService.sendParticipationStatusEmail({ participant_id: id, status });
+    } catch (error) {
+      console.error('Error updating participant status:', error);
+      alert(this.languageService.isFrench() ? 'Erreur lors de la notification.' : 'Error sending notification.');
+    }
   }
 }

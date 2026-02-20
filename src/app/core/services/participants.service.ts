@@ -8,6 +8,7 @@ export interface EventParticipant {
   id: string;
   event_id: string;
   user_id?: string | null;
+  email?: string | null;
   full_name: string;
   role: 'student' | 'professional';
   school?: string | null;
@@ -42,7 +43,7 @@ export class ParticipantsService {
       .from('event_participants')
       .select(`
         *,
-        event:events(id, title_fr, title_en)
+        event:events(id, title_fr, title_en, date, location)
       `)
       .order('created_at', { ascending: false });
 
@@ -65,6 +66,7 @@ export class ParticipantsService {
   async addParticipant(data: {
     event_id: string;
     user_id?: string | null;
+    email?: string | null;
     full_name: string;
     role: 'student' | 'professional';
     school?: string | null;
@@ -76,6 +78,7 @@ export class ParticipantsService {
       .insert([{
         event_id: data.event_id,
         user_id: data.user_id ?? null,
+        email: data.email ?? null,
         full_name: data.full_name,
         role: data.role,
         school: data.school ?? null,

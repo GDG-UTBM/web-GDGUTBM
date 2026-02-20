@@ -1,18 +1,18 @@
-import {Component, Inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
-import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {Component, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
 import {LanguageService} from '../../../core/services/language.service';
 import {EventDetailModalComponent} from '../../../shared/components/event-detail-modal/event-detail-modal';
-import {AllEventsModalComponent} from '../../../shared/components/all-events-modal/all-events-modal';
+import {ParticipationModalComponent} from '../../../shared/components/participation-modal/participation-modal';
 import {EventsService} from '../../../core/services/events.service';
 import {EventModel} from '../../../core/models/event.model';
-import {RouterLink} from '@angular/router';
 
 
 
 @Component({
   selector: 'app-past-events',
   standalone: true,
-  imports: [CommonModule, EventDetailModalComponent, AllEventsModalComponent, RouterLink],
+  imports: [CommonModule, EventDetailModalComponent, ParticipationModalComponent, RouterLink],
   templateUrl: './past-events.html',
   styleUrl:'./past-events.scss',
 })
@@ -20,9 +20,14 @@ export class PastEventsComponent implements OnInit  {
   allEvents = signal<EventModel[]>([]);
   displayedEvents = signal<EventModel[]>([]);
   selectedEvent = signal<EventModel | null>(null);
-  showAllEvents = signal(false);
+  showParticipationModal = signal(false);
+  selectedParticipationEvent = signal<EventModel | null>(null);
 
-  constructor(public languageService: LanguageService, private eventsService: EventsService,) {
+  constructor(
+    public languageService: LanguageService,
+    private eventsService: EventsService,
+    private router: Router
+  ) {
   }
   async ngOnInit() {
     await this.loadEvents();
@@ -53,12 +58,8 @@ export class PastEventsComponent implements OnInit  {
     this.selectedEvent.set(null);
   }
 
-  openAllEvents() {
-    this.showAllEvents.set(true);
-  }
-
-  closeAllEvents() {
-    this.showAllEvents.set(false);
+  goToAllEvents() {
+    this.router.navigate(['/events']);
   }
 
 
@@ -101,4 +102,19 @@ export class PastEventsComponent implements OnInit  {
     }
   ];
 
+  getEventStatus(event: EventModel): 'upcoming' | 'past' {
+    if (event.status) return event.status;
+    if (!event.date) return 'past';
+    return new Date(event.date) >= new Date() ? 'upcoming' : 'past';
+  }
+
+  openParticipation(event: EventModel) {
+    this.selectedParticipationEvent.set(event);
+    this.showParticipationModal.set(true);
+  }
+
+  closeParticipation() {
+    this.showParticipationModal.set(false);
+    this.selectedParticipationEvent.set(null);
+  }
 }
