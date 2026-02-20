@@ -101,7 +101,10 @@ export class AuthService {
         data: {
           first_name: userData.first_name,
           last_name: userData.last_name,
-          role: userData.role
+          role: userData.role,
+          school: userData.school,
+          study_level: userData.study_level,
+          company: userData.company
         }
       }
     });
@@ -109,6 +112,31 @@ export class AuthService {
     if (error) throw error;
 
     return data;
+  }
+
+  async requestPasswordReset(email: string, redirectTo: string) {
+    const { error } = await this.supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    if (error) throw error;
+  }
+
+  async updatePassword(newPassword: string) {
+    const { error } = await this.supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+  }
+
+  async setSessionFromUrl() {
+    if (typeof window === 'undefined') return false;
+    const hash = window.location.hash.replace(/^#/, '');
+    if (!hash) return false;
+    const params = new URLSearchParams(hash);
+    const access_token = params.get('access_token');
+    const refresh_token = params.get('refresh_token');
+    if (!access_token || !refresh_token) return false;
+
+    const { error } = await this.supabase.auth.setSession({ access_token, refresh_token });
+    if (error) throw error;
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return true;
   }
 
   async signInWithEmail(email: string, password: string) {

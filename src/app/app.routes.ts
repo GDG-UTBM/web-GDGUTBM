@@ -5,6 +5,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
   { path: 'about', loadComponent: () => import('./features/about/about').then(m => m.AboutComponent) },
   { path: 'events', loadComponent: () => import('./features/events/events').then(m => m.EventsComponent) },
+  { path: 'profile', loadComponent: () => import('./features/account/profile/profile').then(m => m.ProfileComponent) },
+  { path: 'reset-password', loadComponent: () => import('./features/auth/password-recovery/password-recovery').then(m => m.PasswordRecoveryComponent) },
   {
     path: 'events/:id',
     loadComponent: () => import('./features/events/event-detail/event-detail').then(m => m.EventDetailComponent)

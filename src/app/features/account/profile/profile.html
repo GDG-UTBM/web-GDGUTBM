@@ -1,0 +1,107 @@
+<div class="min-h-screen bg-gdg-bg py-10">
+  <div class="container-custom max-w-4xl">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gdg-text">
+        {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
+      </h1>
+      <p class="text-gdg-muted">
+        {{ languageService.isFrench() ? 'Gérez vos informations personnelles.' : 'Manage your personal information.' }}
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm">
+        <h2 class="text-xl font-semibold mb-4">{{ languageService.isFrench() ? 'Informations' : 'Details' }}</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Prénom' : 'First name' }}</label>
+              <input type="text" formControlName="first_name" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Nom' : 'Last name' }}</label>
+              <input type="text" formControlName="last_name" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Email</label>
+            <input type="email" formControlName="email" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Rôle' : 'Role' }}</label>
+            <input type="text" formControlName="role" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'École' : 'School' }}</label>
+            <input type="text" formControlName="school" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Niveau d\'étude' : 'Study level' }}</label>
+            <input type="text" formControlName="study_level" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Entreprise' : 'Company' }}</label>
+            <input type="text" formControlName="company" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Avatar (URL)' : 'Avatar (URL)' }}</label>
+            <input type="text" formControlName="avatar_url" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          @if (successMessage()) {
+            <div class="p-3 rounded-r10 bg-green-50 text-green-700 text-sm border border-green-100">
+              {{ successMessage() }}
+            </div>
+          }
+          @if (errorMessage()) {
+            <div class="p-3 rounded-r10 bg-red-50 text-red-700 text-sm border border-red-100">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          <button type="submit" class="btn-primary" [disabled]="isLoading()">
+            {{ languageService.isFrench() ? 'Enregistrer' : 'Save' }}
+          </button>
+        </form>
+      </section>
+
+      <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm">
+        <h2 class="text-xl font-semibold mb-4">{{ languageService.isFrench() ? 'Mot de passe' : 'Password' }}</h2>
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Nouveau mot de passe' : 'New password' }}</label>
+            <input type="password" formControlName="new_password" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">{{ languageService.isFrench() ? 'Confirmer le mot de passe' : 'Confirm password' }}</label>
+            <input type="password" formControlName="confirm_password" class="w-full border border-gdg-line rounded-r10 px-3 py-2">
+          </div>
+
+          @if (passwordSuccess()) {
+            <div class="p-3 rounded-r10 bg-green-50 text-green-700 text-sm border border-green-100">
+              {{ passwordSuccess() }}
+            </div>
+          }
+          @if (passwordError()) {
+            <div class="p-3 rounded-r10 bg-red-50 text-red-700 text-sm border border-red-100">
+              {{ passwordError() }}
+            </div>
+          }
+
+          <button type="submit" class="btn-primary">
+            {{ languageService.isFrench() ? 'Changer le mot de passe' : 'Change password' }}
+          </button>
+          <a routerLink="/reset-password" class="text-sm text-gdg-blue hover:underline block">
+            {{ languageService.isFrench() ? 'Mot de passe oublié ?' : 'Forgot password?' }}
+          </a>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>

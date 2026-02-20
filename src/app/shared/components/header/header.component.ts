@@ -1,5 +1,6 @@
 import {Component, effect, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
 import {LanguageSwitcherComponent} from '../language-switcher/language-switcher';
@@ -12,6 +13,7 @@ import {CompleteProfileModalComponent} from '../complete-profile-modal/complete-
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     LanguageSwitcherComponent,
     JoinModalComponent,
     TopicModalComponent,

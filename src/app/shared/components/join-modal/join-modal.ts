@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
@@ -7,7 +8,7 @@ import { LanguageService } from '../../../core/services/language.service';
 @Component({
   selector: 'app-join-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl:'./join-modal.html' ,
   styles: ``
 })

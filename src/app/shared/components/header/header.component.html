@@ -67,6 +67,14 @@
                   <p class="font-semibold">{{ getFullName() }}</p>
                   <p class="text-xs text-gdg-muted">{{ getEmail() }}</p>
                 </div>
+                <a routerLink="/profile" (click)="toggleProfileMenu()"
+                   class="block w-full text-left px-4 py-2 hover:bg-gdg-bg text-gdg-text">
+                  {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
+                </a>
+                <a routerLink="/reset-password" (click)="toggleProfileMenu()"
+                   class="block w-full text-left px-4 py-2 hover:bg-gdg-bg text-gdg-text">
+                  {{ languageService.isFrench() ? 'Mot de passe' : 'Password' }}
+                </a>
                 <button (click)="signOut()"
                         class="w-full text-left px-4 py-2 text-red-600 hover:bg-gdg-bg">
                   {{ languageService.isFrench() ? 'Déconnexion' : 'Sign out' }}
@@ -105,6 +113,11 @@
                     class="text-left text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
               {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
             </button>
+          }
+          @if (authService.isAuthenticated()) {
+            <a routerLink="/profile" class="text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+              {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
+            </a>
           }
         </div>
       </div>

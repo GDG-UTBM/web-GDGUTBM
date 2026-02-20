@@ -58,6 +58,12 @@
           }
         </div>
 
+        <div class="flex justify-end">
+          <a routerLink="/reset-password" class="text-sm text-gdg-blue hover:underline">
+            {{ languageService.isFrench() ? 'Mot de passe oublié ?' : 'Forgot password?' }}
+          </a>
+        </div>
+
         @if (errorMessage()) {
           <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
         }
