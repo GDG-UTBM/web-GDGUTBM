@@ -1,6 +1,8 @@
 import {Component, Inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {LanguageService} from '../../../core/services/language.service';
+import {UsersService} from '../../../core/services/users.service';
+import {EventsService} from '../../../core/services/events.service';
 
 @Component({
   selector: 'app-proof-strip',
@@ -13,16 +15,33 @@ export class ProofStripComponent implements OnInit  {
   eventsCount = signal(0);
   private targetMembers = 30;
   private targetEvents = 3;
-  constructor(public languageService: LanguageService, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    public languageService: LanguageService,
+    private usersService: UsersService,
+    private eventsService: EventsService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
+      await this.loadCounts();
       this.startCounters();
     } else {
       // Pour le SSR, on met directement la valeur cible
       this.membersCount.set(this.targetMembers);
       this.eventsCount.set(this.targetEvents);
+    }
+  }
+
+  private async loadCounts() {
+    try {
+      const users = await this.usersService.getAllUsers();
+      const events = await this.eventsService.getAllEvents();
+      this.targetMembers = users?.length || this.targetMembers;
+      this.targetEvents = events?.length || this.targetEvents;
+    } catch (error) {
+      console.error('Error loading counts:', error);
     }
   }
 

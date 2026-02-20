@@ -71,8 +71,8 @@
               <div class="bg-gdg-surface rounded-r16 border border-gdg-line overflow-hidden hover:shadow-lg transition-all group">
                 <!-- Image -->
                 <div class="relative h-56 bg-gradient-to-br from-gdg-blue/20 to-purple-100">
-                  @if (event.image) {
-                    <img [src]="event.image" [alt]="event.titleFr" class="w-full h-full object-cover">
+                  @if (event.image_url) {
+                    <img [src]="event.image_url" [alt]="event.title_fr" class="w-full h-full object-cover">
                   } @else {
                     <div class="flex items-center justify-center h-full">
                       <span class="text-4xl opacity-20">{{ event.type === 'conference' ? '🎤' : event.type === 'workshop' ? '💻' : '🤝' }}</span>
@@ -84,35 +84,39 @@
                   </div>
                   <!-- Badge type -->
                   <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-gdg-text text-xs px-3 py-1 rounded-full">
-                    {{ getTypeLabel(event.type) }}
+                    {{ event.type ? getTypeLabel(event.type) : (languageService.isFrench() ? 'Événement' : 'Event') }}
                   </div>
                 </div>
                 <!-- Contenu -->
                 <div class="p-6">
                   <h3 class="text-xl font-semibold mb-2 group-hover:text-gdg-blue transition-colors">
-                    {{ languageService.isFrench() ? event.titleFr : event.titleEn }}
+                    {{ languageService.isFrench() ? event.title_fr : event.title_en }}
                   </h3>
                   <p class="text-gdg-muted mb-4 line-clamp-2">
-                    {{ languageService.isFrench() ? event.descriptionFr : event.descriptionEn }}
+                    {{ languageService.isFrench() ? event.description_fr : event.description_en }}
                   </p>
                   <div class="flex items-center text-sm text-gdg-muted mb-4">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span>{{ event.location }}</span>
+                    <span>{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
                   </div>
-                  @if (event.partners && event.partners.length > 0) {
+                  @if ((event.partners && event.partners.length > 0) || event.partner) {
                     <div class="flex items-center gap-2 mb-4">
                       <span class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'Avec :' : 'With:' }}</span>
-                      @for (partner of event.partners; track partner) {
-                        <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ partner }}</span>
+                      @if (event.partners && event.partners.length > 0) {
+                        @for (partner of event.partners; track partner) {
+                          <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ partner }}</span>
+                        }
+                      } @else {
+                        <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ event.partner }}</span>
                       }
                     </div>
                   }
                   <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gdg-line">
                         <span class="text-sm text-gdg-muted">
-                          @if (event.status === 'upcoming') {
+                          @if (getEventStatus(event) === 'upcoming') {
                             {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
                           } @else {
                             {{ languageService.isFrench() ? 'Passé' : 'Past' }}
@@ -125,7 +129,7 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                       </a>
-                      @if (event.status === 'upcoming') {
+                      @if (getEventStatus(event) === 'upcoming') {
                         <button (click)="openParticipation(event)" class="btn-primary text-sm px-4 py-2">
                           {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
                         </button>
@@ -166,7 +170,7 @@
 @if (showParticipationModal() && selectedEvent()) {
   <app-participation-modal
     [eventId]="selectedEvent()!.id"
-    [eventTitle]="languageService.isFrench() ? selectedEvent()!.titleFr : selectedEvent()!.titleEn"
+    [eventTitle]="languageService.isFrench() ? selectedEvent()!.title_fr : selectedEvent()!.title_en"
     (close)="closeParticipation()">
   </app-participation-modal>
 }

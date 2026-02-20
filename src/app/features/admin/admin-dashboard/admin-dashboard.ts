@@ -52,6 +52,8 @@ export class AdminDashboardComponent implements OnInit {
 
       const activities = await this.activitiesService.getAllActivities();
       this.activityCount.set(activities.length);
+
+      await this.participantsService.loadAll();
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
     }

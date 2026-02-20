@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 export interface Topic {
   id: string;
   user_id: string;
+  event_id: string;
   theme: string;
   description: string;
   status: 'pending' | 'approved' | 'rejected';
@@ -16,6 +17,10 @@ export interface Topic {
     last_name: string;
     email: string;
     role: string;
+  };
+  event?: {
+    title_fr: string;
+    title_en: string;
   };
 }
 
@@ -30,7 +35,7 @@ export class TopicsService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
-  async createTopic(topicData: { theme: string; description: string }) {
+  async createTopic(topicData: { event_id: string; theme: string; description: string }) {
     const user = this.authService.getUser()();
     if (!user) throw new Error('User not authenticated');
 
@@ -38,6 +43,7 @@ export class TopicsService {
       .from('topics')
       .insert([{
         user_id: user.id,
+        event_id: topicData.event_id,
         theme: topicData.theme,
         description: topicData.description,
         status: 'pending'
@@ -66,7 +72,8 @@ export class TopicsService {
       .from('topics')
       .select(`
         *,
-        user:profiles(first_name, last_name, email, role)
+        user:profiles(first_name, last_name, email, role),
+        event:events(title_fr, title_en)
       `)
       .order('created_at', { ascending: false });
 
@@ -79,7 +86,8 @@ export class TopicsService {
       .from('topics')
       .select(`
       *,
-      user:profiles(first_name, last_name, email, role)
+      user:profiles(first_name, last_name, email, role),
+      event:events(title_fr, title_en)
     `)
       .order('created_at', { ascending: false });
 

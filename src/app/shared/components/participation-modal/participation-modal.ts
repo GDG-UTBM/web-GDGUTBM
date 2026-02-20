@@ -80,7 +80,7 @@ export class ParticipationModalComponent implements OnInit {
     this.participationForm.get('profession')?.updateValueAndValidity();
   }
 
-  submitParticipation() {
+  async submitParticipation() {
     if (this.participationForm.invalid) {
       this.participationForm.markAllAsTouched();
       return;
@@ -91,14 +91,15 @@ export class ParticipationModalComponent implements OnInit {
 
     try {
       const formValue = this.participationForm.value;
-      this.participantsService.addParticipant({
-        eventId: this.eventId,
-        eventTitle: this.eventTitle,
-        fullName: formValue.fullName,
+      const user = this.authService.getUser()();
+      await this.participantsService.addParticipant({
+        event_id: this.eventId,
+        user_id: user?.id ?? null,
+        full_name: formValue.fullName,
         role: formValue.role,
-        school: formValue.role === 'student' ? formValue.school : undefined,
-        studyLevel: formValue.role === 'student' ? formValue.studyLevel : undefined,
-        profession: formValue.role === 'professional' ? formValue.profession : undefined
+        school: formValue.role === 'student' ? formValue.school : null,
+        study_level: formValue.role === 'student' ? formValue.studyLevel : null,
+        profession: formValue.role === 'professional' ? formValue.profession : null
       });
 
       this.successMessage.set(

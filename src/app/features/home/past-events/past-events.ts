@@ -30,11 +30,18 @@ export class PastEventsComponent implements OnInit  {
 
   async loadEvents() {
     try {
-      // const events = await this.eventsService.getAllEvents();
-      this.allEvents.set(this.datas);
-      this.displayedEvents.set(this.datas.slice(0, 3)); // 3 premiers
+      const events = await this.eventsService.getAllEvents();
+      if (events && events.length) {
+        this.allEvents.set(events);
+        this.displayedEvents.set(events.slice(0, 3));
+      } else {
+        this.allEvents.set(this.datas);
+        this.displayedEvents.set(this.datas.slice(0, 3));
+      }
     } catch (error) {
       console.error('Error loading events:', error);
+      this.allEvents.set(this.datas);
+      this.displayedEvents.set(this.datas.slice(0, 3));
     }
   }
 

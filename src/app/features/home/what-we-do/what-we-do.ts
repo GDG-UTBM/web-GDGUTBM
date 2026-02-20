@@ -22,10 +22,15 @@ export class WhatWeDoComponent implements OnInit  {
 
   async ngOnInit() {
     try {
-      // const data = await this.activitiesService.getAllActivities();
-      this.activities.set(this.datas);
+      const data = await this.activitiesService.getAllActivities();
+      if (data && data.length) {
+        this.activities.set(data);
+      } else {
+        this.activities.set(this.datas);
+      }
     } catch (error) {
       console.error('Error loading activities:', error);
+      this.activities.set(this.datas);
     }
   }
 

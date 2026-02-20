@@ -37,7 +37,7 @@ export class AuthService {
     this.currentUser.set(session?.user ?? null);
 
     if (session?.user) {
-      await this.loadUserProfile(session.user.id);
+      await this.loadUserProfile(session.user);
     }
 
     // Écouter les changements d'authentification
@@ -45,22 +45,48 @@ export class AuthService {
       this.currentUser.set(session?.user ?? null);
 
       if (session?.user) {
-        await this.loadUserProfile(session.user.id);
+        await this.loadUserProfile(session.user);
       } else {
         this.currentProfile.set(null);
       }
     });
   }
 
-  private async loadUserProfile(userId: string) {
+  private async loadUserProfile(user: User) {
     const { data, error } = await this.supabase
       .from('profiles')
       .select('*')
-      .eq('id', userId)
-      .single();
+      .eq('id', user.id)
+      .maybeSingle();
 
     if (error) {
       console.error('Error loading profile:', error);
+      return;
+    }
+
+    if (!data) {
+      const metadata = (user.user_metadata || {}) as Record<string, any>;
+      const { data: created, error: insertError } = await this.supabase
+        .from('profiles')
+        .insert([{
+          id: user.id,
+          email: user.email,
+          first_name: metadata['first_name'] || '',
+          last_name: metadata['last_name'] || '',
+          role: metadata['role'] || 'student',
+          school: metadata['school'] || null,
+          study_level: metadata['study_level'] || null,
+          company: metadata['company'] || null,
+          created_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating profile:', insertError);
+        return;
+      }
+      this.currentProfile.set(created);
       return;
     }
 
@@ -81,14 +107,6 @@ export class AuthService {
     });
 
     if (error) throw error;
-
-    // Créer le profil utilisateur
-    if (data.user) {
-      await this.createUserProfile(data.user.id, {
-        email,
-        ...userData
-      });
-    }
 
     return data;
   }
@@ -162,7 +180,7 @@ export class AuthService {
     if (!user) return null;
     if (this.currentProfile()) return this.currentProfile();
 
-    await this.loadUserProfile(user.id);
+    await this.loadUserProfile(user);
     return this.currentProfile();
   }
 

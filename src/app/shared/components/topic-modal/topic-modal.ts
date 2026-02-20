@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LanguageService } from '../../../core/services/language.service';
 import {TopicsService} from '../../../core/services/topics.service';
+import { EventsService } from '../../../core/services/events.service';
+import { EventModel } from '../../../core/models/event.model';
 
 @Component({
   selector: 'app-topic-modal',
@@ -11,22 +13,19 @@ import {TopicsService} from '../../../core/services/topics.service';
   templateUrl:'topic-modal.html' ,
   styles: ``
 })
-export class TopicModalComponent {
+export class TopicModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   topicForm: FormGroup;
   isLoading = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
-  eventOptions = [
-    { id: '4', labelFr: 'Meetup: Future of Web', labelEn: 'Meetup: Future of Web' },
-    { id: '5', labelFr: 'Coding Session: React', labelEn: 'Coding Session: React' },
-    { id: '1', labelFr: 'AI & Robotique', labelEn: 'AI & Robotics' }
-  ];
+  eventOptions = signal<EventModel[]>([]);
 
   constructor(
     private fb: FormBuilder,
     private topicsService: TopicsService,
+    private eventsService: EventsService,
     public languageService: LanguageService
   ) {
     this.topicForm = this.fb.group({
@@ -34,6 +33,20 @@ export class TopicModalComponent {
       theme: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(10)]]
     });
+  }
+
+  async ngOnInit() {
+    try {
+      const events = await this.eventsService.getAllEvents();
+      const upcoming = (events || []).filter(e => {
+        if (e.status) return e.status === 'upcoming';
+        if (!e.date) return false;
+        return new Date(e.date) >= new Date();
+      });
+      this.eventOptions.set(upcoming.length ? upcoming : (events || []));
+    } catch (error) {
+      console.error('Error loading events for topics:', error);
+    }
   }
 
   async onSubmit() {
@@ -44,19 +57,11 @@ export class TopicModalComponent {
     this.successMessage.set('');
 
     try {
-      const selectedEvent = this.eventOptions.find(e => e.id === this.topicForm.value.eventId);
-      const eventLabel = this.languageService.isFrench()
-        ? selectedEvent?.labelFr
-        : selectedEvent?.labelEn;
-
-      const payload = {
+      await this.topicsService.createTopic({
+        event_id: this.topicForm.value.eventId,
         theme: this.topicForm.value.theme,
-        description: eventLabel
-          ? `${this.topicForm.value.description}\n\n${this.languageService.isFrench() ? 'Événement' : 'Event'}: ${eventLabel}`
-          : this.topicForm.value.description
-      };
-
-      await this.topicsService.createTopic(payload);
+        description: this.topicForm.value.description
+      });
 
       this.successMessage.set(
         this.languageService.isFrench()

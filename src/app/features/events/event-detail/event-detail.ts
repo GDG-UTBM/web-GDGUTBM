@@ -3,8 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService } from '../../../core/services/language.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ParticipantsService } from '../../../core/services/participants.service';
+import { ParticipantsService, EventParticipant } from '../../../core/services/participants.service';
 import { ParticipationModalComponent } from '../../../shared/components/participation-modal/participation-modal';
+import { EventsService } from '../../../core/services/events.service';
+import { EventModel } from '../../../core/models/event.model';
+import { EventMarksService, EventMark } from '../../../core/services/event-marks.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -14,82 +18,39 @@ import { ParticipationModalComponent } from '../../../shared/components/particip
   styleUrls: ['./event-detail.scss']
 })
 export class EventDetailComponent implements OnInit {
-  event = signal<any>(null);
+  event = signal<EventModel | null>(null);
   safeVideoUrl = signal<SafeResourceUrl | null>(null);
   eventId = signal<string | null>(null);
   showParticipationModal = signal(false);
+  participantsList = signal<EventParticipant[]>([]);
+  marksList = signal<EventMark[]>([]);
+  isMarkedByUser = signal(false);
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sanitizer: DomSanitizer,
+    private eventsService: EventsService,
     private participantsService: ParticipantsService,
+    private marksService: EventMarksService,
+    private authService: AuthService,
     public languageService: LanguageService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.eventId.set(id);
-    // Simuler un chargement depuis un service
-    const events = [
-      {
-        id: '1',
-        titleFr: 'AI & Robotique',
-        titleEn: 'AI & Robotics',
-        date: '12 Octobre 2021',
-        descriptionFr: 'Conférence sur l\'intelligence artificielle et la robotique avec des experts Google.',
-        descriptionEn: 'Conference on artificial intelligence and robotics with Google experts.',
-        partner: 'Google',
-        highlights: ['Présentation des dernières avancées en deep learning', 'Démonstration de robots autonomes', 'Session Q&A avec les ingénieurs Google'],
-        videoUrl: 'https://www.youtube.com/watch?v=DVLzQGPV8rI',
-        image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        markedBy: [
-          { id: 'm1', name: 'Camille Dupont', role: 'Étudiante', avatarUrl: 'https://i.pravatar.cc/80?img=16' },
-          { id: 'm2', name: 'Hugo Petit', role: 'DevOps', avatarUrl: 'https://i.pravatar.cc/80?img=18' },
-          { id: 'm3', name: 'Lea Robert', role: 'Product', avatarUrl: 'https://i.pravatar.cc/80?img=24' }
-        ]
-      },
-      {
-        id: '2',
-        titleFr: 'Web & Cloud',
-        titleEn: 'Web & Cloud',
-        date: '5 Juin 2021',
-        descriptionFr: 'Atelier de développement web et solutions cloud modernes.',
-        descriptionEn: 'Workshop on web development and modern cloud solutions.',
-        partner: 'Capgemini',
-        highlights: ['Introduction à AWS', 'Développement d\'une application serverless', 'Bonnes pratiques de sécurité'],
-        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        markedBy: [
-          { id: 'm4', name: 'Paul Nguyen', role: 'Cloud', avatarUrl: 'https://i.pravatar.cc/80?img=21' }
-        ]
-      },
-      {
-        id: '3',
-        titleFr: 'DevOps & CI/CD',
-        titleEn: 'DevOps & CI/CD',
-        date: '15 Mars 2022',
-        descriptionFr: 'Introduction aux pratiques DevOps et pipelines CI/CD.',
-        descriptionEn: 'Introduction to DevOps practices and CI/CD pipelines.',
-        partner: 'Engineering',
-        highlights: ['Mise en place d\'un pipeline avec GitHub Actions', 'Infrastructure as Code avec Terraform', 'Monitoring et logging'],
-        image: 'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-      },
-      {
-        id: '4',
-        titleFr: 'Blockchain Day',
-        titleEn: 'Blockchain Day',
-        date: '20 Sept 2022',
-        descriptionFr: 'Journée dédiée à la blockchain et aux cryptomonnaies.',
-        descriptionEn: 'Day dedicated to blockchain and cryptocurrencies.',
-        partner: 'Crypto Experts',
-        highlights: ['Introduction à la blockchain', 'Smart contracts avec Solidity', 'Cas d\'usage dans la finance'],
-        image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-      }
-    ];
-    const found = events.find(e => e.id === id);
-    this.event.set(found);
-    this.safeVideoUrl.set(this.toSafeVideoUrl(found?.videoUrl));
-    console.log(found);
+    if (!id) return;
+    try {
+      const found = await this.eventsService.getEvent(id);
+      this.event.set(found);
+      this.safeVideoUrl.set(this.toSafeVideoUrl(found?.video_url || null));
+    } catch (error) {
+      console.error('Error loading event:', error);
+    }
+
+    await this.loadParticipants();
+    await this.loadMarks();
   }
 
   goBack() {
@@ -105,11 +66,63 @@ export class EventDetailComponent implements OnInit {
     this.showParticipationModal.set(false);
   }
 
-  participants() {
-    const list = this.participantsService.getParticipants()();
+  async loadParticipants() {
     const id = this.eventId();
-    if (!id) return [];
-    return list.filter(p => p.eventId === id);
+    if (!id) return;
+    try {
+      const list = await this.participantsService.loadByEvent(id);
+      this.participantsList.set(list.filter(p => p.status === 'approved'));
+    } catch (error) {
+      console.error('Error loading participants:', error);
+    }
+  }
+
+  participants() {
+    return this.participantsList();
+  }
+
+  async loadMarks() {
+    const id = this.eventId();
+    if (!id) return;
+    try {
+      const list = await this.marksService.loadByEvent(id);
+      this.marksList.set(list);
+      const user = this.authService.getUser()();
+      this.isMarkedByUser.set(!!user && list.some(m => m.user_id === user.id));
+    } catch (error) {
+      console.error('Error loading marks:', error);
+    }
+  }
+
+  marks() {
+    return this.marksList();
+  }
+
+  async toggleMark() {
+    const id = this.eventId();
+    if (!id) return;
+    const user = this.authService.getUser()();
+    if (!user) {
+      alert(this.languageService.isFrench() ? 'Connectez-vous pour marquer un événement.' : 'Sign in to mark an event.');
+      return;
+    }
+    try {
+      if (this.isMarkedByUser()) {
+        await this.marksService.unmarkEvent(id);
+      } else {
+        await this.marksService.markEvent(id);
+      }
+      await this.loadMarks();
+    } catch (error) {
+      console.error('Error toggling mark:', error);
+    }
+  }
+
+  eventStatus() {
+    const ev = this.event();
+    if (!ev?.date) return 'past';
+    if (ev.status) return ev.status;
+    return new Date(ev.date) >= new Date() ? 'upcoming' : 'past';
   }
 
   private toSafeVideoUrl(url?: string | null): SafeResourceUrl | null {

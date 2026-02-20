@@ -1,77 +1,112 @@
 import { Injectable, signal } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 
 export type ParticipationStatus = 'pending' | 'approved' | 'rejected';
 
 export interface EventParticipant {
   id: string;
-  eventId: string;
-  eventTitle: string;
-  fullName: string;
+  event_id: string;
+  user_id?: string | null;
+  full_name: string;
   role: 'student' | 'professional';
-  school?: string;
-  studyLevel?: string;
-  profession?: string;
+  school?: string | null;
+  study_level?: string | null;
+  profession?: string | null;
   status: ParticipationStatus;
-  createdAt: string;
+  created_at: string;
+  event?: {
+    id: string;
+    title_fr: string;
+    title_en: string;
+  };
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParticipantsService {
-  private participants = signal<EventParticipant[]>([
-    {
-      id: 'p-1',
-      eventId: '1',
-      eventTitle: 'AI & Robotique',
-      fullName: 'Nadia Benali',
-      role: 'student',
-      school: 'UTBM',
-      studyLevel: 'Master',
-      status: 'approved',
-      createdAt: new Date('2025-12-01T10:00:00Z').toISOString()
-    },
-    {
-      id: 'p-2',
-      eventId: '1',
-      eventTitle: 'AI & Robotique',
-      fullName: 'Thomas Martin',
-      role: 'professional',
-      profession: 'Ingénieur IA',
-      status: 'pending',
-      createdAt: new Date('2025-12-02T12:30:00Z').toISOString()
-    },
-    {
-      id: 'p-3',
-      eventId: '2',
-      eventTitle: 'Web & Cloud',
-      fullName: 'Ines Moreau',
-      role: 'professional',
-      profession: 'Développeuse Frontend',
-      status: 'approved',
-      createdAt: new Date('2025-05-28T09:00:00Z').toISOString()
-    }
-  ]);
+  private supabase: SupabaseClient;
+  private participants = signal<EventParticipant[]>([]);
+
+  constructor() {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  }
 
   getParticipants() {
     return this.participants.asReadonly();
   }
 
-  addParticipant(data: Omit<EventParticipant, 'id' | 'status' | 'createdAt'>) {
-    const id = `p-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const newParticipant: EventParticipant = {
-      ...data,
-      id,
-      status: 'pending',
-      createdAt: new Date().toISOString()
-    };
-    this.participants.update(list => [newParticipant, ...list]);
-    return newParticipant;
+  async loadAll() {
+    const { data, error } = await this.supabase
+      .from('event_participants')
+      .select(`
+        *,
+        event:events(id, title_fr, title_en)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    this.participants.set(data || []);
+    return data || [];
   }
 
-  updateStatus(id: string, status: ParticipationStatus) {
+  async loadByEvent(eventId: string) {
+    const { data, error } = await this.supabase
+      .from('event_participants')
+      .select('*')
+      .eq('event_id', eventId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async addParticipant(data: {
+    event_id: string;
+    user_id?: string | null;
+    full_name: string;
+    role: 'student' | 'professional';
+    school?: string | null;
+    study_level?: string | null;
+    profession?: string | null;
+  }) {
+    const { data: inserted, error } = await this.supabase
+      .from('event_participants')
+      .insert([{
+        event_id: data.event_id,
+        user_id: data.user_id ?? null,
+        full_name: data.full_name,
+        role: data.role,
+        school: data.school ?? null,
+        study_level: data.study_level ?? null,
+        profession: data.profession ?? null,
+        status: 'pending'
+      }])
+      .select(`
+        *,
+        event:events(id, title_fr, title_en)
+      `)
+      .single();
+
+    if (error) throw error;
+    if (inserted) {
+      this.participants.update(list => [inserted, ...list]);
+    }
+    return inserted;
+  }
+
+  async updateStatus(id: string, status: ParticipationStatus) {
+    const { data, error } = await this.supabase
+      .from('event_participants')
+      .update({ status })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
     this.participants.update(list =>
       list.map(p => (p.id === id ? { ...p, status } : p))
     );
+    return data;
   }
 }

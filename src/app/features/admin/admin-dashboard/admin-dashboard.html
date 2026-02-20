@@ -100,9 +100,9 @@
         @for (participant of participants(); track participant.id) {
           <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white border border-gdg-line rounded-r12 px-4 py-3">
             <div>
-              <p class="font-semibold">{{ participant.fullName }}</p>
+              <p class="font-semibold">{{ participant.full_name }}</p>
               <p class="text-sm text-gdg-muted">
-                {{ participant.eventTitle }} ·
+                {{ languageService.isFrench() ? participant.event?.title_fr : participant.event?.title_en }} ·
                 @if (participant.role === 'student') {
                   {{ languageService.isFrench() ? 'Étudiant' : 'Student' }}
                 } @else {
@@ -111,7 +111,7 @@
               </p>
               <p class="text-xs text-gdg-muted">
                 @if (participant.role === 'student') {
-                  {{ participant.school || '-' }} · {{ participant.studyLevel || '-' }}
+                  {{ participant.school || '-' }} · {{ participant.study_level || '-' }}
                 } @else {
                   {{ participant.profession || '-' }}
                 }

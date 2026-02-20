@@ -40,8 +40,15 @@ export class AdminEventsComponent implements OnInit {
       description_fr: ['', Validators.required],
       description_en: ['', Validators.required],
       date: ['', Validators.required],
+      end_date: [''],
+      location: [''],
+      type: ['conference'],
+      status: ['upcoming'],
       image_url: [''],
-      partner: ['']
+      partner: [''],
+      partners: [''],
+      video_url: [''],
+      highlights: ['']
     });
   }
 
@@ -71,9 +78,13 @@ export class AdminEventsComponent implements OnInit {
     this.editingId.set(event.id);
     // Formater la date pour input date (YYYY-MM-DD)
     const formattedDate = new Date(event.date).toISOString().split('T')[0];
+    const formattedEndDate = event.end_date ? new Date(event.end_date).toISOString().split('T')[0] : '';
     this.eventForm.patchValue({
       ...event,
-      date: formattedDate
+      date: formattedDate,
+      end_date: formattedEndDate,
+      partners: event.partners ? event.partners.join(', ') : '',
+      highlights: event.highlights ? event.highlights.join('\n') : ''
     });
     this.showModal.set(true);
   }
@@ -94,10 +105,15 @@ export class AdminEventsComponent implements OnInit {
     this.errorMessage.set('');
     try {
       const formValue = this.eventForm.value;
+      const payload = {
+        ...formValue,
+        partners: this.normalizeCommaList(formValue.partners),
+        highlights: this.normalizeLineList(formValue.highlights)
+      };
       if (this.editingId()) {
-        await this.eventsService.updateEvent(this.editingId()!, formValue);
+        await this.eventsService.updateEvent(this.editingId()!, payload);
       } else {
-        await this.eventsService.createEvent(formValue);
+        await this.eventsService.createEvent(payload);
       }
       this.closeModal();
       await this.loadEvents();
@@ -110,5 +126,17 @@ export class AdminEventsComponent implements OnInit {
 
   closeModal() {
     this.showModal.set(false);
+  }
+
+  private normalizeCommaList(value: string | null | undefined) {
+    if (!value) return null;
+    const items = value.split(',').map(v => v.trim()).filter(Boolean);
+    return items.length ? items : null;
+  }
+
+  private normalizeLineList(value: string | null | undefined) {
+    if (!value) return null;
+    const items = value.split('\n').map(v => v.trim()).filter(Boolean);
+    return items.length ? items : null;
   }
 }

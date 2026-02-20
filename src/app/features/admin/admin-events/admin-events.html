@@ -94,8 +94,87 @@
           </div>
 
           <div class="space-y-1">
+            <label for="title_en" class="block text-sm font-semibold text-gdg-text">
+              {{ languageService.isFrench() ? 'Titre (EN) *' : 'Title (EN) *' }}
+            </label>
+            <input id="title_en" type="text" formControlName="title_en"
+                   class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none transition-all">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">
+              {{ languageService.isFrench() ? 'Description (FR) *' : 'Description (FR) *' }}
+            </label>
+            <textarea rows="3" formControlName="description_fr"
+                      class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none"></textarea>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">
+              {{ languageService.isFrench() ? 'Description (EN) *' : 'Description (EN) *' }}
+            </label>
+            <textarea rows="3" formControlName="description_en"
+                      class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none"></textarea>
+          </div>
+
+          <div class="space-y-1">
             <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Date *' : 'Date *' }}</label>
             <input type="date" formControlName="date" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Date de fin' : 'End date' }}</label>
+            <input type="date" formControlName="end_date" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Lieu' : 'Location' }}</label>
+            <input type="text" formControlName="location" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Type' : 'Type' }}</label>
+              <select formControlName="type" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+                <option value="conference">Conférence</option>
+                <option value="workshop">Atelier</option>
+                <option value="meetup">Meetup</option>
+                <option value="coding">Coding</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Statut' : 'Status' }}</label>
+              <select formControlName="status" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+                <option value="upcoming">{{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}</option>
+                <option value="past">{{ languageService.isFrench() ? 'Passé' : 'Past' }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Image (URL)' : 'Image (URL)' }}</label>
+            <input type="text" formControlName="image_url" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Partenaire principal' : 'Main partner' }}</label>
+            <input type="text" formControlName="partner" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Partenaires (séparés par des virgules)' : 'Partners (comma-separated)' }}</label>
+            <input type="text" formControlName="partners" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Vidéo (URL)' : 'Video (URL)' }}</label>
+            <input type="text" formControlName="video_url" class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none">
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-sm font-semibold text-gdg-text">{{ languageService.isFrench() ? 'Points forts (1 par ligne)' : 'Highlights (one per line)' }}</label>
+            <textarea rows="3" formControlName="highlights"
+                      class="w-full border border-gdg-line rounded-lg px-3 py-2 focus:ring-2 focus:ring-gdg-blue focus:outline-none"></textarea>
           </div>
 
           @if (errorMessage()) {
