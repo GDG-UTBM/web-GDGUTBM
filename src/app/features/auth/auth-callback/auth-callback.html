@@ -1,0 +1,15 @@
+<section class="section-spacing bg-gdg-bg min-h-[60vh] flex items-center justify-center">
+  <div class="bg-white border border-gdg-line rounded-r24 p-8 max-w-lg w-full text-center">
+    <div class="mx-auto mb-4 w-12 h-12 rounded-full border-2 border-gdg-blue border-t-transparent animate-spin"></div>
+    <h1 class="text-xl font-semibold mb-2">
+      {{ languageService.isFrench() ? 'Connexion en cours...' : 'Signing you in...' }}
+    </h1>
+    <p class="text-gdg-muted">
+      @if (hasError) {
+        {{ languageService.isFrench() ? "Une erreur est survenue. Réessayez." : 'An error occurred. Please try again.' }}
+      } @else {
+        {{ languageService.isFrench() ? 'Veuillez patienter quelques secondes.' : 'Please wait a moment.' }}
+      }
+    </p>
+  </div>
+</section>

@@ -11,7 +11,6 @@ import {Footer} from './shared/components/footer/footer';
   template: `
     <app-header />
     <router-outlet />
-    <app-footer/>
   `,
   styles: []
 })
