@@ -1,0 +1,18 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in" (click)="close.emit()">
+  <div class="bg-white rounded-r24 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in" (click)="$event.stopPropagation()">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h2>
+        <button (click)="close.emit()" class="text-gdg-muted hover:text-gdg-text text-xl">✕</button>
+      </div>
+      <div class="mb-6 text-6xl text-center">{{ activity.icon }}</div>
+      <p class="text-lg text-gdg-text mb-6">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
+      <h3 class="font-semibold text-lg mb-2">{{ languageService.isFrench() ? 'Ce que vous apprendrez :' : 'What you will learn:' }}</h3>
+      <ul class="list-disc list-inside space-y-2 text-gdg-muted">
+        <li>{{ languageService.isFrench() ? 'Les dernières tendances' : 'Latest trends' }}</li>
+        <li>{{ languageService.isFrench() ? 'Cas pratiques' : 'Practical cases' }}</li>
+        <li>{{ languageService.isFrench() ? 'Échanges avec des experts' : 'Exchanges with experts' }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

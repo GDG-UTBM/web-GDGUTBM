@@ -7,12 +7,11 @@ import {Footer} from './shared/components/footer/footer';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, HomeComponent, Footer],
+  imports: [RouterOutlet, HeaderComponent, Footer],
   template: `
     <app-header />
-    <app-home/>
-    <app-footer/>
     <router-outlet />
+    <app-footer/>
   `,
   styles: []
 })

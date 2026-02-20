@@ -1,139 +1,97 @@
 import {Component, Inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {LanguageService} from '../../../core/services/language.service';
+import {EventDetailModalComponent} from '../../../shared/components/event-detail-modal/event-detail-modal';
+import {AllEventsModalComponent} from '../../../shared/components/all-events-modal/all-events-modal';
+import {EventsService} from '../../../core/services/events.service';
+import {EventModel} from '../../../core/models/event.model';
+import {RouterLink} from '@angular/router';
 
-interface PastEvent {
-  id: number;
-  titleFr: string;
-  titleEn: string;
-  date: string;
-  image: string;
-  descriptionFr: string;
-  descriptionEn: string;
-  partner: string;
-}
+
 
 @Component({
   selector: 'app-past-events',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <section class="section-spacing bg-gdg-surface">
-      <div class="container-custom">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-semibold mb-4">
-            {{ languageService.isFrench() ? 'Événements Passés' : 'Past Events' }}
-          </h2>
-          <p class="text-gdg-muted max-w-2xl mx-auto">
-            {{ languageService.isFrench()
-              ? 'Découvrez nos événements précédents qui ont marqué la communauté tech.'
-              : 'Discover our past events that have marked the tech community.'
-            }}
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          @for (event of pastEvents; track event.id) {
-            <div class="card group">
-              <!-- Image de l'événement -->
-              <div class="mb-4 relative overflow-hidden rounded-r16">
-                <div class="h-48 bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center">
-                  <span class="text-4xl">🎯</span>
-                </div>
-                <div class="absolute top-4 right-4 bg-gdg-blue text-white text-xs px-3 py-1 rounded-full">
-                  {{ event.partner }}
-                </div>
-              </div>
-
-              <!-- Contenu -->
-              <div class="space-y-3">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="font-semibold text-lg group-hover:text-gdg-blue transition-colors">
-                      {{ languageService.isFrench() ? event.titleFr : event.titleEn }}
-                    </h3>
-                    <p class="text-sm text-gdg-muted mt-1">
-                      {{ event.date }}
-                    </p>
-                  </div>
-                </div>
-
-                <p class="text-gdg-muted text-sm line-clamp-2">
-                  {{ languageService.isFrench() ? event.descriptionFr : event.descriptionEn }}
-                </p>
-
-                <div class="pt-4 border-t border-gdg-line flex justify-between items-center">
-                  <span class="text-xs text-gdg-muted">
-                    {{ languageService.isFrench() ? 'Avec' : 'With' }} {{ event.partner }}
-                  </span>
-                  <button (click)="openEventDetails(event)"
-                          class="text-gdg-blue text-sm font-medium hover:text-gdg-blue-hover transition-colors">
-                    {{ languageService.isFrench() ? 'Voir plus →' : 'Learn More →' }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-
-        <!-- Bouton voir tous les événements -->
-        <div class="text-center mt-12">
-          <button class="btn-secondary px-8 py-3">
-            {{ languageService.isFrench() ? 'Voir tous les événements' : 'View all events' }}
-          </button>
-        </div>
-      </div>
-    </section>
-  `,
-  styles: [`
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `]
+  imports: [CommonModule, EventDetailModalComponent, AllEventsModalComponent, RouterLink],
+  templateUrl: './past-events.html',
+  styleUrl:'./past-events.scss',
 })
-export class PastEventsComponent  {
-  constructor(public languageService: LanguageService) {
+export class PastEventsComponent implements OnInit  {
+  allEvents = signal<EventModel[]>([]);
+  displayedEvents = signal<EventModel[]>([]);
+  selectedEvent = signal<EventModel | null>(null);
+  showAllEvents = signal(false);
+
+  constructor(public languageService: LanguageService, private eventsService: EventsService,) {
+  }
+  async ngOnInit() {
+    await this.loadEvents();
+  }
+
+  async loadEvents() {
+    try {
+      // const events = await this.eventsService.getAllEvents();
+      this.allEvents.set(this.datas);
+      this.displayedEvents.set(this.datas.slice(0, 3)); // 3 premiers
+    } catch (error) {
+      console.error('Error loading events:', error);
+    }
+  }
+
+  openEventDetail(event: EventModel) {
+    this.selectedEvent.set(event);
+  }
+
+  closeEventDetail() {
+    this.selectedEvent.set(null);
+  }
+
+  openAllEvents() {
+    this.showAllEvents.set(true);
+  }
+
+  closeAllEvents() {
+    this.showAllEvents.set(false);
   }
 
 
-  pastEvents: PastEvent[] = [
+  datas: EventModel[] = [
     {
-      id: 1,
-      titleFr: 'AI & Robotique',
-      titleEn: 'AI & Robotics',
-      date: '12 Octobre 2021',
-      image: 'ai-robotics.jpg',
-      descriptionFr: 'Conférence sur l\'intelligence artificielle et la robotique avec des experts Google.',
-      descriptionEn: 'Conference on artificial intelligence and robotics with Google experts.',
-      partner: 'Google'
+      "id": "1",
+      "title_fr": "AI & Robotique",
+      "title_en": "AI & Robotics",
+      "description_fr": "Conférence sur l'intelligence artificielle et la robotique avec des experts Google.",
+      "description_en": "Conference on artificial intelligence and robotics with Google experts.",
+      "date": "2021-10-12",
+      "image_url": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
+      "partner": "Google",
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
     },
     {
-      id: 2,
-      titleFr: 'Web & Cloud',
-      titleEn: 'Web & Cloud',
-      date: '5 Juin 2021',
-      image: 'web-cloud.jpg',
-      descriptionFr: 'Atelier de développement web et solutions cloud modernes.',
-      descriptionEn: 'Workshop on web development and modern cloud solutions.',
-      partner: 'Capgemini'
+      "id": "2",
+      "title_fr": "Web & Cloud",
+      "title_en": "Web & Cloud",
+      "description_fr": "Atelier de développement web et solutions cloud modernes.",
+      "description_en": "Workshop on web development and modern cloud solutions.",
+      "date": "2021-06-05",
+      "image_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+      "partner": "Capgemini",
+      "created_at": "2024-01-02T11:00:00Z",
+      "updated_at": "2024-01-02T11:00:00Z"
     },
     {
-      id: 3,
-      titleFr: 'DevOps & CI/CD',
-      titleEn: 'DevOps & CI/CD',
-      date: '15 Mars 2022',
-      image: 'devops.jpg',
-      descriptionFr: 'Introduction aux pratiques DevOps et pipelines CI/CD.',
-      descriptionEn: 'Introduction to DevOps practices and CI/CD pipelines.',
-      partner: 'Engineering'
+      "id": "3",
+      "title_fr": "DevOps & CI/CD",
+      "title_en": "DevOps & CI/CD",
+      "description_fr": "Introduction aux pratiques DevOps et pipelines CI/CD.",
+      "description_en": "Introduction to DevOps practices and CI/CD pipelines.",
+      "date": "2022-03-15",
+      "image_url": "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=1200&q=80",
+      "partner": "Engineering",
+      "created_at": "2024-01-03T09:00:00Z",
+      "updated_at": "2024-01-03T09:00:00Z"
     }
   ];
 
-  openEventDetails(event: PastEvent) {
-    // Ouvrir la modale avec les détails de l'événement
-    console.log('Open event details:', event);
-  }
 }

@@ -1,1 +1,36 @@
-<p>proof-strip works!</p>
+<section class="py-14 bg-gradient-to-b from-gdg-surface to-gdg-bg border-y border-gdg-line">
+  <div class="container-custom">
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-12">
+      <div class="h-8 md:h-10">
+        <img src="https://logo.clearbit.com/google.com" alt="Google" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+      <div class="h-8 md:h-10">
+        <img src="https://logo.clearbit.com/capgemini.com" alt="Capgemini" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+      <div class="h-8 md:h-10">
+        <img src="https://logo.clearbit.com/utbm.fr" alt="UTBM" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+      <div class="h-8 md:h-10">
+        <img src="https://logo.clearbit.com/meetup.com" alt="Meetup" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+      <div class="h-8 md:h-10">
+        <img src="https://logo.clearbit.com/developer.google.com" alt="Google Developers" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
+        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">{{ membersCount() }}+</div>
+        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'membres actifs' : 'active members' }}</p>
+      </div>
+      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
+        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">{{ eventsCount() }}+</div>
+        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'événements organisés' : 'events hosted' }}</p>
+      </div>
+      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
+        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">12+</div>
+        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'partenaires locaux' : 'local partners' }}</p>
+      </div>
+    </div>
+  </div>
+</section>

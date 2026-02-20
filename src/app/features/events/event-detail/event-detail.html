@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gdg-bg">
+  <div class="container-custom pt-8 pb-2">
+    <button type="button" (click)="goBack()" class="inline-flex items-center gap-2 text-gdg-muted hover:text-gdg-blue transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      {{ languageService.isFrench() ? 'Retour aux événements' : 'Back to events' }}
+    </button>
+  </div>
+
+  @if (event()) {
+    <section class="relative">
+      <div class="absolute inset-0">
+        <div class="h-[320px] md:h-[440px] bg-cover bg-center" [style.backgroundImage]="'url(' + event()?.image + ')'"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-gdg-dark/75 via-gdg-dark/40 to-gdg-bg"></div>
+        <div class="absolute -top-10 -right-8 w-48 h-48 bg-gdg-blue/25 rounded-full blur-3xl"></div>
+        <div class="absolute top-24 -left-10 w-56 h-56 bg-gdg-dark/25 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="container-custom relative pt-10 pb-10">
+        <div class="max-w-4xl ed-fade-up">
+          <div class="flex flex-wrap gap-3 mb-5">
+            <span class="inline-flex items-center gap-2 text-white/90 text-sm px-3 py-1 rounded-full border border-white/20 bg-white/10">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              {{ event()?.date }}
+            </span>
+            <span class="inline-flex items-center gap-2 text-white/90 text-sm px-3 py-1 rounded-full border border-white/20 bg-white/10">
+              <span class="w-2 h-2 rounded-full bg-gdg-blue"></span>
+              {{ event()?.partner }}
+            </span>
+          </div>
+
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            {{ languageService.isFrench() ? event()?.titleFr : event()?.titleEn }}
+          </h1>
+          <p class="text-lg md:text-xl text-white/85 max-w-3xl">
+            {{ languageService.isFrench() ? event()?.descriptionFr : event()?.descriptionEn }}
+          </p>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-4 ed-fade-up ed-delay-1">
+          <div class="px-4 py-3 rounded-r16 border border-white/20 bg-white/10 text-white">
+            <div class="text-xs uppercase tracking-wide text-white/70">
+              {{ languageService.isFrench() ? 'Participants' : 'Participants' }}
+            </div>
+            <div class="text-2xl font-semibold">{{ participants().length }}</div>
+          </div>
+          <div class="px-4 py-3 rounded-r16 border border-white/20 bg-white/10 text-white">
+            <div class="text-xs uppercase tracking-wide text-white/70">
+              {{ languageService.isFrench() ? 'Marqués' : 'Marked' }}
+            </div>
+            <div class="text-2xl font-semibold">{{ event()?.markedBy?.length || 0 }}</div>
+          </div>
+        </div>
+        <div class="mt-6 ed-fade-up ed-delay-2">
+          <button (click)="openParticipation()" class="btn-primary text-base px-6 py-3">
+            {{ languageService.isFrench() ? 'Participer à l\'événement' : 'Participate in this event' }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="container-custom grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] pb-16 pt-8">
+      <div class="space-y-8">
+        @if (event()?.highlights) {
+          <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm ed-fade-up ed-delay-1">
+            <h2 class="text-2xl font-semibold mb-4">{{ languageService.isFrench() ? 'Points forts' : 'Highlights' }}</h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+              @for (item of event()?.highlights; track item) {
+                <div class="rounded-r16 border border-gdg-line bg-white px-4 py-3 shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <span class="mt-1 w-2 h-2 rounded-full bg-gdg-blue"></span>
+                    <p class="text-gdg-text">{{ item }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm ed-fade-up ed-delay-2">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-semibold">{{ languageService.isFrench() ? 'Participants' : 'Participants' }}</h2>
+            <span class="text-sm text-gdg-muted">{{ participants().length }}</span>
+          </div>
+          @if (participants().length) {
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              @for (person of participants(); track person.id) {
+                <div class="flex items-center gap-3 bg-white border border-gdg-line rounded-r12 px-3 py-3 shadow-sm">
+                  <div class="w-10 h-10 rounded-full bg-gdg-bg flex items-center justify-center text-sm font-semibold text-gdg-blue">
+                    {{ person.fullName.charAt(0) }}
+                  </div>
+                  <div class="leading-tight">
+                    <div class="font-semibold">{{ person.fullName }}</div>
+                    <div class="text-sm text-gdg-muted">
+                      @if (person.role === 'student') {
+                        {{ languageService.isFrench() ? 'Étudiant' : 'Student' }}
+                      } @else {
+                        {{ languageService.isFrench() ? 'Professionnel' : 'Professional' }}
+                      }
+                    </div>
+                    <div class="text-xs mt-1 inline-flex items-center px-2 py-0.5 rounded-full"
+                         [class.bg-yellow-100]="person.status === 'pending'"
+                         [class.text-yellow-800]="person.status === 'pending'"
+                         [class.bg-green-100]="person.status === 'approved'"
+                         [class.text-green-800]="person.status === 'approved'"
+                         [class.bg-red-100]="person.status === 'rejected'"
+                         [class.text-red-800]="person.status === 'rejected'">
+                      @if (person.status === 'pending') {
+                        {{ languageService.isFrench() ? 'En attente' : 'Pending' }}
+                      } @else if (person.status === 'approved') {
+                        {{ languageService.isFrench() ? 'Validé' : 'Approved' }}
+                      } @else {
+                        {{ languageService.isFrench() ? 'Refusé' : 'Rejected' }}
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-gdg-muted">{{ languageService.isFrench() ? 'Aucun participant pour le moment.' : 'No participants yet.' }}</p>
+          }
+        </section>
+
+        <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm ed-fade-up ed-delay-3">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-semibold">{{ languageService.isFrench() ? 'Ils ont marqué l\'événement' : 'Marked this event' }}</h2>
+            <span class="text-sm text-gdg-muted">{{ event()?.markedBy?.length || 0 }}</span>
+          </div>
+          @if (event()?.markedBy?.length) {
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              @for (person of event()?.markedBy; track person.id) {
+                <div class="flex items-center gap-3 bg-white border border-gdg-line rounded-r12 px-3 py-3 shadow-sm">
+                  <img [src]="person.avatarUrl" alt="" class="w-10 h-10 rounded-full object-cover">
+                  <div class="leading-tight">
+                    <div class="font-semibold">{{ person.name }}</div>
+                    <div class="text-sm text-gdg-muted">{{ person.role }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-gdg-muted">{{ languageService.isFrench() ? 'Aucune personne pour le moment.' : 'No one yet.' }}</p>
+          }
+        </section>
+
+        @if (safeVideoUrl()) {
+          <section class="bg-gdg-surface rounded-r24 border border-gdg-line p-6 md:p-8 shadow-sm ed-fade-up ed-delay-4">
+            <h2 class="text-2xl font-semibold mb-4">{{ languageService.isFrench() ? 'Vidéo de l\'événement' : 'Event video' }}</h2>
+            <div class="relative w-full overflow-hidden rounded-r16" style="padding-bottom: 56.25%">
+              <iframe [src]="safeVideoUrl()" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full"></iframe>
+            </div>
+          </section>
+        }
+      </div>
+
+      <aside class="space-y-6 lg:sticky lg:top-24 self-start">
+        <div class="bg-gdg-surface rounded-r20 border border-gdg-line p-6 shadow-sm ed-fade-up ed-delay-2">
+          <h3 class="text-lg font-semibold mb-4">{{ languageService.isFrench() ? 'Résumé' : 'Summary' }}</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Date' : 'Date' }}</span>
+              <span class="font-medium text-gdg-text">{{ event()?.date }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Partenaire' : 'Partner' }}</span>
+              <span class="font-medium text-gdg-text">{{ event()?.partner || '-' }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Participants' : 'Participants' }}</span>
+              <span class="font-medium text-gdg-text">{{ participants().length }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-gdg-muted">{{ languageService.isFrench() ? 'Marqués' : 'Marked' }}</span>
+              <span class="font-medium text-gdg-text">{{ event()?.markedBy?.length || 0 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gdg-surface rounded-r20 border border-gdg-line p-6 shadow-sm ed-fade-up ed-delay-3">
+          <h3 class="text-lg font-semibold mb-4">{{ languageService.isFrench() ? 'Quelques visages' : 'People' }}</h3>
+          @if (participants().length) {
+            <div class="flex flex-wrap gap-3">
+              @for (person of participants(); track person.id) {
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-full bg-gdg-bg flex items-center justify-center text-xs font-semibold text-gdg-blue border border-gdg-line">
+                    {{ person.fullName.charAt(0) }}
+                  </div>
+                  <span class="text-sm text-gdg-text">{{ person.fullName }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-gdg-muted text-sm">{{ languageService.isFrench() ? 'Aucun participant pour le moment.' : 'No participants yet.' }}</p>
+          }
+        </div>
+
+        <div class="bg-gdg-surface rounded-r20 border border-gdg-line p-6 shadow-sm ed-fade-up ed-delay-4">
+          <h3 class="text-lg font-semibold mb-3">{{ languageService.isFrench() ? 'Participer' : 'Participate' }}</h3>
+          <p class="text-sm text-gdg-muted mb-4">
+            {{ languageService.isFrench()
+            ? 'Rejoignez l\'événement et recevez les infos pratiques.'
+            : 'Join the event and receive practical details.' }}
+          </p>
+          <button (click)="openParticipation()" class="btn-primary w-full">
+            {{ languageService.isFrench() ? 'Je participe' : 'I\'m in' }}
+          </button>
+        </div>
+      </aside>
+    </div>
+  }
+</div>
+
+@if (showParticipationModal() && event()) {
+  <app-participation-modal
+    [eventId]="event()!.id"
+    [eventTitle]="languageService.isFrench() ? event()!.titleFr : event()!.titleEn"
+    (close)="closeParticipation()">
+  </app-participation-modal>
+}

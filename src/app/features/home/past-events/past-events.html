@@ -1,1 +1,69 @@
-<p>past-events works!</p>
+<section class="section-spacing bg-gdg-surface">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-semibold mb-4">
+        {{ languageService.isFrench() ? 'Événements' : 'Events' }}
+      </h2>
+      <p class="text-gdg-muted max-w-2xl mx-auto">
+        {{ languageService.isFrench()
+        ? 'Découvrez nos événements passés et à venir.'
+        : 'Discover our past and upcoming events.'
+        }}
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (event of displayedEvents(); track event.id) {
+        <div class="bg-white border border-gdg-line rounded-r24 overflow-hidden hover:shadow-lg transition-all group">
+          <div class="relative h-44">
+            @if (event.image_url) {
+              <img [src]="event.image_url" [alt]="event.title_fr" class="w-full h-full object-cover">
+            } @else {
+              <div class="w-full h-full bg-gdg-line flex items-center justify-center text-3xl">📅</div>
+            }
+            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-gdg-text text-xs px-3 py-1 rounded-full">
+              {{ event.date | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold text-lg mb-2 group-hover:text-gdg-blue transition-colors">
+              {{ languageService.isFrench() ? event.title_fr : event.title_en }}
+            </h3>
+            <p class="text-sm text-gdg-muted line-clamp-2">
+              {{ languageService.isFrench() ? event.description_fr : event.description_en }}
+            </p>
+            <div class="mt-4 flex items-center justify-between">
+              <button class="text-gdg-blue text-sm font-medium hover:underline" [routerLink]="['/events', event.id]">
+                {{ languageService.isFrench() ? 'Voir plus →' : 'Learn more →' }}
+              </button>
+              <button class="text-xs px-3 py-1 rounded-full border border-gdg-line text-gdg-muted" (click)="openEventDetail(event)">
+                {{ languageService.isFrench() ? 'Aperçu' : 'Preview' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="text-center mt-12">
+      <button (click)="openAllEvents()" class="btn-secondary px-8 py-3">
+        {{ languageService.isFrench() ? 'Voir tous les événements' : 'View all events' }}
+      </button>
+    </div>
+  </div>
+</section>
+
+@if (selectedEvent()) {
+  <app-event-detail-modal
+    [event]="selectedEvent()!"
+    (close)="closeEventDetail()">
+  </app-event-detail-modal>
+}
+
+@if (showAllEvents()) {
+  <app-all-events-modal
+    [events]="allEvents()"
+    (close)="closeAllEvents()"
+    (eventClick)="openEventDetail($event)">
+  </app-all-events-modal>
+}

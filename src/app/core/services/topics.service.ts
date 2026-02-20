@@ -74,6 +74,19 @@ export class TopicsService {
     this.topics.set(data);
     return data;
   }
+  async getAllTopicsWithUser() {
+    const { data, error } = await this.supabase
+      .from('topics')
+      .select(`
+      *,
+      user:profiles(first_name, last_name, email, role)
+    `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  }
+
 
   async updateTopicStatus(topicId: string, status: 'approved' | 'rejected') {
     const { data, error } = await this.supabase

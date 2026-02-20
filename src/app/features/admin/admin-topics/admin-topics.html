@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-gdg-bg py-12 px-4 sm:px-6 lg:px-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gdg-text mb-2">
+        {{ languageService.isFrench() ? 'Gestion des sujets proposés' : 'Manage proposed topics' }}
+      </h1>
+      <p class="text-gdg-muted">
+        {{ languageService.isFrench()
+        ? 'Approuvez ou rejetez les sujets soumis par les professionnels.'
+        : 'Approve or reject topics submitted by professionals.'
+        }}
+      </p>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+        <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Total' : 'Total' }}</p>
+        <p class="text-3xl font-bold text-gdg-text">{{ topics().length }}</p>
+      </div>
+      <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+        <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'En attente' : 'Pending' }}</p>
+        <p class="text-3xl font-bold text-yellow-600">{{ pendingCount() }}</p>
+      </div>
+      <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+        <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Approuvés' : 'Approved' }}</p>
+        <p class="text-3xl font-bold text-green-600">{{ approvedCount() }}</p>
+      </div>
+    </div>
+
+    <!-- Filtres par statut -->
+    <div class="mb-6 flex flex-wrap gap-2">
+      <button
+        (click)="filterStatus.set('all')"
+        class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+        [class.bg-gdg-blue]="filterStatus() === 'all'"
+        [class.text-white]="filterStatus() === 'all'"
+        [class.bg-gdg-line]="filterStatus() !== 'all'"
+        [class.text-gdg-text]="filterStatus() !== 'all'">
+        {{ languageService.isFrench() ? 'Tous' : 'All' }}
+      </button>
+      <button
+        (click)="filterStatus.set('pending')"
+        class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+        [class.bg-gdg-blue]="filterStatus() === 'pending'"
+        [class.text-white]="filterStatus() === 'pending'"
+        [class.bg-gdg-line]="filterStatus() !== 'pending'"
+        [class.text-gdg-text]="filterStatus() !== 'pending'">
+        {{ languageService.isFrench() ? 'En attente' : 'Pending' }}
+      </button>
+      <button
+        (click)="filterStatus.set('approved')"
+        class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+        [class.bg-gdg-blue]="filterStatus() === 'approved'"
+        [class.text-white]="filterStatus() === 'approved'"
+        [class.bg-gdg-line]="filterStatus() !== 'approved'"
+        [class.text-gdg-text]="filterStatus() !== 'approved'">
+        {{ languageService.isFrench() ? 'Approuvés' : 'Approved' }}
+      </button>
+      <button
+        (click)="filterStatus.set('rejected')"
+        class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+        [class.bg-gdg-blue]="filterStatus() === 'rejected'"
+        [class.text-white]="filterStatus() === 'rejected'"
+        [class.bg-gdg-line]="filterStatus() !== 'rejected'"
+        [class.text-gdg-text]="filterStatus() !== 'rejected'">
+        {{ languageService.isFrench() ? 'Rejetés' : 'Rejected' }}
+      </button>
+    </div>
+
+    <!-- Liste des sujets -->
+    @if (isLoading()) {
+      <div class="flex justify-center py-12">
+        <svg class="animate-spin h-10 w-10 text-gdg-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+    } @else {
+      @if (filteredTopics().length === 0) {
+        <div class="text-center py-16 bg-gdg-surface rounded-r16 border border-gdg-line">
+          <p class="text-gdg-muted">
+            {{ languageService.isFrench() ? 'Aucun sujet trouvé.' : 'No topics found.' }}
+          </p>
+        </div>
+      } @else {
+        <div class="space-y-4">
+          @for (topic of filteredTopics(); track topic.id) {
+            <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6 hover:shadow-md transition-shadow">
+              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-semibold">{{ topic.theme }}</h3>
+                    <span
+                      class="text-xs px-2 py-1 rounded-full"
+                      [class.bg-yellow-100]="topic.status === 'pending'"
+                      [class.text-yellow-800]="topic.status === 'pending'"
+                      [class.bg-green-100]="topic.status === 'approved'"
+                      [class.text-green-800]="topic.status === 'approved'"
+                      [class.bg-red-100]="topic.status === 'rejected'"
+                      [class.text-red-800]="topic.status === 'rejected'">
+                          {{ statusLabel(topic.status) }}
+                        </span>
+                  </div>
+                  <p class="text-gdg-text mb-3">{{ topic.description }}</p>
+                  <div class="text-sm text-gdg-muted space-y-1">
+                    <p>
+                      <span class="font-medium">{{ languageService.isFrench() ? 'Proposé par :' : 'Proposed by:' }}</span>
+                      {{ topic.user?.first_name }} {{ topic.user?.last_name }} ({{ topic.user?.email }})
+                    </p>
+                    <p>
+                      <span class="font-medium">{{ languageService.isFrench() ? 'Date :' : 'Date:' }}</span>
+                      {{ topic.created_at | date:'dd/MM/yyyy HH:mm' }}
+                    </p>
+                  </div>
+                </div>
+                @if (topic.status === 'pending') {
+                  <div class="flex gap-2 self-end lg:self-center">
+                    <button
+                      (click)="updateStatus(topic.id, 'approved')"
+                      class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-r10 text-sm font-medium transition-colors">
+                      {{ languageService.isFrench() ? 'Approuver' : 'Approve' }}
+                    </button>
+                    <button
+                      (click)="updateStatus(topic.id, 'rejected')"
+                      class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-r10 text-sm font-medium transition-colors">
+                      {{ languageService.isFrench() ? 'Rejeter' : 'Reject' }}
+                    </button>
+                  </div>
+                } @else {
+                  <div class="self-end lg:self-center">
+                        <span class="text-sm text-gdg-muted italic">
+                          {{ languageService.isFrench()
+                          ? (topic.status === 'approved' ? 'Déjà approuvé' : 'Déjà rejeté')
+                          : (topic.status === 'approved' ? 'Already approved' : 'Already rejected')
+                          }}
+                        </span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="flex min-h-screen bg-gdg-bg">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gdg-surface border-r border-gdg-line">
+    <div class="p-6">
+      <h2 class="text-xl font-bold text-gdg-text">GDG Admin</h2>
+    </div>
+    <nav class="px-4 space-y-2">
+      <a routerLink="/admin" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" [routerLinkActiveOptions]="{exact:true}" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">📊</span>
+        {{ languageService.isFrench() ? 'Tableau de bord' : 'Dashboard' }}
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">👥</span>
+        {{ languageService.isFrench() ? 'Utilisateurs' : 'Users' }}
+      </a>
+      <a routerLink="/admin/topics" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">📝</span>
+        {{ languageService.isFrench() ? 'Sujets' : 'Topics' }}
+      </a>
+      <a routerLink="/admin/events" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">📅</span>
+        {{ languageService.isFrench() ? 'Événements' : 'Events' }}
+      </a>
+      <a routerLink="/admin/activities" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">⚡</span>
+        {{ languageService.isFrench() ? 'Activités' : 'Activities' }}
+      </a>
+    </nav>
+    <div class="absolute bottom-4 px-4">
+      <button (click)="signOut()" class="flex items-center text-gdg-muted hover:text-gdg-text transition-colors">
+        <span class="mr-2">🚪</span>
+        {{ languageService.isFrench() ? 'Déconnexion' : 'Logout' }}
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 overflow-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>

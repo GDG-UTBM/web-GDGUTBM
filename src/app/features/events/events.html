@@ -1,0 +1,176 @@
+<div class="min-h-screen bg-gdg-bg">
+  <!-- Hero -->
+  <section class="bg-gradient-to-b from-gdg-blue/10 to-transparent py-16 md:py-20">
+    <div class="container-custom text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-gdg-text mb-4">
+        {{ languageService.isFrench() ? 'Événements' : 'Events' }}
+      </h1>
+      <p class="text-xl text-gdg-muted max-w-2xl mx-auto">
+        {{ languageService.isFrench()
+        ? 'Découvrez nos prochains événements et revivez les moments passés.'
+        : 'Discover our upcoming events and relive past moments.' }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Filtres -->
+  <section class="py-8 border-b border-gdg-line bg-gdg-surface">
+    <div class="container-custom">
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <button
+          (click)="filterType.set('all')"
+          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+          [class.bg-gdg-blue]="filterType() === 'all'"
+          [class.text-white]="filterType() === 'all'"
+          [class.bg-gdg-line]="filterType() !== 'all'"
+          [class.text-gdg-text]="filterType() !== 'all'">
+          {{ languageService.isFrench() ? 'Tous' : 'All' }}
+        </button>
+        <button
+          (click)="filterType.set('upcoming')"
+          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+          [class.bg-gdg-blue]="filterType() === 'upcoming'"
+          [class.text-white]="filterType() === 'upcoming'"
+          [class.bg-gdg-line]="filterType() !== 'upcoming'"
+          [class.text-gdg-text]="filterType() !== 'upcoming'">
+          {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
+        </button>
+        <button
+          (click)="filterType.set('past')"
+          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
+          [class.bg-gdg-blue]="filterType() === 'past'"
+          [class.text-white]="filterType() === 'past'"
+          [class.bg-gdg-line]="filterType() !== 'past'"
+          [class.text-gdg-text]="filterType() !== 'past'">
+          {{ languageService.isFrench() ? 'Passés' : 'Past' }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Liste des événements -->
+  <section class="section-spacing">
+    <div class="container-custom">
+      @if (isLoading()) {
+        <div class="flex justify-center py-12">
+          <svg class="animate-spin h-10 w-10 text-gdg-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+      } @else {
+        @if (filteredEvents().length === 0) {
+          <div class="text-center py-16 bg-gdg-surface rounded-r16 border border-gdg-line">
+            <p class="text-gdg-muted">
+              {{ languageService.isFrench() ? 'Aucun événement trouvé.' : 'No events found.' }}
+            </p>
+          </div>
+        } @else {
+          <div class="grid lg:grid-cols-2 gap-8">
+            @for (event of filteredEvents(); track event.id) {
+              <div class="bg-gdg-surface rounded-r16 border border-gdg-line overflow-hidden hover:shadow-lg transition-all group">
+                <!-- Image -->
+                <div class="relative h-56 bg-gradient-to-br from-gdg-blue/20 to-purple-100">
+                  @if (event.image) {
+                    <img [src]="event.image" [alt]="event.titleFr" class="w-full h-full object-cover">
+                  } @else {
+                    <div class="flex items-center justify-center h-full">
+                      <span class="text-4xl opacity-20">{{ event.type === 'conference' ? '🎤' : event.type === 'workshop' ? '💻' : '🤝' }}</span>
+                    </div>
+                  }
+                  <!-- Badge date -->
+                  <div class="absolute top-4 right-4 bg-gdg-blue text-white text-sm px-3 py-1 rounded-full">
+                    {{ event.date | date:'dd/MM/yyyy' }}
+                  </div>
+                  <!-- Badge type -->
+                  <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-gdg-text text-xs px-3 py-1 rounded-full">
+                    {{ getTypeLabel(event.type) }}
+                  </div>
+                </div>
+                <!-- Contenu -->
+                <div class="p-6">
+                  <h3 class="text-xl font-semibold mb-2 group-hover:text-gdg-blue transition-colors">
+                    {{ languageService.isFrench() ? event.titleFr : event.titleEn }}
+                  </h3>
+                  <p class="text-gdg-muted mb-4 line-clamp-2">
+                    {{ languageService.isFrench() ? event.descriptionFr : event.descriptionEn }}
+                  </p>
+                  <div class="flex items-center text-sm text-gdg-muted mb-4">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>{{ event.location }}</span>
+                  </div>
+                  @if (event.partners && event.partners.length > 0) {
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'Avec :' : 'With:' }}</span>
+                      @for (partner of event.partners; track partner) {
+                        <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ partner }}</span>
+                      }
+                    </div>
+                  }
+                  <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gdg-line">
+                        <span class="text-sm text-gdg-muted">
+                          @if (event.status === 'upcoming') {
+                            {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
+                          } @else {
+                            {{ languageService.isFrench() ? 'Passé' : 'Past' }}
+                          }
+                        </span>
+                    <div class="flex items-center gap-3">
+                      <a [routerLink]="['/events', event.id]" class="text-gdg-blue hover:text-gdg-blue-hover font-medium flex items-center gap-1">
+                        {{ languageService.isFrench() ? 'Voir plus' : 'Learn more' }}
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                      @if (event.status === 'upcoming') {
+                        <button (click)="openParticipation(event)" class="btn-primary text-sm px-4 py-2">
+                          {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
+                        </button>
+                      } @else {
+                        <span class="text-xs text-gdg-muted px-3 py-1 rounded-full border border-gdg-line">
+                          {{ languageService.isFrench() ? 'Terminé' : 'Ended' }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- CTA pour proposer un sujet (si connecté) -->
+  <section class="bg-gdg-dark text-white py-16">
+    <div class="container-custom text-center">
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">
+        {{ languageService.isFrench() ? 'Vous avez une idée de sujet ?' : 'Have an idea for a topic?' }}
+      </h2>
+      <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
+        {{ languageService.isFrench()
+        ? 'Si vous êtes un professionnel, vous pouvez proposer un sujet pour nos prochains événements.'
+        : 'If you are a professional, you can propose a topic for our upcoming events.' }}
+      </p>
+      <button (click)="openTopicModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
+        {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
+      </button>
+    </div>
+  </section>
+</div>
+
+@if (showParticipationModal() && selectedEvent()) {
+  <app-participation-modal
+    [eventId]="selectedEvent()!.id"
+    [eventTitle]="languageService.isFrench() ? selectedEvent()!.titleFr : selectedEvent()!.titleEn"
+    (close)="closeParticipation()">
+  </app-participation-modal>
+}
+
+@if (showTopicModal()) {
+  <app-topic-modal (close)="closeTopicModal()"></app-topic-modal>
+}

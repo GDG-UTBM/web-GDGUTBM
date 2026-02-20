@@ -1,1 +1,72 @@
-<p>topic-modal works!</p>
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+     (click)="closeModal()">
+  <div class="bg-white/95 rounded-r24 w-full max-w-md p-6 md:p-7 animate-scale-in border border-gdg-line shadow-2xl"
+       (click)="$event.stopPropagation()">
+    <div class="h-1.5 rounded-full bg-gradient-to-r from-gdg-blue to-blue-400 mb-5"></div>
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-semibold">
+        {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
+      </h3>
+      <button (click)="closeModal()" class="text-gdg-muted hover:text-gdg-text">
+        ✕
+      </button>
+    </div>
+
+    <form [formGroup]="topicForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gdg-text mb-1">
+          {{ languageService.isFrench() ? 'Événement *' : 'Event *' }}
+        </label>
+        <select formControlName="eventId"
+                class="w-full border border-gdg-line rounded-r4 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gdg-blue">
+          <option value="">{{ languageService.isFrench() ? 'Sélectionnez un événement' : 'Select an event' }}</option>
+          @for (ev of eventOptions; track ev.id) {
+            <option [value]="ev.id">
+              {{ languageService.isFrench() ? ev.labelFr : ev.labelEn }}
+            </option>
+          }
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gdg-text mb-1">
+          {{ languageService.isFrench() ? 'Thème du sujet *' : 'Topic theme *' }}
+        </label>
+        <input type="text" formControlName="theme"
+               placeholder="{{ languageService.isFrench() ? 'Ex: Intelligence Artificielle, Web3, DevOps...' : 'Ex: Artificial Intelligence, Web3, DevOps...' }}"
+               class="w-full border border-gdg-line rounded-r4 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gdg-blue">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gdg-text mb-1">
+          {{ languageService.isFrench() ? 'Description *' : 'Description *' }}
+        </label>
+        <textarea formControlName="description" rows="4"
+                  placeholder="{{ languageService.isFrench() ? 'Décrivez votre sujet en détail...' : 'Describe your topic in detail...' }}"
+                  class="w-full border border-gdg-line rounded-r4 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gdg-blue"></textarea>
+      </div>
+
+      @if (successMessage()) {
+        <p class="text-green-500 text-sm">{{ successMessage() }}</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="isLoading()"
+              class="btn-primary w-full disabled:opacity-50">
+        @if (isLoading()) {
+          <span class="flex items-center justify-center">
+                <svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+            {{ languageService.isFrench() ? 'Envoi...' : 'Sending...' }}
+              </span>
+        } @else {
+          <span>{{ languageService.isFrench() ? 'Proposer le sujet' : 'Propose topic' }}</span>
+        }
+      </button>
+    </form>
+  </div>
+</div>

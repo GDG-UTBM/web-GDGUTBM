@@ -1,1 +1,85 @@
-<p>hero works!</p>
+<section class="relative overflow-hidden bg-gdg-bg">
+  <div class="absolute inset-0">
+    <div class="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-gdg-blue/15 blur-3xl"></div>
+    <div class="absolute top-20 -left-16 w-80 h-80 rounded-full bg-gdg-dark/10 blur-3xl"></div>
+  </div>
+
+  <div class="container-custom py-16 md:py-24 relative">
+    <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+      <div class="space-y-6 animate-fade-in">
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full text-xs bg-white border border-gdg-line text-gdg-muted">Meetups</span>
+          <span class="px-3 py-1 rounded-full text-xs bg-white border border-gdg-line text-gdg-muted">Workshops</span>
+          <span class="px-3 py-1 rounded-full text-xs bg-white border border-gdg-line text-gdg-muted">Community</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gdg-text">
+          {{ languageService.isFrench() ? 'Un point d\'ancrage pour évoluer dans la tech' : 'A hub to grow in tech' }}
+        </h1>
+        <p class="text-lg md:text-xl text-gdg-muted leading-relaxed">
+          {{ languageService.isFrench()
+          ? 'Événements, rencontres et échanges entre étudiants, ingénieurs et acteurs de la tech.'
+          : 'Events, meetings and exchanges between students, engineers and tech professionals.'
+          }}
+        </p>
+        <div class="flex flex-wrap gap-4 items-center">
+          @if (authService.isProfessionalOrAdmin()) {
+            <button (click)="openTopicModal()" class="btn-primary text-lg px-7 py-4">
+              {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
+            </button>
+          } @else {
+            <button (click)="openJoinModal()" class="btn-primary text-lg px-7 py-4">
+              {{ languageService.isFrench() ? 'Rejoindre la communauté' : 'Join the community' }}
+            </button>
+          }
+          <a routerLink="/events" class="btn-secondary text-lg px-6 py-4">
+            {{ languageService.isFrench() ? 'Voir les événements' : 'View events' }}
+          </a>
+        </div>
+        <div class="grid grid-cols-3 gap-4 pt-4">
+          <div class="rounded-r16 border border-gdg-line bg-white px-4 py-3">
+            <div class="text-2xl font-semibold text-gdg-text">30+</div>
+            <div class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'membres' : 'members' }}</div>
+          </div>
+          <div class="rounded-r16 border border-gdg-line bg-white px-4 py-3">
+            <div class="text-2xl font-semibold text-gdg-text">20+</div>
+            <div class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'événements' : 'events' }}</div>
+          </div>
+          <div class="rounded-r16 border border-gdg-line bg-white px-4 py-3">
+            <div class="text-2xl font-semibold text-gdg-text">10+</div>
+            <div class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'partenaires' : 'partners' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative animate-scale-in">
+        <div class="relative rounded-r24 overflow-hidden shadow-2xl">
+          <img
+            src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
+            alt="GDG UTBM"
+            class="w-full h-[420px] md:h-[520px] object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-gdg-dark/60 via-gdg-dark/10 to-transparent"></div>
+        </div>
+        <div class="absolute -bottom-6 -left-6 bg-white px-5 py-3 rounded-r16 shadow-lg border border-gdg-line">
+          <div class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Prochain meetup' : 'Next meetup' }}</div>
+          <div class="font-semibold text-gdg-text">Future of Web</div>
+        </div>
+        <div class="absolute -top-4 -right-4 bg-gdg-blue text-white px-4 py-2 rounded-r10 shadow-lg">
+          <span class="font-semibold">GDG UTBM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if (showJoinModal()) {
+  <app-join-modal
+    (close)="closeJoinModal()"
+    (registerSuccess)="onRegisterSuccess()">
+  </app-join-modal>
+}
+
+@if (showTopicModal()) {
+  <app-topic-modal
+    (close)="closeTopicModal()">
+  </app-topic-modal>
+}

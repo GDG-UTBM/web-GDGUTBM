@@ -1,1 +1,41 @@
-<p>what-we-do works!</p>
+<section class="section-spacing bg-gdg-bg">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-semibold mb-4">
+        {{ languageService.isFrench() ? 'Ce que nous faisons' : 'What We Do' }}
+      </h2>
+      <p class="text-gdg-muted max-w-2xl mx-auto">
+        {{ languageService.isFrench()
+        ? 'Nous créons des opportunités d\'apprentissage, de réseau et de croissance dans le domaine technologique.'
+        : 'We create opportunities for learning, networking and growth in the technology field.'
+        }}
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      @for (activity of activities(); track activity.id) {
+        <div class="group cursor-pointer bg-white border border-gdg-line rounded-r24 p-6 shadow-sm hover:shadow-lg transition-all duration-300"
+             (click)="openActivityDetail(activity)">
+          <div class="w-12 h-12 rounded-full bg-gdg-blue/10 flex items-center justify-center text-2xl mb-4">
+            {{ activity.icon }}
+          </div>
+          <h3 class="text-xl font-semibold mb-3">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h3>
+          <p class="text-gdg-muted mb-6">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
+          <div class="flex items-center text-gdg-blue font-medium">
+            <span>{{ languageService.isFrench() ? 'En savoir plus' : 'Learn more' }}</span>
+            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+@if (selectedActivity()) {
+  <app-activity-detail-modal
+    [activity]="selectedActivity()!"
+    (close)="closeActivityDetail()">
+  </app-activity-detail-modal>
+}

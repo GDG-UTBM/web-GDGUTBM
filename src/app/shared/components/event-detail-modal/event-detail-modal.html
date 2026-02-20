@@ -1,0 +1,30 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in" (click)="close.emit()">
+  <div class="bg-white rounded-r24 max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scale-in" (click)="$event.stopPropagation()">
+    <div class="relative">
+      <div class="h-64 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl">
+        {{ event.image_url ? '' : '📅' }}
+      </div>
+      <button (click)="close.emit()" class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full p-2">
+        ✕
+      </button>
+    </div>
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">{{ languageService.isFrench() ? event.title_fr : event.title_en }}</h2>
+          <p class="text-gdg-muted">{{ event.date | date:'dd MMMM yyyy' }}</p>
+        </div>
+        @if (event.partner) {
+          <span class="bg-gdg-blue/10 text-gdg-blue px-3 py-1 rounded-full text-sm">{{ event.partner }}</span>
+        }
+      </div>
+      <p class="text-lg text-gdg-text mb-6">{{ languageService.isFrench() ? event.description_fr : event.description_en }}</p>
+      <h3 class="font-semibold text-lg mb-2">{{ languageService.isFrench() ? 'Détails :' : 'Details:' }}</h3>
+      <ul class="list-disc list-inside space-y-2 text-gdg-muted">
+        <li>{{ languageService.isFrench() ? 'Conférence avec experts' : 'Conference with experts' }}</li>
+        <li>{{ languageService.isFrench() ? 'Ateliers pratiques' : 'Hands-on workshops' }}</li>
+        <li>{{ languageService.isFrench() ? 'Networking' : 'Networking' }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

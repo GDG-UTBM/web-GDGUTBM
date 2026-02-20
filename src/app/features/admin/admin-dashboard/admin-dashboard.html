@@ -1,0 +1,155 @@
+<div class="p-8">
+  <h1 class="text-3xl font-bold text-gdg-text mb-2">
+    {{ languageService.isFrench() ? 'Tableau de bord' : 'Dashboard' }}
+  </h1>
+  <p class="text-gdg-muted mb-8">
+    {{ languageService.isFrench() ? 'Bienvenue dans l\'administration GDG UTBM.' : 'Welcome to GDG UTBM administration.' }}
+  </p>
+
+  <!-- Statistiques -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Utilisateurs' : 'Users' }}</p>
+      <p class="text-3xl font-bold text-gdg-text">{{ userCount() }}</p>
+    </div>
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Sujets en attente' : 'Pending topics' }}</p>
+      <p class="text-3xl font-bold text-yellow-600">{{ pendingTopics() }}</p>
+    </div>
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Événements' : 'Events' }}</p>
+      <p class="text-3xl font-bold text-gdg-text">{{ eventCount() }}</p>
+    </div>
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Activités' : 'Activities' }}</p>
+      <p class="text-3xl font-bold text-gdg-text">{{ activityCount() }}</p>
+    </div>
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <p class="text-sm text-gdg-muted">{{ languageService.isFrench() ? 'Participants' : 'Participants' }}</p>
+      <p class="text-3xl font-bold text-gdg-text">{{ participants().length }}</p>
+      <p class="text-xs text-gdg-muted mt-1">
+        {{ languageService.isFrench() ? 'En attente:' : 'Pending:' }} {{ pendingParticipantsCount() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Graphiques simples (remplacés par des indicateurs) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Derniers sujets -->
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <h2 class="text-lg font-semibold mb-4">
+        {{ languageService.isFrench() ? 'Derniers sujets proposés' : 'Latest proposed topics' }}
+      </h2>
+      <ul class="space-y-3">
+        @for (topic of recentTopics(); track topic.id) {
+          <li class="flex justify-between items-center">
+            <div>
+              <p class="font-medium">{{ topic.theme }}</p>
+              <p class="text-sm text-gdg-muted">{{ topic.user?.first_name }} {{ topic.user?.last_name }}</p>
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full"
+                  [class.bg-yellow-100]="topic.status === 'pending'"
+                  [class.text-yellow-800]="topic.status === 'pending'"
+                  [class.bg-green-100]="topic.status === 'approved'"
+                  [class.text-green-800]="topic.status === 'approved'"
+                  [class.bg-red-100]="topic.status === 'rejected'"
+                  [class.text-red-800]="topic.status === 'rejected'">
+                  {{ statusLabel(topic.status) }}
+                </span>
+          </li>
+        } @empty {
+          <p class="text-gdg-muted">{{ languageService.isFrench() ? 'Aucun sujet' : 'No topics' }}</p>
+        }
+      </ul>
+      <a routerLink="/admin/topics" class="inline-block mt-4 text-gdg-blue hover:underline">
+        {{ languageService.isFrench() ? 'Voir tous les sujets →' : 'View all topics →' }}
+      </a>
+    </div>
+
+    <!-- Derniers événements -->
+    <div class="bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+      <h2 class="text-lg font-semibold mb-4">
+        {{ languageService.isFrench() ? 'Prochains événements' : 'Upcoming events' }}
+      </h2>
+      <ul class="space-y-3">
+        @for (event of upcomingEvents(); track event.id) {
+          <li class="flex justify-between">
+            <div>
+              <p class="font-medium">{{ languageService.isFrench() ? event.title_fr : event.title_en }}</p>
+              <p class="text-sm text-gdg-muted">{{ event.date | date:'dd/MM/yyyy' }}</p>
+            </div>
+          </li>
+        } @empty {
+          <p class="text-gdg-muted">{{ languageService.isFrench() ? 'Aucun événement à venir' : 'No upcoming events' }}</p>
+        }
+      </ul>
+      <a routerLink="/admin/events" class="inline-block mt-4 text-gdg-blue hover:underline">
+        {{ languageService.isFrench() ? 'Gérer les événements →' : 'Manage events →' }}
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-10 bg-gdg-surface rounded-r16 border border-gdg-line p-6">
+    <h2 class="text-lg font-semibold mb-4">
+      {{ languageService.isFrench() ? 'Gestion des participants' : 'Participants management' }}
+    </h2>
+    @if (participants().length === 0) {
+      <p class="text-gdg-muted">{{ languageService.isFrench() ? 'Aucun participant pour le moment.' : 'No participants yet.' }}</p>
+    } @else {
+      <div class="space-y-3">
+        @for (participant of participants(); track participant.id) {
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white border border-gdg-line rounded-r12 px-4 py-3">
+            <div>
+              <p class="font-semibold">{{ participant.fullName }}</p>
+              <p class="text-sm text-gdg-muted">
+                {{ participant.eventTitle }} ·
+                @if (participant.role === 'student') {
+                  {{ languageService.isFrench() ? 'Étudiant' : 'Student' }}
+                } @else {
+                  {{ languageService.isFrench() ? 'Professionnel' : 'Professional' }}
+                }
+              </p>
+              <p class="text-xs text-gdg-muted">
+                @if (participant.role === 'student') {
+                  {{ participant.school || '-' }} · {{ participant.studyLevel || '-' }}
+                } @else {
+                  {{ participant.profession || '-' }}
+                }
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs px-2 py-1 rounded-full"
+                    [class.bg-yellow-100]="participant.status === 'pending'"
+                    [class.text-yellow-800]="participant.status === 'pending'"
+                    [class.bg-green-100]="participant.status === 'approved'"
+                    [class.text-green-800]="participant.status === 'approved'"
+                    [class.bg-red-100]="participant.status === 'rejected'"
+                    [class.text-red-800]="participant.status === 'rejected'">
+                @if (participant.status === 'pending') {
+                  {{ languageService.isFrench() ? 'En attente' : 'Pending' }}
+                } @else if (participant.status === 'approved') {
+                  {{ languageService.isFrench() ? 'Validé' : 'Approved' }}
+                } @else {
+                  {{ languageService.isFrench() ? 'Refusé' : 'Rejected' }}
+                }
+              </span>
+
+              @if (participant.status === 'pending') {
+                <button
+                  (click)="updateParticipantStatus(participant.id, 'approved')"
+                  class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-r10 text-xs font-medium transition-colors">
+                  {{ languageService.isFrench() ? 'Valider' : 'Approve' }}
+                </button>
+                <button
+                  (click)="updateParticipantStatus(participant.id, 'rejected')"
+                  class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-r10 text-xs font-medium transition-colors">
+                  {{ languageService.isFrench() ? 'Refuser' : 'Reject' }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

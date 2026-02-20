@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import {computed, Injectable, signal} from '@angular/core';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
@@ -24,10 +24,11 @@ export class AuthService {
   private supabase: SupabaseClient;
   private currentUser = signal<User | null>(null);
   private currentProfile = signal<UserProfile | null>(null);
+  private initPromise: Promise<void>;
 
   constructor(private router: Router) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-    this.initAuth();
+    this.initPromise = this.initAuth();
   }
 
   private async initAuth() {
@@ -151,6 +152,20 @@ export class AuthService {
     return data;
   }
 
+  async whenReady() {
+    await this.initPromise;
+  }
+
+  async ensureProfileLoaded() {
+    await this.whenReady();
+    const user = this.currentUser();
+    if (!user) return null;
+    if (this.currentProfile()) return this.currentProfile();
+
+    await this.loadUserProfile(user.id);
+    return this.currentProfile();
+  }
+
   // Getters
   getUser() {
     return this.currentUser.asReadonly();
@@ -175,4 +190,8 @@ export class AuthService {
   isStudent() {
     return this.currentProfile()?.role === 'student';
   }
+  isProfessionalOrAdmin = computed(() => {
+    const profile = this.currentProfile();
+    return profile?.role === 'professional' || profile?.role === 'admin';
+  });
 }

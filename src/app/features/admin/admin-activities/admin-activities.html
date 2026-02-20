@@ -1,0 +1,89 @@
+<div class="p-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gdg-text">
+      {{ languageService.isFrench() ? 'Gestion des activités' : 'Activities Management' }}
+    </h1>
+    <button (click)="openAddModal()" class="btn-primary">
+      + {{ languageService.isFrench() ? 'Ajouter' : 'Add' }}
+    </button>
+  </div>
+
+  <!-- Liste des activités avec drag & drop -->
+  @if (isLoading()) {
+    <div class="flex justify-center py-12">
+      <svg class="animate-spin h-10 w-10 text-gdg-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+  } @else {
+    <div cdkDropList class="space-y-3" (cdkDropListDropped)="drop($event)">
+      @for (activity of activities(); track activity.id) {
+        <div cdkDrag class="bg-gdg-surface rounded-r16 border border-gdg-line p-4 cursor-move hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <span class="text-2xl">{{ activity.icon }}</span>
+              <div>
+                <h3 class="font-semibold">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h3>
+                <p class="text-sm text-gdg-muted line-clamp-1">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button (click)="editActivity(activity)" class="text-gdg-blue hover:underline">
+                {{ languageService.isFrench() ? 'Modifier' : 'Edit' }}
+              </button>
+              <button (click)="deleteActivity(activity.id)" class="text-red-600 hover:underline">
+                {{ languageService.isFrench() ? 'Supprimer' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal d'ajout/édition -->
+  @if (showModal()) {
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in" (click)="closeModal()">
+      <div class="bg-white rounded-r16 w-full max-w-lg p-6 animate-scale-in" (click)="$event.stopPropagation()">
+        <h3 class="text-xl font-semibold mb-4">
+          {{ editingId() ? (languageService.isFrench() ? 'Modifier l\'activité' : 'Edit activity') : (languageService.isFrench() ? 'Ajouter une activité' : 'Add activity') }}
+        </h3>
+        <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Titre (FR)</label>
+              <input type="text" formControlName="title_fr" class="w-full border border-gdg-line rounded-r4 px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Title (EN)</label>
+              <input type="text" formControlName="title_en" class="w-full border border-gdg-line rounded-r4 px-3 py-2">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Description (FR)</label>
+              <textarea formControlName="description_fr" rows="3" class="w-full border border-gdg-line rounded-r4 px-3 py-2"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Description (EN)</label>
+              <textarea formControlName="description_en" rows="3" class="w-full border border-gdg-line rounded-r4 px-3 py-2"></textarea>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Icône (emoji)</label>
+            <input type="text" formControlName="icon" placeholder="🎤" class="w-full border border-gdg-line rounded-r4 px-3 py-2">
+          </div>
+          <div class="flex justify-end space-x-2 pt-4">
+            <button type="button" (click)="closeModal()" class="btn-secondary">
+              {{ languageService.isFrench() ? 'Annuler' : 'Cancel' }}
+            </button>
+            <button type="submit" class="btn-primary">
+              {{ languageService.isFrench() ? 'Enregistrer' : 'Save' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

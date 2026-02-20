@@ -1,0 +1,25 @@
+<div class="pt-12 border-t border-gray-800">
+<p class="text-gray-400 mb-6">
+                             {{ languageService.isFrench() ? 'En partenariat avec' : 'In partnership with' }}
+</p>
+<div class="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+<div class="h-6 md:h-8 opacity-70 hover:opacity-100 transition-opacity">
+<img src="assets/images/partners/google-white.svg" alt="Google" class="h-full">
+</div>
+<div class="h-6 md:h-8 opacity-70 hover:opacity-100 transition-opacity">
+<img src="assets/images/partners/gdg-white.svg" alt="GDG" class="h-full">
+</div>
+<div class="h-6 md:h-8 opacity-70 hover:opacity-100 transition-opacity">
+<img src="assets/images/partners/capgemini-white.svg" alt="Capgemini" class="h-full">
+</div>
+<div class="h-6 md:h-8 opacity-70 hover:opacity-100 transition-opacity">
+<img src="assets/images/partners/engineering-white.svg" alt="Engineering" class="h-full">
+</div>
+<div class="h-6 md:h-8 opacity-70 hover:opacity-100 transition-opacity">
+<img src="assets/images/partners/utbm-white.svg" alt="UTBM" class="h-full">
+</div>
+</div>
+</div>
+.logo-invert {
+  filter: brightness(0) invert(1);
+}
