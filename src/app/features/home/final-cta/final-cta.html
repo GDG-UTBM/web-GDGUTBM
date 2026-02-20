@@ -19,7 +19,7 @@
                   class="bg-white text-gdg-dark hover:bg-gray-100 font-semibold text-lg px-10 py-4 rounded-r12 transition-all duration-200">
             {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
           </button>
-        } @else {
+        } @else if (!authService.isAuthenticated()) {
           <button (click)="openJoinModal()"
                   class="bg-white text-gdg-dark hover:bg-gray-100 font-semibold text-lg px-10 py-4 rounded-r12 transition-all duration-200">
             {{ languageService.isFrench() ? 'Rejoindre la communauté' : 'Join the community' }}

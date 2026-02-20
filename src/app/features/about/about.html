@@ -144,19 +144,21 @@
   </section>
 
   <!-- CTA Section -->
-  <section class="section-spacing bg-gdg-dark text-white">
-    <div class="container-custom text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">
-        {{ languageService.isFrench() ? 'Rejoignez notre communauté' : 'Join our community' }}
-      </h2>
-      <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-        {{ languageService.isFrench()
-        ? 'Que vous soyez étudiant, professionnel ou simplement passionné, il y a une place pour vous.'
-        : 'Whether you are a student, professional or simply passionate, there is a place for you.' }}
-      </p>
-      <a routerLink="/" class="btn-primary text-lg px-8 py-4">
-        {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
-      </a>
-    </div>
-  </section>
+  @if (!(authService.isAuthenticated() && authService.isStudent())) {
+    <section class="section-spacing bg-gdg-dark text-white">
+      <div class="container-custom text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+          {{ languageService.isFrench() ? 'Rejoignez notre communauté' : 'Join our community' }}
+        </h2>
+        <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          {{ languageService.isFrench()
+          ? 'Que vous soyez étudiant, professionnel ou simplement passionné, il y a une place pour vous.'
+          : 'Whether you are a student, professional or simply passionate, there is a place for you.' }}
+        </p>
+        <a routerLink="/" class="btn-primary text-lg px-8 py-4">
+          {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
+        </a>
+      </div>
+    </section>
+  }
 </div>

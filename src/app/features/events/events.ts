@@ -6,11 +6,13 @@ import { ParticipationModalComponent } from '../../shared/components/participati
 import { TopicModalComponent } from '../../shared/components/topic-modal/topic-modal';
 import { EventsService } from '../../core/services/events.service';
 import { EventModel } from '../../core/models/event.model';
+import { AuthService } from '../../core/services/auth.service';
+import { JoinModalComponent } from '../../shared/components/join-modal/join-modal';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, RouterLink, ParticipationModalComponent, TopicModalComponent],
+  imports: [CommonModule, RouterLink, ParticipationModalComponent, TopicModalComponent, JoinModalComponent],
   templateUrl: './events.html',
   styleUrl:'./events.scss',
 })
@@ -21,10 +23,12 @@ export class EventsComponent implements OnInit {
   showParticipationModal = signal(false);
   selectedEvent = signal<EventModel | null>(null);
   showTopicModal = signal(false);
+  showJoinModal = signal(false);
 
   constructor(
     public languageService: LanguageService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +67,14 @@ export class EventsComponent implements OnInit {
 
   closeTopicModal() {
     this.showTopicModal.set(false);
+  }
+
+  openJoinModal() {
+    this.showJoinModal.set(true);
+  }
+
+  closeJoinModal() {
+    this.showJoinModal.set(false);
   }
 
   openParticipation(event: EventModel) {

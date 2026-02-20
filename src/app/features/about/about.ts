@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LanguageService } from '../../core/services/language.service';
+import { AuthService } from '../../core/services/auth.service';
 import {TeamMember} from '../../core/models/TeamMember.model';
 import {RouterLink} from '@angular/router';
 
@@ -38,7 +39,7 @@ export class AboutComponent implements OnInit {
     }
   ];
 
-  constructor(public languageService: LanguageService) {}
+  constructor(public languageService: LanguageService, public authService: AuthService) {}
 
   ngOnInit(): void {}
 }

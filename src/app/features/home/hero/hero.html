@@ -26,7 +26,7 @@
             <button (click)="openTopicModal()" class="btn-primary text-lg px-7 py-4">
               {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
             </button>
-          } @else {
+          } @else if (!authService.isAuthenticated()) {
             <button (click)="openJoinModal()" class="btn-primary text-lg px-7 py-4">
               {{ languageService.isFrench() ? 'Rejoindre la communauté' : 'Join the community' }}
             </button>

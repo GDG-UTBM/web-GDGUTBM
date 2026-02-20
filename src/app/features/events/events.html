@@ -149,22 +149,40 @@
     </div>
   </section>
 
-  <!-- CTA pour proposer un sujet (si connecté) -->
-  <section class="bg-gdg-dark text-white py-16">
-    <div class="container-custom text-center">
-      <h2 class="text-2xl md:text-3xl font-bold mb-4">
-        {{ languageService.isFrench() ? 'Vous avez une idée de sujet ?' : 'Have an idea for a topic?' }}
-      </h2>
-      <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
-        {{ languageService.isFrench()
-        ? 'Si vous êtes un professionnel, vous pouvez proposer un sujet pour nos prochains événements.'
-        : 'If you are a professional, you can propose a topic for our upcoming events.' }}
-      </p>
-      <button (click)="openTopicModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
-        {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
-      </button>
-    </div>
-  </section>
+  <!-- CTA bas de page -->
+  @if (authService.isProfessionalOrAdmin() || !authService.isAuthenticated()) {
+    <section class="bg-gdg-dark text-white py-16">
+      <div class="container-custom text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">
+          @if (authService.isProfessionalOrAdmin()) {
+            {{ languageService.isFrench() ? 'Vous avez une idée de sujet ?' : 'Have an idea for a topic?' }}
+          } @else {
+            {{ languageService.isFrench() ? 'Rejoignez la communauté GDG' : 'Join the GDG community' }}
+          }
+        </h2>
+        <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
+          @if (authService.isProfessionalOrAdmin()) {
+            {{ languageService.isFrench()
+            ? 'Si vous êtes un professionnel, vous pouvez proposer un sujet pour nos prochains événements.'
+            : 'If you are a professional, you can propose a topic for our upcoming events.' }}
+          } @else {
+            {{ languageService.isFrench()
+            ? 'Accédez à nos événements, rencontres et opportunités tech.'
+            : 'Get access to our events, meetups and tech opportunities.' }}
+          }
+        </p>
+        @if (authService.isProfessionalOrAdmin()) {
+          <button (click)="openTopicModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
+            {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
+          </button>
+        } @else {
+          <button (click)="openJoinModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
+            {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
+          </button>
+        }
+      </div>
+    </section>
+  }
 </div>
 
 @if (showParticipationModal() && selectedEvent()) {
@@ -177,4 +195,10 @@
 
 @if (showTopicModal()) {
   <app-topic-modal (close)="closeTopicModal()"></app-topic-modal>
+}
+
+@if (showJoinModal()) {
+  <app-join-modal
+    (close)="closeJoinModal()">
+  </app-join-modal>
 }
