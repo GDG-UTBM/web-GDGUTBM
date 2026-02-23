@@ -17,26 +17,21 @@ import {RouterLink} from '@angular/router';
 export class AboutComponent implements OnInit {
   team: TeamMember[] = [
     {
-      name: 'Jean Dupont',
-      role: 'Organisateur',
-      linkedin: '#',
-      github: '#'
+      name: 'Steeven Yiemtsa',
+      role: 'Lead Technique',
+      linkedin: 'https://www.linkedin.com/in/steeven-yiemtsa-846515310/',
+      github: 'https://github.com/steeven481?tab=repositories'
     },
     {
-      name: 'Marie Martin',
+      name: 'Guillaume Schneider',
       role: 'Responsable Événements',
       linkedin: '#'
     },
     {
-      name: 'Pierre Durand',
-      role: 'Lead Technique',
+      name: 'Faycal Bijji',
+      role: 'Community Manage',
       github: '#'
     },
-    {
-      name: 'Sophie Lefebvre',
-      role: 'Community Manager',
-      linkedin: '#'
-    }
   ];
 
   constructor(public languageService: LanguageService, public authService: AuthService) {}

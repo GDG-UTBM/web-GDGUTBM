@@ -1,43 +1,42 @@
-<header class="sticky top-0 z-50 bg-gdg-surface border-b border-gdg-line shadow-sm">
+<header class="sticky top-0 z-50 header-surface bg-white">
   <nav class="container-custom">
-    <div class="flex items-center justify-between h-16">
+    <div class="flex items-center justify-between h-18 md:h-20">
       <!-- Logo -->
       <div class="flex items-center">
-        <a href="/" class="flex items-center space-x-2">
-          <div class="w-10 h-10 bg-gdg-blue rounded-r10 flex items-center justify-center">
-            <span class="text-white font-bold text-lg">GDG</span>
+        <a href="/" class="flex items-center gap-3 header-logo">
+          <div class="w-14 h-14 md:w-16 md:h-16 rounded-r16 overflow-hidden border border-gdg-line bg-white flex items-center justify-center">
+            <img src="assets/images/logo/logo4.png" alt="GDG UTBM" class="w-14 h-14 md:w-12 md:h-12 object-contain">
           </div>
-          <span class="text-xl font-bold text-gdg-text hidden md:inline">UTBM</span>
         </a>
       </div>
 
       <!-- Navigation Centrale -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a href="/" class="text-gdg-text hover:text-gdg-blue font-medium transition-colors">
+      <div class="hidden md:flex items-center gap-6">
+        <a href="/" class="nav-link">
           {{ languageService.isFrench() ? 'Accueil' : 'Home' }}
         </a>
-        <a href="/events" class="text-gdg-text hover:text-gdg-blue font-medium transition-colors">
+        <a href="/events" class="nav-link">
           {{ languageService.isFrench() ? 'Événements' : 'Events' }}
         </a>
-        <a href="/about" class="text-gdg-text hover:text-gdg-blue font-medium transition-colors">
+        <a href="/about" class="nav-link">
           {{ languageService.isFrench() ? 'À propos' : 'About' }}
         </a>
         @if (authService.isAdmin()) {
-          <a href="/admin" class="text-gdg-text hover:text-gdg-blue font-medium">
+          <a href="/admin" class="nav-link">
             Admin
           </a>
         }
       </div>
 
       <!-- Côté droit -->
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center gap-3 md:gap-4">
         <!-- Switch langue -->
         <app-language-switcher></app-language-switcher>
 
         <!-- Bouton proposer un sujet (visible seulement si professionnel connecté) -->
         @if (authService.isAuthenticated() && authService.isProfessional()) {
           <button (click)="openTopicModal()"
-                  class="btn-secondary text-sm px-4 py-2">
+                  class="btn-secondary text-sm px-4 py-2 shadow-sm">
             {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
           </button>
         }
@@ -45,14 +44,14 @@
         <!-- Bouton rejoindre ou profil -->
         @if (!authService.isAuthenticated()) {
           <button (click)="openJoinModal()"
-                  class="btn-primary text-sm px-4 py-2">
+                  class="btn-primary text-sm px-4 py-2 shadow-md">
             {{ languageService.isFrench() ? 'Rejoindre' : 'Join' }}
           </button>
         } @else {
           <div class="relative">
             <button (click)="toggleProfileMenu()"
-                    class="flex items-center space-x-2 text-gdg-text hover:text-gdg-blue">
-              <div class="w-8 h-8 bg-gdg-blue/10 rounded-full flex items-center justify-center">
+                    class="flex items-center gap-2 text-gdg-text hover:text-gdg-blue">
+              <div class="w-9 h-9 bg-gdg-blue/10 rounded-full flex items-center justify-center border border-gdg-line">
                     <span class="font-semibold">
                       {{ getInitials() }}
                     </span>
@@ -62,7 +61,7 @@
 
             <!-- Menu profil -->
             @if (profileMenuOpen()) {
-              <div class="absolute right-0 mt-2 w-48 bg-white rounded-r10 shadow-lg border border-gdg-line py-1 z-50">
+              <div class="absolute right-0 mt-2 w-52 bg-white rounded-r14 shadow-xl border border-gdg-line py-1 z-50">
                 <div class="px-4 py-2 border-b border-gdg-line">
                   <p class="font-semibold">{{ getFullName() }}</p>
                   <p class="text-xs text-gdg-muted">{{ getEmail() }}</p>
@@ -86,7 +85,7 @@
 
         <!-- Menu mobile -->
         <button (click)="toggleMobileMenu()"
-                class="md:hidden p-2 rounded-lg hover:bg-gdg-bg">
+                class="md:hidden p-2 rounded-lg hover:bg-gdg-bg border border-transparent hover:border-gdg-line">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M4 6h16M4 12h16M4 18h16"></path>
@@ -98,24 +97,24 @@
     <!-- Menu mobile -->
     @if (mobileMenuOpen()) {
       <div class="md:hidden py-4 border-t border-gdg-line">
-        <div class="flex flex-col space-y-3">
-          <a href="/" class="text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+        <div class="flex flex-col gap-2">
+          <a href="/" class="mobile-link">
             {{ languageService.isFrench() ? 'Accueil' : 'Home' }}
           </a>
-          <a href="/events" class="text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+          <a href="/events" class="mobile-link">
             {{ languageService.isFrench() ? 'Événements' : 'Events' }}
           </a>
-          <a href="/about" class="text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+          <a href="/about" class="mobile-link">
             {{ languageService.isFrench() ? 'À propos' : 'About' }}
           </a>
           @if (authService.isProfessional()) {
             <button (click)="openTopicModal()"
-                    class="text-left text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+                    class="text-left mobile-link">
               {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
             </button>
           }
           @if (authService.isAuthenticated()) {
-            <a routerLink="/profile" class="text-gdg-text hover:text-gdg-blue font-medium px-4 py-2">
+            <a routerLink="/profile" class="mobile-link">
               {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
             </a>
           }
