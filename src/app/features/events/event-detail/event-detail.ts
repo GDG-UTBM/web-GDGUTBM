@@ -9,11 +9,12 @@ import { EventsService } from '../../../core/services/events.service';
 import { EventModel } from '../../../core/models/event.model';
 import { EventMarksService, EventMark } from '../../../core/services/event-marks.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { SiteFooterComponent } from '../../../shared/components/site-footer/site-footer';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [CommonModule, ParticipationModalComponent],
+  imports: [CommonModule, ParticipationModalComponent, SiteFooterComponent],
   templateUrl: './event-detail.html',
   styleUrls: ['./event-detail.scss']
 })
@@ -123,6 +124,11 @@ export class EventDetailComponent implements OnInit {
     if (!ev?.date) return 'past';
     if (ev.status) return ev.status;
     return new Date(ev.date) >= new Date() ? 'upcoming' : 'past';
+  }
+
+  eventLink() {
+    const ev = this.event();
+    return ev?.link || ev?.video_url || '';
   }
 
   private toSafeVideoUrl(url?: string | null): SafeResourceUrl | null {

@@ -1,182 +1,209 @@
-<div class="min-h-screen bg-gdg-bg">
-  <!-- Hero -->
-  <section class="bg-gradient-to-b from-gdg-blue/10 to-transparent py-16 md:py-20">
-    <div class="container-custom text-center">
-      <h1 class="text-4xl md:text-5xl font-bold text-gdg-text mb-4">
-        {{ languageService.isFrench() ? 'Événements' : 'Events' }}
-      </h1>
-      <p class="text-xl text-gdg-muted max-w-2xl mx-auto">
-        {{ languageService.isFrench()
-        ? 'Découvrez nos prochains événements et revivez les moments passés.'
-        : 'Discover our upcoming events and relive past moments.' }}
-      </p>
-    </div>
-  </section>
-
-  <!-- Filtres -->
-  <section class="py-8 border-b border-gdg-line bg-gdg-surface">
-    <div class="container-custom">
-      <div class="flex flex-wrap items-center justify-center gap-4">
-        <button
-          (click)="filterType.set('all')"
-          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
-          [class.bg-gdg-blue]="filterType() === 'all'"
-          [class.text-white]="filterType() === 'all'"
-          [class.bg-gdg-line]="filterType() !== 'all'"
-          [class.text-gdg-text]="filterType() !== 'all'">
-          {{ languageService.isFrench() ? 'Tous' : 'All' }}
-        </button>
-        <button
-          (click)="filterType.set('upcoming')"
-          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
-          [class.bg-gdg-blue]="filterType() === 'upcoming'"
-          [class.text-white]="filterType() === 'upcoming'"
-          [class.bg-gdg-line]="filterType() !== 'upcoming'"
-          [class.text-gdg-text]="filterType() !== 'upcoming'">
-          {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
-        </button>
-        <button
-          (click)="filterType.set('past')"
-          class="px-4 py-2 rounded-r10 text-sm font-medium transition-colors"
-          [class.bg-gdg-blue]="filterType() === 'past'"
-          [class.text-white]="filterType() === 'past'"
-          [class.bg-gdg-line]="filterType() !== 'past'"
-          [class.text-gdg-text]="filterType() !== 'past'">
-          {{ languageService.isFrench() ? 'Passés' : 'Past' }}
-        </button>
+<div class="events-page">
+  <section class="page-banner">
+    <div class="container-custom page-banner-inner">
+      <div>
+        <h1 class="page-title">{{ languageService.isFrench() ? 'Événements' : 'Events' }}</h1>
+        <p class="page-subtitle">
+          {{ languageService.isFrench()
+          ? 'Découvrez nos prochains événements et revivez les moments passés.'
+          : 'Discover our upcoming events and relive past moments.' }}
+        </p>
+      </div>
+      <div class="page-kpis">
+        <div class="kpi-pill">
+          <span>{{ languageService.isFrench() ? 'Total' : 'Total' }}</span>
+          <strong>{{ totalCount() }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span>{{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}</span>
+          <strong>{{ upcomingCount() }}</strong>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Liste des événements -->
-  <section class="section-spacing">
-    <div class="container-custom">
-      @if (isLoading()) {
-        <div class="flex justify-center py-12">
-          <svg class="animate-spin h-10 w-10 text-gdg-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
+  <section class="events-shell">
+    <div class="container-custom events-grid">
+      <aside class="panel">
+        <div class="panel-pad">
+          <h3 class="panel-title">{{ languageService.isFrench() ? 'Calendrier' : 'Calendar' }}</h3>
+          <div class="panel-actions">
+            <button class="icon-btn" (click)="prevMonth()" aria-label="Previous">
+              ‹
+            </button>
+            <div class="cal-nav">{{ monthLabel() }}</div>
+            <button class="icon-btn" (click)="nextMonth()" aria-label="Next">
+              ›
+            </button>
+          </div>
+
+          <div class="calendar">
+            @for (dow of weekDays(); track dow) {
+              <div class="cal-dow">{{ dow }}</div>
+            }
+            @for (day of calendarDays(); track $index) {
+              @if (day) {
+                <button class="cal-day"
+                        [class.is-today]="isToday(day)"
+                        [class.is-selected]="selectedDay() === day"
+                        [class.has-event]="hasEventOnDay(day)"
+                        (click)="selectDay(day)">
+                  {{ day }}
+                </button>
+              } @else {
+                <div class="cal-day is-muted"></div>
+              }
+            }
+          </div>
+          @if (selectedDay()) {
+            <button class="clear-date" (click)="clearSelectedDay()">
+              {{ languageService.isFrench() ? 'Effacer la date' : 'Clear date' }}
+            </button>
+          }
         </div>
-      } @else {
-        @if (filteredEvents().length === 0) {
-          <div class="text-center py-16 bg-gdg-surface rounded-r16 border border-gdg-line">
-            <p class="text-gdg-muted">
-              {{ languageService.isFrench() ? 'Aucun événement trouvé.' : 'No events found.' }}
-            </p>
+
+        <div class="panel-pad">
+          <h3 class="panel-title">{{ languageService.isFrench() ? 'Filtres rapides' : 'Quick filters' }}</h3>
+          <div class="filter-stack">
+            <button (click)="filterType.set('all')" class="filter-pill" [class.is-active]="filterType() === 'all'">
+              {{ languageService.isFrench() ? 'Tous' : 'All' }}
+            </button>
+            <button (click)="filterType.set('upcoming')" class="filter-pill" [class.is-active]="filterType() === 'upcoming'">
+              {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
+            </button>
+            <button (click)="filterType.set('past')" class="filter-pill" [class.is-active]="filterType() === 'past'">
+              {{ languageService.isFrench() ? 'Passés' : 'Past' }}
+            </button>
+          </div>
+
+          <div class="kpi-stack">
+            <div class="kpi">
+              <div class="kpi-label">{{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}</div>
+              <div class="kpi-value">{{ upcomingCount() }}</div>
+              <div class="kpi-sub">{{ languageService.isFrench() ? 'événements programmés' : 'events scheduled' }}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">{{ languageService.isFrench() ? 'Passés' : 'Past' }}</div>
+              <div class="kpi-value">{{ pastCount() }}</div>
+              <div class="kpi-sub">{{ languageService.isFrench() ? 'moments à revivre' : 'moments to relive' }}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="events-right">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <strong>{{ languageService.isFrench() ? 'Sélection d’événements' : 'Event selection' }}</strong>
+            <span>{{ filteredEvents().length }} {{ languageService.isFrench() ? 'résultats' : 'results' }}</span>
+          </div>
+          <div class="toolbar-controls">
+            <input class="search-input"
+                   type="text"
+                   [value]="searchTerm()"
+                   (input)="setSearch($any($event.target).value)"
+                   [placeholder]="languageService.isFrench() ? 'Rechercher un événement' : 'Search events'"/>
+            <select class="sort-select" [value]="sortOrder()" (change)="setSort($any($event.target).value)">
+              <option value="date_desc">
+                {{ languageService.isFrench() ? 'Les plus récents' : 'Newest first' }}
+              </option>
+              <option value="date_asc">
+                {{ languageService.isFrench() ? 'Les plus anciens' : 'Oldest first' }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        @if (isLoading()) {
+          <div class="loader">
+            <div class="spinner"></div>
           </div>
         } @else {
-          <div class="grid lg:grid-cols-2 gap-8">
-            @for (event of filteredEvents(); track event.id) {
-              <div class="bg-gdg-surface rounded-r16 border border-gdg-line overflow-hidden hover:shadow-lg transition-all group">
-                <!-- Image -->
-                <div class="relative h-56 bg-gradient-to-br from-gdg-blue/20 to-purple-100">
-                  @if (event.image_url) {
-                    <img [src]="event.image_url" [alt]="event.title_fr" class="w-full h-full object-cover">
-                  } @else {
-                    <div class="flex items-center justify-center h-full">
-                      <span class="text-4xl opacity-20">{{ event.type === 'conference' ? '🎤' : event.type === 'workshop' ? '💻' : '🤝' }}</span>
+          @if (filteredEvents().length === 0) {
+            <div class="empty">
+              {{ languageService.isFrench() ? 'Aucun événement trouvé.' : 'No events found.' }}
+            </div>
+          } @else {
+            <div class="events-list">
+              @for (event of filteredEvents(); track event.id) {
+                <article class="event-row">
+                  <div class="event-thumb">
+                    @if (event.image_url) {
+                      <img [src]="event.image_url" [alt]="event.title_fr">
+                    } @else {
+                      <div class="event-thumb-fallback">GDG</div>
+                    }
+                    <div class="event-badge">{{ event.date | date:'dd/MM/yyyy' }}</div>
+                  </div>
+                  <div class="event-info">
+                    <div class="event-top">
+                      <span class="event-chip">{{ event.type ? getTypeLabel(event.type) : (languageService.isFrench() ? 'Événement' : 'Event') }}</span>
+                      <span class="event-location">{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
                     </div>
-                  }
-                  <!-- Badge date -->
-                  <div class="absolute top-4 right-4 bg-gdg-blue text-white text-sm px-3 py-1 rounded-full">
-                    {{ event.date | date:'dd/MM/yyyy' }}
-                  </div>
-                  <!-- Badge type -->
-                  <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-gdg-text text-xs px-3 py-1 rounded-full">
-                    {{ event.type ? getTypeLabel(event.type) : (languageService.isFrench() ? 'Événement' : 'Event') }}
-                  </div>
-                </div>
-                <!-- Contenu -->
-                <div class="p-6">
-                  <h3 class="text-xl font-semibold mb-2 group-hover:text-gdg-blue transition-colors">
-                    {{ languageService.isFrench() ? event.title_fr : event.title_en }}
-                  </h3>
-                  <p class="text-gdg-muted mb-4 line-clamp-2">
-                    {{ languageService.isFrench() ? event.description_fr : event.description_en }}
-                  </p>
-                  <div class="flex items-center text-sm text-gdg-muted mb-4">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    <span>{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
-                  </div>
-                  @if ((event.partners && event.partners.length > 0) || event.partner) {
-                    <div class="flex items-center gap-2 mb-4">
-                      <span class="text-xs text-gdg-muted">{{ languageService.isFrench() ? 'Avec :' : 'With:' }}</span>
-                      @if (event.partners && event.partners.length > 0) {
-                        @for (partner of event.partners; track partner) {
-                          <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ partner }}</span>
-                        }
+                    <h3>{{ languageService.isFrench() ? event.title_fr : event.title_en }}</h3>
+                    <p>{{ languageService.isFrench() ? event.description_fr : event.description_en }}</p>
+                    <div class="event-meta-row">
+                      <span>{{ event.date | date:'dd/MM/yyyy' }} · {{ event.date | date:'HH:mm' }}</span>
+                      <span>{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
+                      @if (eventLink(event)) {
+                        <a [href]="eventLink(event)" target="_blank" rel="noopener">
+                          {{ languageService.isFrench() ? 'Lien' : 'Link' }}
+                        </a>
                       } @else {
-                        <span class="text-xs bg-gdg-line px-2 py-1 rounded">{{ event.partner }}</span>
+                        <span>{{ languageService.isFrench() ? 'Lien : -' : 'Link: -' }}</span>
                       }
                     </div>
-                  }
-                  <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gdg-line">
-                        <span class="text-sm text-gdg-muted">
-                          @if (getEventStatus(event) === 'upcoming') {
-                            {{ languageService.isFrench() ? 'À venir' : 'Upcoming' }}
-                          } @else {
-                            {{ languageService.isFrench() ? 'Passé' : 'Past' }}
-                          }
-                        </span>
-                    <div class="flex items-center gap-3">
-                      <a [routerLink]="['/events', event.id]" class="text-gdg-blue hover:text-gdg-blue-hover font-medium flex items-center gap-1">
+                    <div class="event-actions">
+                      <a [routerLink]="['/events', event.id]" class="event-link">
                         {{ languageService.isFrench() ? 'Voir plus' : 'Learn more' }}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
                       </a>
                       @if (getEventStatus(event) === 'upcoming') {
-                        <button (click)="openParticipation(event)" class="btn-primary text-sm px-4 py-2">
+                        <button (click)="openParticipation(event)" class="btn-primary event-cta">
                           {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
                         </button>
                       } @else {
-                        <span class="text-xs text-gdg-muted px-3 py-1 rounded-full border border-gdg-line">
-                          {{ languageService.isFrench() ? 'Terminé' : 'Ended' }}
-                        </span>
+                        <span class="event-status">{{ languageService.isFrench() ? 'Terminé' : 'Ended' }}</span>
                       }
                     </div>
                   </div>
-                </div>
-              </div>
-            }
-          </div>
+                </article>
+              }
+            </div>
+          }
         }
-      }
+      </div>
     </div>
   </section>
 
-  <!-- CTA bas de page -->
   @if (authService.isProfessionalOrAdmin() || !authService.isAuthenticated()) {
-    <section class="bg-gdg-dark text-white py-16">
-      <div class="container-custom text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4">
-          @if (authService.isProfessionalOrAdmin()) {
-            {{ languageService.isFrench() ? 'Vous avez une idée de sujet ?' : 'Have an idea for a topic?' }}
-          } @else {
-            {{ languageService.isFrench() ? 'Rejoignez la communauté GDG' : 'Join the GDG community' }}
-          }
-        </h2>
-        <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
-          @if (authService.isProfessionalOrAdmin()) {
-            {{ languageService.isFrench()
-            ? 'Si vous êtes un professionnel, vous pouvez proposer un sujet pour nos prochains événements.'
-            : 'If you are a professional, you can propose a topic for our upcoming events.' }}
-          } @else {
-            {{ languageService.isFrench()
-            ? 'Accédez à nos événements, rencontres et opportunités tech.'
-            : 'Get access to our events, meetups and tech opportunities.' }}
-          }
-        </p>
+    <section class="events-cta">
+      <div class="container-custom events-cta-inner">
+        <div>
+          <h2>
+            @if (authService.isProfessionalOrAdmin()) {
+              {{ languageService.isFrench() ? 'Vous avez une idée de sujet ?' : 'Have an idea for a topic?' }}
+            } @else {
+              {{ languageService.isFrench() ? 'Rejoignez la communauté GDG' : 'Join the GDG community' }}
+            }
+          </h2>
+          <p>
+            @if (authService.isProfessionalOrAdmin()) {
+              {{ languageService.isFrench()
+              ? 'Si vous êtes un professionnel, vous pouvez proposer un sujet pour nos prochains événements.'
+              : 'If you are a professional, you can propose a topic for our upcoming events.' }}
+            } @else {
+              {{ languageService.isFrench()
+              ? 'Accédez à nos événements, rencontres et opportunités tech.'
+              : 'Get access to our events, meetups and tech opportunities.' }}
+            }
+          </p>
+        </div>
         @if (authService.isProfessionalOrAdmin()) {
-          <button (click)="openTopicModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
+          <button (click)="openTopicModal()" class="btn-secondary events-cta-btn">
             {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
           </button>
         } @else {
-          <button (click)="openJoinModal()" class="btn-secondary !border-white !text-white hover:!bg-white/10">
+          <button (click)="openJoinModal()" class="btn-secondary events-cta-btn">
             {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
           </button>
         }
@@ -184,6 +211,8 @@
     </section>
   }
 </div>
+
+<app-site-footer></app-site-footer>
 
 @if (showParticipationModal() && selectedEvent()) {
   <app-participation-modal

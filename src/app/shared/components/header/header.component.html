@@ -1,130 +1,110 @@
-<header class="sticky top-0 z-50 header-surface bg-white">
-  <nav class="container-custom">
-    <div class="flex items-center justify-between h-18 md:h-20">
-      <!-- Logo -->
-      <div class="flex items-center">
-        <a href="/" class="flex items-center gap-3 header-logo">
-          <div class="w-14 h-14 md:w-16 md:h-16 rounded-r16 overflow-hidden border border-gdg-line bg-white flex items-center justify-center">
-            <img src="assets/images/logo/logo4.png" alt="GDG UTBM" class="w-14 h-14 md:w-12 md:h-12 object-contain">
-          </div>
-        </a>
-      </div>
+<header class="header">
+  <div class="container-custom header-inner">
+    <a class="brand" routerLink="/">
+      <img class="brand-mark"
+           src="https://www.svgrepo.com/show/353810/google-developers.svg"
+           alt="GDG logo">
+      <span class="brand-text">
+        <strong>GDG</strong><span> </span> <span class="brand-light">  UTBM</span>
+      </span>
+    </a>
 
-      <!-- Navigation Centrale -->
-      <div class="hidden md:flex items-center gap-6">
-        <a href="/" class="nav-link">
-          {{ languageService.isFrench() ? 'Accueil' : 'Home' }}
-        </a>
-        <a href="/events" class="nav-link">
-          {{ languageService.isFrench() ? 'Événements' : 'Events' }}
-        </a>
-        <a href="/about" class="nav-link">
-          {{ languageService.isFrench() ? 'À propos' : 'About' }}
-        </a>
-        @if (authService.isAdmin()) {
-          <a href="/admin" class="nav-link">
-            Admin
-          </a>
-        }
-      </div>
+    <nav class="nav" aria-label="Navigation principale">
+      <a routerLink="/events">{{ languageService.isFrench() ? 'Événements' : 'Events' }}</a>
+      <a routerLink="/about">{{ languageService.isFrench() ? 'À propos' : 'About' }}</a>
+      <a routerLink="/offres">{{ languageService.isFrench() ? 'Offres' : 'Internships' }}</a>
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin">Admin</a>
+      }
+    </nav>
 
-      <!-- Côté droit -->
-      <div class="flex items-center gap-3 md:gap-4">
-        <!-- Switch langue -->
-        <app-language-switcher></app-language-switcher>
+    <div class="header-actions">
+      <app-language-switcher></app-language-switcher>
 
-        <!-- Bouton proposer un sujet (visible seulement si professionnel connecté) -->
-        @if (authService.isAuthenticated() && authService.isProfessional()) {
-          <button (click)="openTopicModal()"
-                  class="btn-secondary text-sm px-4 py-2 shadow-sm">
-            {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
-          </button>
-        }
-
-        <!-- Bouton rejoindre ou profil -->
-        @if (!authService.isAuthenticated()) {
-          <button (click)="openJoinModal()"
-                  class="btn-primary text-sm px-4 py-2 shadow-md">
-            {{ languageService.isFrench() ? 'Rejoindre' : 'Join' }}
-          </button>
-        } @else {
-          <div class="relative">
-            <button (click)="toggleProfileMenu()"
-                    class="flex items-center gap-2 text-gdg-text hover:text-gdg-blue">
-              <div class="w-9 h-9 bg-gdg-blue/10 rounded-full flex items-center justify-center border border-gdg-line">
-                    <span class="font-semibold">
-                      {{ getInitials() }}
-                    </span>
-              </div>
-              <span class="hidden md:inline">{{ getFirstName() }}</span>
-            </button>
-
-            <!-- Menu profil -->
-            @if (profileMenuOpen()) {
-              <div class="absolute right-0 mt-2 w-52 bg-white rounded-r14 shadow-xl border border-gdg-line py-1 z-50">
-                <div class="px-4 py-2 border-b border-gdg-line">
-                  <p class="font-semibold">{{ getFullName() }}</p>
-                  <p class="text-xs text-gdg-muted">{{ getEmail() }}</p>
-                </div>
-                <a routerLink="/profile" (click)="toggleProfileMenu()"
-                   class="block w-full text-left px-4 py-2 hover:bg-gdg-bg text-gdg-text">
-                  {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
-                </a>
-                <a routerLink="/reset-password" (click)="toggleProfileMenu()"
-                   class="block w-full text-left px-4 py-2 hover:bg-gdg-bg text-gdg-text">
-                  {{ languageService.isFrench() ? 'Mot de passe' : 'Password' }}
-                </a>
-                <button (click)="signOut()"
-                        class="w-full text-left px-4 py-2 text-red-600 hover:bg-gdg-bg">
-                  {{ languageService.isFrench() ? 'Déconnexion' : 'Sign out' }}
-                </button>
-              </div>
-            }
-          </div>
-        }
-
-        <!-- Menu mobile -->
-        <button (click)="toggleMobileMenu()"
-                class="md:hidden p-2 rounded-lg hover:bg-gdg-bg border border-transparent hover:border-gdg-line">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
+      @if (authService.isAuthenticated() && authService.isProfessional()) {
+        <button (click)="openTopicModal()" class="btn-secondary header-join">
+          {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
         </button>
-      </div>
-    </div>
+      }
 
-    <!-- Menu mobile -->
-    @if (mobileMenuOpen()) {
-      <div class="md:hidden py-4 border-t border-gdg-line">
-        <div class="flex flex-col gap-2">
-          <a href="/" class="mobile-link">
-            {{ languageService.isFrench() ? 'Accueil' : 'Home' }}
-          </a>
-          <a href="/events" class="mobile-link">
-            {{ languageService.isFrench() ? 'Événements' : 'Events' }}
-          </a>
-          <a href="/about" class="mobile-link">
-            {{ languageService.isFrench() ? 'À propos' : 'About' }}
-          </a>
-          @if (authService.isProfessional()) {
-            <button (click)="openTopicModal()"
-                    class="text-left mobile-link">
-              {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose topic' }}
-            </button>
-          }
-          @if (authService.isAuthenticated()) {
-            <a routerLink="/profile" class="mobile-link">
-              {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
-            </a>
+      @if (!authService.isAuthenticated()) {
+        <button (click)="openJoinModal()" class="btn-secondary header-join">
+          {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
+        </button>
+      } @else {
+        <div class="relative">
+          <button (click)="toggleProfileMenu()" class="profile-trigger">
+            <div class="profile-avatar">
+              <span>{{ getInitials() }}</span>
+            </div>
+            <span class="profile-name">{{ getFirstName() }}</span>
+          </button>
+
+          @if (profileMenuOpen()) {
+            <div class="profile-menu">
+              <div class="profile-head">
+                <p class="profile-title">{{ getFullName() }}</p>
+                <p class="profile-email">{{ getEmail() }}</p>
+              </div>
+              <a routerLink="/profile" (click)="toggleProfileMenu()" class="profile-link">
+                {{ languageService.isFrench() ? 'Mon profil' : 'My profile' }}
+              </a>
+              <a routerLink="/reset-password" (click)="toggleProfileMenu()" class="profile-link">
+                {{ languageService.isFrench() ? 'Mot de passe' : 'Password' }}
+              </a>
+              <button (click)="signOut()" class="profile-link profile-link--danger">
+                {{ languageService.isFrench() ? 'Déconnexion' : 'Sign out' }}
+              </button>
+            </div>
           }
         </div>
+      }
+
+      <button class="burger" type="button"
+              (click)="toggleMobileMenu()"
+              [attr.aria-expanded]="mobileMenuOpen()"
+              aria-label="Ouvrir le menu"
+              aria-controls="mobileMenu">
+        <span class="burger-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="drawer" [class.is-open]="mobileMenuOpen()">
+    <div class="drawer-backdrop" (click)="closeMobileMenu()" aria-hidden="true"></div>
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="drawer-head">
+        <a class="drawer-brand" routerLink="/">
+          <img class="drawer-brand-mark"
+               src="https://www.svgrepo.com/show/353810/google-developers.svg"
+               alt="GDG logo">
+          <span class="drawer-brand-text"><strong>GDG</strong> <span class="drawer-brand-light">UTBM</span></span>
+        </a>
+        <button class="drawer-close" type="button" aria-label="Fermer le menu" (click)="closeMobileMenu()">
+          ×
+        </button>
       </div>
-    }
-  </nav>
+
+      <div class="drawer-sep" aria-hidden="true"></div>
+
+      <nav class="drawer-nav" aria-label="Navigation mobile">
+        <a routerLink="/events" (click)="closeMobileMenu()">{{ languageService.isFrench() ? 'Événements' : 'Events' }}</a>
+        <a routerLink="/about" (click)="closeMobileMenu()">{{ languageService.isFrench() ? 'À propos' : 'About' }}</a>
+        <a routerLink="/offres" (click)="closeMobileMenu()">{{ languageService.isFrench() ? 'Offres' : 'Internships' }}</a>
+        @if (authService.isAdmin()) {
+          <a routerLink="/admin" (click)="closeMobileMenu()">Admin</a>
+        }
+
+        @if (!authService.isAuthenticated()) {
+          <button (click)="openJoinModal(); closeMobileMenu()" class="btn-secondary drawer-join">
+            {{ languageService.isFrench() ? 'Nous rejoindre' : 'Join us' }}
+          </button>
+        }
+      </nav>
+    </div>
+  </div>
 </header>
 
-<!-- Modale d'inscription -->
 @if (showJoinModal()) {
   <app-join-modal
     (close)="closeJoinModal()"
@@ -132,14 +112,10 @@
   </app-join-modal>
 }
 
-<!-- Modale de proposition de sujet -->
 @if (showTopicModal()) {
-  <app-topic-modal
-    (close)="closeTopicModal()">
-  </app-topic-modal>
+  <app-topic-modal (close)="closeTopicModal()"></app-topic-modal>
 }
 
-<!-- Modale de complétion de profil -->
 @if (showCompleteProfileModal()) {
   <app-complete-profile-modal
     (close)="closeCompleteProfileModal()"

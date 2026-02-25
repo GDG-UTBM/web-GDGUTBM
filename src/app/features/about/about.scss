@@ -1,0 +1,44 @@
+.page-banner {
+  padding: 28px 0 18px;
+  border-bottom: 1px solid var(--gdg-line);
+  background:
+    radial-gradient(900px 220px at 18% 30%, rgba(47, 111, 237, 0.14), transparent 60%),
+    radial-gradient(700px 200px at 80% 20%, rgba(47, 111, 237, 0.10), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.70), rgba(255,255,255,0.55));
+}
+
+.page-banner-inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(26px, 2.8vw, 38px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 12px;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  height: 7px;
+  width: min(420px, 100%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(47,111,237,0.65), rgba(47,111,237,0));
+  box-shadow: 0 6px 18px rgba(47,111,237,0.18);
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--gdg-muted);
+  font-weight: 600;
+  max-width: 70ch;
+}

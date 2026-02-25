@@ -1,50 +1,56 @@
-<section class="py-20 bg-gradient-to-br from-gdg-dark via-gdg-dark to-gdg-blue/40 text-white relative overflow-hidden">
-  <div class="absolute -top-20 -right-24 w-72 h-72 rounded-full bg-white/5 blur-3xl"></div>
-  <div class="absolute bottom-0 -left-16 w-72 h-72 rounded-full bg-gdg-blue/20 blur-3xl"></div>
-
-  <div class="container-custom text-center relative">
-    <div class="max-w-3xl mx-auto space-y-8">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">
-        {{ languageService.isFrench() ? 'Prêts à rejoindre l\'aventure ?' : 'Ready to join the adventure?' }}
-      </h2>
-      <p class="text-lg text-gray-200">
+<section class="cta-final join-landing" id="rejoindre">
+  <div class="container-custom join-landing-inner">
+    <div class="join-col join-col--student">
+      <h2 class="join-title">{{ languageService.isFrench() ? 'Vous êtes étudiant' : 'You are a student' }}</h2>
+      <p class="join-subtitle">
         {{ languageService.isFrench()
-        ? 'Rejoignez notre communauté de passionnés de technologie et accédez à des événements exclusifs, du networking et des opportunités de croissance.'
-        : 'Join our community of tech enthusiasts and get access to exclusive events, networking and growth opportunities.'
-        }}
+        ? 'Un espace pour apprendre, participer et construire des projets concrets avec la communauté.'
+        : 'A space to learn, participate and build real projects with the community.' }}
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
+
+      <ul class="join-list">
+        <li><b>{{ languageService.isFrench() ? 'Suivez vos inscriptions' : 'Track your registrations' }}</b> : événements, sessions et candidatures au même endroit.</li>
+        <li><b>{{ languageService.isFrench() ? 'Explorez des sujets' : 'Explore topics' }}</b> proposés par des pros et trouvez ceux qui matchent votre profil.</li>
+        <li><b>{{ languageService.isFrench() ? 'Valorisez vos projets' : 'Showcase your projects' }}</b> : historique, contributions et portfolio accessible depuis votre dashboard.</li>
+        <li><b>{{ languageService.isFrench() ? 'Accédez aux offres' : 'Access opportunities' }}</b> : stages et alternances liées aux événements.</li>
+      </ul>
+
+      <div class="join-btn-wrap">
+        @if (!authService.isAuthenticated()) {
+          <button (click)="openJoinModal()" class="btn-primary join-btn">
+            {{ languageService.isFrench() ? 'Rejoindre le GDG' : 'Join GDG' }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="join-sep" aria-hidden="true"></div>
+
+    <div class="join-col join-col--company">
+      <h2 class="join-title">{{ languageService.isFrench() ? 'Vous êtes une entreprise' : 'You are a company' }}</h2>
+      <p class="join-subtitle">
+        {{ languageService.isFrench()
+        ? 'Publiez des sujets, recrutez plus efficacement et rencontrez des talents en contexte réel.'
+        : 'Publish topics, recruit faster and meet talents in real contexts.' }}
+      </p>
+
+      <ul class="join-list">
+        <li><b>{{ languageService.isFrench() ? 'Créez vos sujets' : 'Create topics' }}</b> : dépôt, validation et suivi au même endroit.</li>
+        <li><b>{{ languageService.isFrench() ? 'Recevez des candidatures' : 'Receive applications' }}</b> qualifiées et gérez vos échanges.</li>
+        <li><b>{{ languageService.isFrench() ? 'Publiez vos offres' : 'Publish offers' }}</b> (stage/alternance/CDI) avec visibilité locale.</li>
+        <li><b>{{ languageService.isFrench() ? 'Activez des partenariats' : 'Activate partnerships' }}</b> : présence aux événements et mise en avant.</li>
+      </ul>
+
+      <div class="join-btn-wrap">
         @if (authService.isProfessionalOrAdmin()) {
-          <button (click)="openTopicModal()"
-                  class="bg-white text-gdg-dark hover:bg-gray-100 font-semibold text-lg px-10 py-4 rounded-r12 transition-all duration-200">
+          <button (click)="openTopicModal()" class="btn-primary join-btn">
             {{ languageService.isFrench() ? 'Proposer un sujet' : 'Propose a topic' }}
           </button>
         } @else if (!authService.isAuthenticated()) {
-          <button (click)="openJoinModal()"
-                  class="bg-white text-gdg-dark hover:bg-gray-100 font-semibold text-lg px-10 py-4 rounded-r12 transition-all duration-200">
-            {{ languageService.isFrench() ? 'Rejoindre la communauté' : 'Join the community' }}
+          <button (click)="openJoinModal()" class="btn-primary join-btn">
+            {{ languageService.isFrench() ? 'Rejoindre le GDG' : 'Join GDG' }}
           </button>
         }
-        <a routerLink="/events" class="btn-secondary !border-white !text-white hover:!bg-white/10 text-lg px-10 py-4">
-          {{ languageService.isFrench() ? 'Voir les événements' : 'View events' }}
-        </a>
-      </div>
-      <div class="pt-12 border-t border-white/10">
-        <p class="text-gray-300 mb-6">{{ languageService.isFrench() ? 'En partenariat avec' : 'In partnership with' }}</p>
-        <div class="flex flex-wrap justify-center items-center gap-6 md:gap-10 opacity-90">
-          <div class="h-6 md:h-8">
-            <img src="https://logo.clearbit.com/google.com" alt="Google" class="h-full logo-invert">
-          </div>
-          <div class="h-6 md:h-8">
-            <img src="https://logo.clearbit.com/capgemini.com" alt="Capgemini" class="h-full logo-invert">
-          </div>
-          <div class="h-6 md:h-8">
-            <img src="https://logo.clearbit.com/utbm.fr" alt="UTBM" class="h-full logo-invert">
-          </div>
-          <div class="h-6 md:h-8">
-            <img src="https://logo.clearbit.com/meetup.com" alt="Meetup" class="h-full logo-invert">
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -58,7 +64,5 @@
 }
 
 @if (showTopicModal()) {
-  <app-topic-modal
-    (close)="closeTopicModal()">
-  </app-topic-modal>
+  <app-topic-modal (close)="closeTopicModal()"></app-topic-modal>
 }

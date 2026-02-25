@@ -40,6 +40,7 @@ export class AdminEventsComponent implements OnInit {
       description_fr: ['', Validators.required],
       description_en: ['', Validators.required],
       date: ['', Validators.required],
+      time: ['18:00'],
       end_date: [''],
       location: [''],
       type: ['conference'],
@@ -47,6 +48,7 @@ export class AdminEventsComponent implements OnInit {
       image_url: [''],
       partner: [''],
       partners: [''],
+      link: [''],
       video_url: [''],
       highlights: ['']
     });
@@ -78,10 +80,12 @@ export class AdminEventsComponent implements OnInit {
     this.editingId.set(event.id);
     // Formater la date pour input date (YYYY-MM-DD)
     const formattedDate = new Date(event.date).toISOString().split('T')[0];
+    const formattedTime = new Date(event.date).toTimeString().slice(0, 5);
     const formattedEndDate = event.end_date ? new Date(event.end_date).toISOString().split('T')[0] : '';
     this.eventForm.patchValue({
       ...event,
       date: formattedDate,
+      time: formattedTime,
       end_date: formattedEndDate,
       partners: event.partners ? event.partners.join(', ') : '',
       highlights: event.highlights ? event.highlights.join('\n') : ''
@@ -105,8 +109,12 @@ export class AdminEventsComponent implements OnInit {
     this.errorMessage.set('');
     try {
       const formValue = this.eventForm.value;
+      const datePart = formValue.date;
+      const timePart = formValue.time || '00:00';
+      const combinedDate = datePart ? `${datePart}T${timePart}:00` : formValue.date;
       const payload = {
         ...formValue,
+        date: combinedDate,
         partners: this.normalizeCommaList(formValue.partners),
         highlights: this.normalizeLineList(formValue.highlights)
       };

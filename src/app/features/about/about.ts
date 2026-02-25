@@ -4,15 +4,16 @@ import { LanguageService } from '../../core/services/language.service';
 import { AuthService } from '../../core/services/auth.service';
 import {TeamMember} from '../../core/models/TeamMember.model';
 import {RouterLink} from '@angular/router';
+import { SiteFooterComponent } from '../../shared/components/site-footer/site-footer';
 
 
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: 'about.html' ,
-  styles: []
+  imports: [CommonModule, RouterLink, SiteFooterComponent],
+  templateUrl: 'about.html',
+  styleUrls: ['./about.scss']
 })
 export class AboutComponent implements OnInit {
   team: TeamMember[] = [

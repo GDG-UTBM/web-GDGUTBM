@@ -1,4 +1,4 @@
-import {Component, effect, signal} from '@angular/core';
+import {Component, effect, Inject, PLATFORM_ID, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -7,6 +7,7 @@ import {LanguageSwitcherComponent} from '../language-switcher/language-switcher'
 import {JoinModalComponent} from '../join-modal/join-modal';
 import {TopicModalComponent} from '../topic-modal/topic-modal';
 import {CompleteProfileModalComponent} from '../complete-profile-modal/complete-profile-modal';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,7 @@ import {CompleteProfileModalComponent} from '../complete-profile-modal/complete-
     CompleteProfileModalComponent
   ],
   templateUrl:'./header.component.html',
-  styles: ``
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   mobileMenuOpen = signal(false);
@@ -31,7 +32,8 @@ export class HeaderComponent {
 
   constructor(
     public authService: AuthService,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Vérifier si le profil est complet après connexion
     const profileSignal = this.authService.getProfile();
@@ -67,6 +69,18 @@ export class HeaderComponent {
   // Méthodes de toggle
   toggleMobileMenu() {
     this.mobileMenuOpen.update(state => !state);
+    this.syncBodyScroll();
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen.set(false);
+    this.syncBodyScroll();
+  }
+
+  private syncBodyScroll() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    document.body.style.overflow = this.mobileMenuOpen() ? 'hidden' : '';
+    document.documentElement.style.overflow = this.mobileMenuOpen() ? 'hidden' : '';
   }
 
   toggleProfileMenu() {

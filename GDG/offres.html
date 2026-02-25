@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GDG UTBM — Offres</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* ==========================================================================
+       Offres Page (banner + layout)
+       ========================================================================== */
+
+    .page-banner {
+      padding: 28px 0 18px;
+      border-bottom: 1px solid var(--gdg-line);
+      background:
+        radial-gradient(900px 220px at 18% 30%, rgba(47,111,237,0.14), transparent 60%),
+        radial-gradient(700px 200px at 80% 20%, rgba(47,111,237,0.10), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.70), rgba(255,255,255,0.55));
+    }
+
+    .page-banner-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: clamp(26px, 2.8vw, 38px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 12px;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 2px;
+      height: 7px;
+      width: min(360px, 100%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(47,111,237,0.65), rgba(47,111,237,0.00));
+      box-shadow: 0 6px 18px rgba(47,111,237,0.18);
+    }
+
+    .page-subtitle {
+      margin: 6px 0 0;
+      color: var(--gdg-muted);
+      font-weight: 600;
+    }
+
+    .shell {
+      padding: 26px 0 74px;
+      background: var(--gdg-bg, #f6f8fc);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ==========================================================================
+       Left panel (filters + KPI)
+       ========================================================================== */
+
+    .panel {
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+      overflow: hidden;
+    }
+
+    .panel-pad { padding: 18px; }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .fieldset {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 850;
+      color: rgba(11,19,36,0.55);
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .select, .search {
+      width: 100%;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+      padding: 0 12px;
+      outline: none;
+      font: inherit;
+    }
+
+    .filters-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-soft {
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.85);
+      cursor: pointer;
+      font-weight: 800;
+      color: rgba(11,19,36,0.80);
+      transition: transform 160ms cubic-bezier(.2,.8,.2,1), border-color 160ms cubic-bezier(.2,.8,.2,1);
+      flex: 1;
+    }
+
+    .btn-soft:hover {
+      transform: translateY(-1px);
+      border-color: rgba(47,111,237,0.22);
+    }
+
+    .kpi-stack {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .kpi {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: rgba(11,19,36,0.55);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .kpi-value {
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: rgba(47,111,237,0.98);
+    }
+
+    .kpi-sub {
+      margin-top: 6px;
+      color: rgba(11,19,36,0.62);
+      font-weight: 650;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       Right panel (list)
+       ========================================================================== */
+
+    .right {
+      display: grid;
+      gap: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+    }
+
+    .toolbar-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .toolbar-title strong {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .toolbar-title span {
+      color: rgba(11,19,36,0.60);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    .toolbar-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+      padding: 0 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .row {
+      border-radius: 22px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.90);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 16px 18px;
+      transition: transform 200ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms cubic-bezier(.2,.8,.2,1), border-color 200ms cubic-bezier(.2,.8,.2,1);
+      cursor: pointer;
+    }
+
+    .row:hover {
+      transform: translateY(-3px);
+      border-color: rgba(47,111,237,0.22);
+      box-shadow: 0 30px 90px rgba(15,23,42,0.10);
+    }
+
+    .row h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+
+    .row p {
+      margin: 8px 0 0;
+      color: rgba(11,19,36,0.62);
+      line-height: 1.65;
+      max-width: 90ch;
+    }
+
+    .chips {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.72);
+      color: rgba(11,19,36,0.70);
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .chip.is-blue {
+      background: rgba(47,111,237,0.10);
+      border-color: rgba(47,111,237,0.18);
+      color: rgba(47,111,237,0.98);
+    }
+
+    .row-right {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      justify-items: end;
+      min-width: 220px;
+    }
+
+    .org {
+      font-weight: 900;
+      color: rgba(11,19,36,0.78);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .place {
+      font-weight: 850;
+      color: rgba(11,19,36,0.66);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .link-more {
+      font-weight: 900;
+      color: rgba(47,111,237,0.98);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .link-more::after {
+      content: "›";
+      font-size: 18px;
+      transform: translateY(-1px);
+      transition: transform 160ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .row:hover .link-more::after {
+      transform: translate(2px, -1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .page-banner { padding: 22px 0 12px; }
+      .shell { padding: 18px 0 54px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar-controls { justify-content: space-between; }
+      .row { grid-template-columns: 1fr; }
+      .row-right { justify-items: start; min-width: 0; }
+      .org, .place { text-align: left; }
+    }
+  </style>
+</head>
+
+<body>
+
+    <header class="header">
+    <div class="container header-inner">
+
+        <!-- Logo -->
+        <a class="brand" href="index.html">
+        <img class="brand-mark"
+            src="https://www.svgrepo.com/show/353810/google-developers.svg"
+            alt="GDG logo">
+        <span class="brand-text">
+            <strong>GDG</strong> <span class="brand-light">UTBM</span>
+        </span>
+        </a>
+
+        <!-- Nav desktop -->
+        <nav class="nav" aria-label="Navigation principale">
+        <a href="evenements.html">Événements</a>
+        <a href="sujets.html">Sujets</a>
+        <a href="offres.html">Offres</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="header-actions">
+
+        <!-- Lang switch -->
+        <div class="lang-switch" aria-label="Choix de langue">
+            <button class="active" type="button">FR</button>
+            <span class="lang-sep" aria-hidden="true"></span>
+            <button type="button">EN</button>
+        </div>
+
+        <a href="#rejoindre" class="btn-secondary header-join">Nous rejoindre</a>
+
+        <!-- Burger (mobile) -->
+        <button class="burger" type="button"
+                aria-label="Ouvrir le menu"
+                aria-expanded="false"
+                aria-controls="mobileMenu">
+            <span class="burger-icon" aria-hidden="true"></span>
+        </button>
+
+        </div>
+
+    </div>
+
+    <!-- Drawer mobile  -->
+    <div id="mobileMenu" class="drawer" aria-hidden="true">
+        <div class="drawer-backdrop" data-close aria-hidden="true"></div>
+
+        <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+
+        <div class="drawer-head">
+            <a class="drawer-brand" href="#">
+            <img class="drawer-brand-mark"
+                src="https://www.svgrepo.com/show/353810/google-developers.svg"
+                alt="GDG logo">
+            <span class="drawer-brand-text"><strong>GDG</strong> <span class="drawer-brand-light">UTBM</span></span>
+            </a>
+
+            <button class="drawer-close" type="button" aria-label="Fermer le menu" data-close>
+            ×
+            </button>
+        </div>
+
+        <div class="drawer-sep" aria-hidden="true"></div>
+
+        <nav class="drawer-nav" aria-label="Navigation mobile">
+            <a href="evenements.html">Événements</a>
+            <a href="sujets.html">Sujets</a>
+            <a href="offres.html">Offres</a>
+
+            <a href="#rejoindre" class="btn-secondary drawer-join">Nous rejoindre</a>
+        </nav>
+
+        </div>
+    </div>
+    </header>
+
+
+  <section class="page-banner" aria-label="Bannière page Offres">
+    <div class="container page-banner-inner">
+      <div>
+        <h1 class="page-title">Offres</h1>
+        <p class="page-subtitle">Stages, alternances, CDD/CDI — filtre et postule rapidement.</p>
+      </div>
+    </div>
+  </section>
+
+  <main class="shell">
+    <div class="container">
+      <div class="grid">
+
+        <!-- LEFT : filtres + KPIs -->
+        <aside class="panel">
+          <div class="panel-pad">
+            <h2 class="panel-title">Filtres</h2>
+
+            <div class="fieldset">
+              <div class="field">
+                <label for="q">Recherche</label>
+                <input id="q" class="search" type="search" placeholder="Ex: DevOps, C#, Data…" />
+              </div>
+
+              <div class="field">
+                <label for="contract">Type de contrat</label>
+                <select id="contract" class="select">
+                  <option value="all">Tous</option>
+                  <option value="Stage">Stage</option>
+                  <option value="Alternance">Alternance</option>
+                  <option value="CDI">CDI</option>
+                  <option value="CDD">CDD</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="dept">Département</label>
+                <select id="dept" class="select">
+                  <option value="all">Tous</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="domain">Domaine</label>
+                <select id="domain" class="select">
+                  <option value="all">Tous</option>
+                </select>
+              </div>
+
+              <div class="filters-actions">
+                <button id="reset" class="btn-soft" type="button">Réinitialiser</button>
+                <button id="onlyOpen" class="btn-soft" type="button">Ouvertes</button>
+              </div>
+            </div>
+
+            <div class="kpi-stack">
+              <div class="kpi">
+                <div class="kpi-label">Offres visibles</div>
+                <div class="kpi-value" id="kpiVisible">0</div>
+                <div class="kpi-sub">Après filtres (recherche + contrat + département + domaine)</div>
+              </div>
+
+              <div class="kpi">
+                <div class="kpi-label">Offres ouvertes</div>
+                <div class="kpi-value" id="kpiOpen">0</div>
+                <div class="kpi-sub">Candidatures en cours / poste non pourvu</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT : liste -->
+        <section class="right">
+          <div class="toolbar">
+            <div class="toolbar-title">
+              <strong>Explorer les offres</strong>
+              <span id="subtitle">Filtre par type de contrat, département et domaine.</span>
+            </div>
+
+            <div class="toolbar-controls">
+              <button class="pill" id="sortRecent" type="button">Plus récentes</button>
+              <button class="pill" id="sortContract" type="button">Contrat</button>
+            </div>
+          </div>
+
+          <div class="list" id="list"></div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+
+  <script>
+    // =========================================================================
+    // Mock data
+    // =========================================================================
+    const OFFERS = [
+      {
+        id: "o1",
+        title: "Stage DevOps / CI-CD (GitHub Actions + Azure)",
+        desc: "Aider à industrialiser le déploiement : pipelines, environnements de preview, monitoring, sécurité secrets. Idéal si tu veux apprendre en conditions réelles.",
+        contract: "Stage",
+        dept: "90",
+        domain: "Cloud/DevOps",
+        org: "Capgemini",
+        city: "Belfort",
+        status: "Ouverte",
+        postedAt: "2025-10-20"
+      },
+      {
+        id: "o2",
+        title: "Alternance Développeur .NET / Blazor",
+        desc: "Développement d’une web app moderne : composants, API .NET, bonnes pratiques, tests et perf. Tu livreras des features visibles et mesurables.",
+        contract: "Alternance",
+        dept: "90",
+        domain: "Software",
+        org: "GDG UTBM",
+        city: "Sevenans",
+        status: "Ouverte",
+        postedAt: "2025-10-28"
+      },
+      {
+        id: "o3",
+        title: "CDI Data Engineer (Python / ETL / Qualité)",
+        desc: "Mise en place de pipelines de données : ingestion, transformation, qualité, documentation et dashboards. Objectif : fiabiliser et accélérer l’accès aux données.",
+        contract: "CDI",
+        dept: "67",
+        domain: "Data/IA",
+        org: "Crédit Mutuel",
+        city: "Strasbourg",
+        status: "Ouverte",
+        postedAt: "2025-09-30"
+      },
+      {
+        id: "o4",
+        title: "CDD Cyber — Sécurité applicative (OWASP)",
+        desc: "Audit d’applications web, recommandations, correctifs, sensibilisation équipe. Un rôle concret pour améliorer le niveau sécurité avec des résultats rapides.",
+        contract: "CDD",
+        dept: "68",
+        domain: "Cyber",
+        org: "FORVIA",
+        city: "Mulhouse",
+        status: "Ouverte",
+        postedAt: "2025-10-10"
+      },
+      {
+        id: "o5",
+        title: "Stage UX/UI — Design System & Accessibilité",
+        desc: "Construire des composants cohérents : tokens, guidelines, accessibilité, tests. Tu contribueras à une UI premium et maintenable sur le long terme.",
+        contract: "Stage",
+        dept: "25",
+        domain: "UX/UI",
+        org: "UTBM",
+        city: "Belfort",
+        status: "Fermée",
+        postedAt: "2025-08-22"
+      },
+      {
+        id: "o6",
+        title: "Alternance Embarqué — Capteurs & télémetrie",
+        desc: "Implémenter une chaîne de collecte : capteurs, protocole, stockage, visualisation. Un bon mix hardware/software, avec une vraie valeur terrain.",
+        contract: "Alternance",
+        dept: "75",
+        domain: "Embarqué",
+        org: "Partenaire GDG",
+        city: "Paris",
+        status: "Ouverte",
+        postedAt: "2025-11-02"
+      }
+    ];
+
+    // =========================================================================
+    // DOM helpers
+    // =========================================================================
+    const $ = (s) => document.querySelector(s);
+
+    const listEl = $("#list");
+    const qEl = $("#q");
+    const contractEl = $("#contract");
+    const deptEl = $("#dept");
+    const domainEl = $("#domain");
+    const resetEl = $("#reset");
+    const onlyOpenEl = $("#onlyOpen");
+
+    const kpiVisible = $("#kpiVisible");
+    const kpiOpen = $("#kpiOpen");
+    const subtitle = $("#subtitle");
+
+    const sortRecent = $("#sortRecent");
+    const sortContract = $("#sortContract");
+
+    let onlyOpen = false;
+    let sortMode = "recent"; // recent | contract
+
+    function buildOptions() {
+      // départements
+      const deptSet = new Set(OFFERS.map(o => o.dept));
+      Array.from(deptSet).sort((a,b) => a.localeCompare(b, "fr")).forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d;
+        deptEl.appendChild(opt);
+      });
+
+      // domaines
+      const domainSet = new Set(OFFERS.map(o => o.domain));
+      Array.from(domainSet).sort((a,b) => a.localeCompare(b, "fr")).forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d;
+        domainEl.appendChild(opt);
+      });
+    }
+
+    function matchesFilters(o) {
+      const q = (qEl.value || "").trim().toLowerCase();
+      const contract = contractEl.value;
+      const dept = deptEl.value;
+      const domain = domainEl.value;
+
+      if (onlyOpen && o.status !== "Ouverte") return false;
+
+      if (q) {
+        const blob = (o.title + " " + o.desc + " " + o.org + " " + o.domain + " " + o.contract + " " + o.city).toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+
+      if (contract !== "all" && o.contract !== contract) return false;
+      if (dept !== "all" && o.dept !== dept) return false;
+      if (domain !== "all" && o.domain !== domain) return false;
+
+      return true;
+    }
+
+    function contractRank(c) {
+      return c === "Stage" ? 1 : c === "Alternance" ? 2 : c === "CDD" ? 3 : 4;
+    }
+
+    function renderKPIs(items) {
+      kpiVisible.textContent = String(items.length);
+      kpiOpen.textContent = String(items.filter(x => x.status === "Ouverte").length);
+
+      const parts = [];
+      if (contractEl.value !== "all") parts.push(`Contrat: ${contractEl.value}`);
+      if (deptEl.value !== "all") parts.push(`Dépt: ${deptEl.value}`);
+      if (domainEl.value !== "all") parts.push(`Domaine: ${domainEl.value}`);
+      if (onlyOpen) parts.push("Ouvertes");
+
+      subtitle.textContent = parts.length
+        ? `Filtres actifs — ${parts.join(" · ")}`
+        : "Filtre par type de contrat, département et domaine.";
+    }
+
+    function renderList() {
+      let items = OFFERS.filter(matchesFilters);
+
+      if (sortMode === "recent") {
+        items = items.sort((a,b) => b.postedAt.localeCompare(a.postedAt));
+      } else {
+        items = items.sort((a,b) => contractRank(a.contract) - contractRank(b.contract));
+      }
+
+      renderKPIs(items);
+
+      listEl.innerHTML = "";
+
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "panel panel-pad";
+        empty.innerHTML = `<strong>Aucune offre</strong><p style="margin:8px 0 0; color:rgba(11,19,36,0.62)">Change les filtres ou ta recherche.</p>`;
+        listEl.appendChild(empty);
+        return;
+      }
+
+      items.forEach(o => {
+        const row = document.createElement("article");
+        row.className = "row";
+        row.innerHTML = `
+          <div>
+            <h3>${o.title}</h3>
+            <p>${o.desc}</p>
+
+            <div class="chips">
+              <span class="chip is-blue">${o.status}</span>
+              <span class="chip">${o.contract}</span>
+              <span class="chip">${o.domain}</span>
+              <span class="chip">Dépt. ${o.dept}</span>
+            </div>
+          </div>
+
+          <div class="row-right">
+            <div class="org">${o.org}</div>
+            <div class="place">${o.city} · ${o.postedAt}</div>
+            <a class="link-more" href="#">Voir l’offre</a>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+
+    // events
+    function onChange() { renderList(); }
+
+    qEl.addEventListener("input", onChange);
+    contractEl.addEventListener("change", onChange);
+    deptEl.addEventListener("change", onChange);
+    domainEl.addEventListener("change", onChange);
+
+    resetEl.addEventListener("click", () => {
+      qEl.value = "";
+      contractEl.value = "all";
+      deptEl.value = "all";
+      domainEl.value = "all";
+      onlyOpen = false;
+      renderList();
+    });
+
+    onlyOpenEl.addEventListener("click", () => {
+      onlyOpen = !onlyOpen;
+      onlyOpenEl.style.borderColor = onlyOpen ? "rgba(47,111,237,0.35)" : "rgba(16,24,40,0.10)";
+      renderList();
+    });
+
+    sortRecent.addEventListener("click", () => {
+      sortMode = "recent";
+      renderList();
+    });
+
+    sortContract.addEventListener("click", () => {
+      sortMode = "contract";
+      renderList();
+    });
+
+    // init
+    (function init(){
+      buildOptions();
+      renderList();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+﻿:root {
+  --gdg-text: #0b1324;
+  --gdg-muted: rgba(11, 19, 36, 0.66);
+  --gdg-surface: #ffffff;
+  --gdg-line: rgba(16, 24, 40, 0.10);
+
+  --gdg-blue: #2f6fed;
+  --gdg-blue-hover: #255fe0;
+  --gdg-dark: #0b1324;
+
+  --gdg-focus: rgba(47, 111, 237, 0.55);
+
+  --r10: 10px;
+  --r12: 12px;
+  --r16: 16px;
+  --r18: 18px;
+
+  --shadow-card: 0 10px 30px rgba(15, 23, 42, 0.06);
+  --shadow-card-hover: 0 16px 44px rgba(15, 23, 42, 0.10);
+
+  --motion-fast: 160ms;
+  --motion-ease: cubic-bezier(.2,.8,.2,1);
+}

@@ -1,13 +1,9 @@
-<div class="flex items-center space-x-1">
-  <button (click)="setLanguage('fr')"
-          [class]="languageService.isFrench() ? 'text-gdg-blue font-medium' : 'text-gdg-muted hover:text-gdg-text'"
-          class="px-2 py-1 text-sm transition-colors">
+<div class="lang-switch" aria-label="Choix de langue">
+  <button type="button" (click)="setLanguage('fr')" [class.active]="languageService.isFrench()">
     FR
   </button>
-  <span class="text-gdg-line">|</span>
-  <button (click)="setLanguage('en')"
-          [class]="!languageService.isFrench() ? 'text-gdg-blue font-medium' : 'text-gdg-muted hover:text-gdg-text'"
-          class="px-2 py-1 text-sm transition-colors">
+  <span class="lang-sep" aria-hidden="true"></span>
+  <button type="button" (click)="setLanguage('en')" [class.active]="!languageService.isFrench()">
     EN
   </button>
 </div>

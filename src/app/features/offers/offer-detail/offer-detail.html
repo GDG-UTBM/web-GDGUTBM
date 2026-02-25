@@ -1,0 +1,80 @@
+<div class="offer-detail-page">
+  <div class="container-custom detail-top">
+    <button class="back-link" (click)="goBack()">← {{ 'Retour aux offres' }}</button>
+  </div>
+
+  @if (offer()) {
+    <section class="detail-hero">
+      <div class="container-custom detail-hero-inner">
+        <div class="detail-logo">
+          <img [src]="offer()!.logo" [alt]="offer()!.company" />
+        </div>
+        <div>
+          <h1>{{ offer()!.title }}</h1>
+          <p class="detail-company">{{ offer()!.company }} · {{ offer()!.location }}</p>
+        </div>
+        <div class="detail-cta">
+          <button class="btn-primary"
+                  [disabled]="offer()!.status === 'closed'"
+                  (click)="openApplyModal()">
+            Postuler
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-content">
+      <div class="container-custom detail-grid">
+        <div class="detail-main">
+          <div class="detail-card">
+            <h2>À propos du stage</h2>
+            <p>{{ offer()!.description }}</p>
+          </div>
+
+          <div class="detail-card">
+            <h2>Compétences recherchées</h2>
+            <div class="detail-tags">
+              @for (tag of offer()!.tags; track tag) {
+                <span>{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <aside class="detail-side">
+          <div class="detail-card">
+            <h3>Informations clés</h3>
+            <div class="detail-meta">
+              <div><span>Type</span><strong>{{ offer()!.type }}</strong></div>
+              <div><span>Durée</span><strong>{{ offer()!.duration }}</strong></div>
+              <div><span>Début</span><strong>{{ displayStartDate(offer()!) }}</strong></div>
+              <div><span>Mode</span><strong>{{ offer()!.mode }}</strong></div>
+              <div><span>Statut</span><strong>{{ offer()!.status === 'closed' ? 'Fermée' : 'Ouverte' }}</strong></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <h3>Entreprise</h3>
+            <p>{{ offer()!.company }}</p>
+            <p class="muted">{{ offer()!.location }}</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  } @else {
+    <div class="container-custom empty">
+      Offre introuvable.
+    </div>
+  }
+</div>
+
+<app-site-footer></app-site-footer>
+
+@if (offer() && showApplyModal()) {
+  <app-offer-application-modal
+    [offerId]="offer()!.id"
+    [offerTitle]="offer()!.title"
+    [companyName]="offer()!.company"
+    (close)="closeApplyModal()">
+  </app-offer-application-modal>
+}

@@ -13,6 +13,7 @@ export interface EventModel {
   type?: 'workshop' | 'conference' | 'meetup' | 'coding' | null;
   status?: 'upcoming' | 'past' | null;
   video_url?: string | null;
+  link?: string | null;
   highlights?: string[] | null;
   created_at: string;
   updated_at: string;

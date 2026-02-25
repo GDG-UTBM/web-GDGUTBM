@@ -11,7 +11,7 @@ import {ActivitiesService} from '../../../core/services/activities.service';
   standalone: true,
   imports: [CommonModule, ActivityDetailModalComponent],
   templateUrl: 'what-we-do.html',
-  styles: ``
+  styleUrls: ['./what-we-do.scss']
 })
 export class WhatWeDoComponent implements OnInit  {
   selectedActivity = signal<Activity | null>(null);

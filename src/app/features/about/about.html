@@ -1,20 +1,18 @@
 <div class="min-h-screen bg-gdg-bg">
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-br from-gdg-blue/10 to-transparent py-20 md:py-28">
-    <div class="container-custom">
-      <div class="max-w-3xl mx-auto text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-gdg-text mb-6">
+  <!-- Banner -->
+  <section class="page-banner">
+    <div class="container-custom page-banner-inner">
+      <div>
+        <h1 class="page-title">
           {{ languageService.isFrench() ? 'À propos de GDG UTBM' : 'About GDG UTBM' }}
         </h1>
-        <p class="text-xl text-gdg-muted leading-relaxed">
+        <p class="page-subtitle">
           {{ languageService.isFrench()
-          ? 'Nous sommes une communauté d\'étudiants, d\'ingénieurs et de passionnés de technologie, soutenue par Google et lUTBM.'
+          ? 'Nous sommes une communauté d\'étudiants, d\'ingénieurs et de passionnés de technologie, soutenue par Google et l’UTBM.'
           : 'We are a community of students, engineers and tech enthusiasts, supported by Google and UTBM.' }}
         </p>
       </div>
     </div>
-    <!-- Élément décoratif -->
-    <div class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-gdg-bg to-transparent"></div>
   </section>
 
   <!-- Mission Section -->
@@ -161,3 +159,5 @@
     </section>
   }
 </div>
+
+<app-site-footer></app-site-footer>

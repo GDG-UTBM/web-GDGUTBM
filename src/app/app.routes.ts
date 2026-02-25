@@ -5,6 +5,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
   { path: 'about', loadComponent: () => import('./features/about/about').then(m => m.AboutComponent) },
   { path: 'events', loadComponent: () => import('./features/events/events').then(m => m.EventsComponent) },
+  { path: 'offres', loadComponent: () => import('./features/offers/offers').then(m => m.OffersComponent) },
+  { path: 'offres/:id', loadComponent: () => import('./features/offers/offer-detail/offer-detail').then(m => m.OfferDetailComponent) },
   { path: 'profile', loadComponent: () => import('./features/account/profile/profile').then(m => m.ProfileComponent) },
   { path: 'reset-password', loadComponent: () => import('./features/auth/password-recovery/password-recovery').then(m => m.PasswordRecoveryComponent) },
   {
@@ -22,6 +24,7 @@ export const routes: Routes = [
       { path: 'users', loadComponent: () => import('./features/admin/admin-users/admin-users').then(m => m.AdminUsersComponent) },
       { path: 'topics', loadComponent: () => import('./features/admin/admin-topics/admin-topics').then(m => m.AdminTopicsComponent) },
       { path: 'events', loadComponent: () => import('./features/admin/admin-events/admin-events').then(m => m.AdminEventsComponent) },
+      { path: 'offres', loadComponent: () => import('./features/admin/admin-offers/admin-offers').then(m => m.AdminOffersComponent) },
       { path: 'activities', loadComponent: () => import('./features/admin/admin-activities/admin-activities').then(m => m.AdminActivitiesComponent) }
     ]
   },

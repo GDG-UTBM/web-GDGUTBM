@@ -11,12 +11,11 @@ import {TopicModalComponent} from '../../../shared/components/topic-modal/topic-
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     JoinModalComponent,
     TopicModalComponent
   ],
-  templateUrl: 'final-cta.html' ,
-  styles: ``
+  templateUrl: 'final-cta.html',
+  styleUrls: ['./final-cta.scss']
 })
 export class FinalCtaComponent{
   showJoinModal = signal(false);

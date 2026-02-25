@@ -21,6 +21,10 @@
         <span class="mr-3">📅</span>
         {{ languageService.isFrench() ? 'Événements' : 'Events' }}
       </a>
+      <a routerLink="/admin/offres" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+        <span class="mr-3">💼</span>
+        {{ languageService.isFrench() ? 'Offres' : 'Offers' }}
+      </a>
       <a routerLink="/admin/activities" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">⚡</span>
         {{ languageService.isFrench() ? 'Activités' : 'Activities' }}

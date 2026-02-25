@@ -1,14 +1,132 @@
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.section {
+  padding: 84px 0;
 }
-@keyframes scaleIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+
+.what-head {
+  margin-bottom: 26px;
 }
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
+
+.what-title {
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
+
+.what-subtitle {
+  color: var(--gdg-muted);
+  margin-top: 8px;
+}
+
+.what-grid--illus {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.what-illus-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 18px;
+  padding: 18px 18px 20px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  box-shadow: 0 18px 54px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition: transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
+}
+
+.what-illus-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(47, 111, 237, 0.22);
+  box-shadow: 0 26px 70px rgba(15, 23, 42, 0.10), 0 16px 44px rgba(47, 111, 237, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.what-illus {
+  border-radius: 16px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(47, 111, 237, 0.07), rgba(47, 111, 237, 0));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.what-illus-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.what-illus-lines {
+  display: grid;
+  gap: 8px;
+  flex: 1;
+}
+
+.what-illus-lines span {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(47, 111, 237, 0.18);
+}
+
+.what-illus-lines span:nth-child(2) {
+  width: 70%;
+  background: rgba(47, 111, 237, 0.12);
+}
+
+.what-illus-lines span:nth-child(3) {
+  width: 50%;
+  background: rgba(47, 111, 237, 0.08);
+}
+
+.what-illus-body {
+  margin-top: 14px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.what-illus-title {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(11, 19, 36, 0.92);
+}
+
+.what-illus-desc {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: rgba(11, 19, 36, 0.60);
+}
+
+.what-illus-cta {
+  margin-top: auto;
+  font-weight: 700;
+  color: var(--gdg-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.what-illus-cta .arrow {
+  font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+  .what-grid--illus {
+    grid-template-columns: 1fr;
+  }
 }

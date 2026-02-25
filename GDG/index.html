@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDG UTBM - Accueil</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+
+    <!-- Logo -->
+    <a class="brand" href="index.html">
+      <img class="brand-mark"
+           src="https://www.svgrepo.com/show/353810/google-developers.svg"
+           alt="GDG logo">
+      <span class="brand-text">
+        <strong>GDG</strong> <span class="brand-light">UTBM</span>
+      </span>
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="evenements.html">Événements</a>
+      <a href="sujets.html">Sujets</a>
+      <a href="offres.html">Offres</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="header-actions">
+
+      <!-- Lang switch -->
+      <div class="lang-switch" aria-label="Choix de langue">
+        <button class="active" type="button">FR</button>
+        <span class="lang-sep" aria-hidden="true"></span>
+        <button type="button">EN</button>
+      </div>
+
+      <a href="#rejoindre" class="btn-secondary header-join">Nous rejoindre</a>
+
+      <!-- Burger (mobile) -->
+      <button class="burger" type="button"
+              aria-label="Ouvrir le menu"
+              aria-expanded="false"
+              aria-controls="mobileMenu">
+        <span class="burger-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Drawer mobile -->
+  <div id="mobileMenu" class="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" data-close aria-hidden="true"></div>
+
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+
+      <div class="drawer-head">
+        <a class="drawer-brand" href="#">
+          <img class="drawer-brand-mark"
+               src="https://www.svgrepo.com/show/353810/google-developers.svg"
+               alt="GDG logo">
+          <span class="drawer-brand-text"><strong>GDG</strong> <span class="drawer-brand-light">UTBM</span></span>
+        </a>
+
+        <button class="drawer-close" type="button" aria-label="Fermer le menu" data-close>
+          ×
+        </button>
+      </div>
+
+      <div class="drawer-sep" aria-hidden="true"></div>
+
+      <nav class="drawer-nav" aria-label="Navigation mobile">
+        <a href="evenements.html">Événements</a>
+        <a href="sujets.html">Sujets</a>
+        <a href="offres.html">Offres</a>
+
+        <a href="#rejoindre" class="btn-secondary drawer-join">Nous rejoindre</a>
+      </nav>
+
+    </div>
+  </div>
+</header>
+
+
+<section class="hero hero--panorama" id="a-propos">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-slide is-active"
+         style="--bg:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2000&auto=format&fit=crop');"></div>
+    <div class="hero-slide"
+         style="--bg:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2000&auto=format&fit=crop');"></div>
+    <div class="hero-slide"
+         style="--bg:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop');"></div>
+  </div>
+  <!-- Décor flottant (Google-like) -->
+  <div class="hero-float" aria-hidden="true">
+    <span class="gshape gshape--red gshape--plus"></span>
+    <span class="gshape gshape--blue gshape--dot"></span>
+    <span class="gshape gshape--green gshape--spark"></span>
+    <span class="gshape gshape--yellow gshape--plus"></span>
+
+    <span class="gshape gshape--blue gshape--kite"></span>
+    <span class="gshape gshape--green gshape--dot"></span>
+    <span class="gshape gshape--yellow gshape--spark"></span>
+  </div>
+
+
+  <div class="container hero-content">
+    <h1 class="hero-title">
+      <span class="hero-kicker">Un point d'ancrage</span><br />
+      <span class="hero-underline">pour évoluer</span> <span class="hero-strong">dans la tech</span>
+    </h1>
+
+    <p class="hero-tagline">A hub to grow in tech.</p>
+
+    <p class="hero-subtext">
+      Événements, rencontres et apprentissage entre <b>étudiants</b>, <b>développeurs</b> et
+      <b>passionnés</b> de technologie.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#rejoindre" class="btn-primary hero-btn">Rejoindre la communauté</a>
+      <a href="#evenements" class="btn-secondary hero-btn hero-btn--ghost">Voir les événements</a>
+    </div>
+  </div>
+</section>
+
+
+<section class="proof" aria-label="Preuve sociale">
+  <div class="container proof-wrap">
+
+    <!-- CARD partenaires -->
+    <div class="proof-partners-section" aria-label="Partenaires">
+      <div class="proof-partners-head">
+        <div class="proof-partners-title">Partenaires</div>
+
+        <!-- Nom + lien -->
+        <a class="proof-partner-link" href="#" target="_blank" rel="noopener" aria-label="Lien partenaire">
+          <span class="proof-partner-name">—</span>
+          <span class="proof-partner-cta">Visiter</span>
+        </a>
+      </div>
+
+      <div class="proof-partners-track" id="partnersTrack" role="list">
+        <button class="partner" type="button" role="listitem" data-name="Google" data-url="https://www.google.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+        </button>
+
+        <button class="partner" type="button" role="listitem" data-name="GDG" data-url="https://gdg.community.dev/">
+          <img src="https://www.svgrepo.com/show/353810/google-developers.svg" alt="GDG">
+        </button>
+
+        <button class="partner" type="button" role="listitem" data-name="Capgemini" data-url="https://www.capgemini.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Capgemini_201x_logo.svg" alt="Capgemini">
+        </button>
+
+        <button class="partner" type="button" role="listitem" data-name="UTBM" data-url="https://www.utbm.fr/">
+          <img src="https://upload.wikimedia.org/wikipedia/fr/b/be/Utbm.svg" alt="UTBM">
+        </button>
+
+        <button class="partner" type="button" role="listitem" data-name="FORVIA" data-url="https://www.forvia.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/fr/9/93/Logo_Faurecia_groupe_FORVIA.svg" alt="FORVIA Faurecia">
+        </button>
+
+        <button class="partner" type="button" role="listitem" data-name="Crédit Mutuel" data-url="https://www.creditmutuel.fr/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Cr%C3%A9dit_Mutuel.svg" alt="Crédit Mutuel">
+        </button>
+      </div>
+
+    </div>
+
+    <!-- CARD stats -->
+    <div class="proof-card proof-stats" aria-label="Statistiques récentes">
+      <div class="proof-stat">
+        <div class="proof-number">8+</div>
+        <div class="proof-label">Évènements organisés</div>
+      </div>
+
+      <div class="proof-divider" aria-hidden="true"></div>
+
+      <div class="proof-stat">
+        <div class="proof-number">300+</div>
+        <div class="proof-label">Participants sur les editions recentes</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section what-we-do" id="ce-que-nous-faisons">
+  <div class="container">
+    <header class="what-head">
+      <h2 class="what-title">Ce que nous faisons</h2>
+    </header>
+
+    <div class="what-grid what-grid--illus">
+
+      <article class="what-illus-card">
+        <div class="what-illus" aria-hidden="true">
+          <!-- Illustration: Conférences -->
+          <svg viewBox="0 0 260 140" role="img" focusable="false">
+            <rect x="16" y="18" width="112" height="78" rx="14" class="i-surface"/>
+            <rect x="30" y="34" width="84" height="6" rx="3" class="i-line"/>
+            <rect x="30" y="48" width="58" height="6" rx="3" class="i-line i-line--soft"/>
+            <rect x="30" y="62" width="72" height="6" rx="3" class="i-line i-line--soft"/>
+
+            <circle cx="186" cy="56" r="18" class="i-accent"/>
+            <rect x="166" y="78" width="40" height="28" rx="14" class="i-accent i-accent--soft"/>
+            <rect x="214" y="34" width="28" height="28" rx="10" class="i-accent i-accent--soft"/>
+          </svg>
+        </div>
+
+        <div class="what-illus-body">
+          <h3 class="what-illus-title">Conferences et ateliers</h3>
+          <p class="what-illus-desc">
+            Interventions d'experts, retours d'expérience et ateliers pratiques
+            pour approfondir des sujets clés comme le cloud, l'IA et l'architecture moderne.
+          </p>
+          <div class="what-illus-cta">
+            Découvrir <span class="arrow">›</span>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="what-illus-card">
+        <div class="what-illus" aria-hidden="true">
+          <!-- Illustration: Coding -->
+          <svg viewBox="0 0 260 140" role="img" focusable="false">
+            <rect x="18" y="22" width="224" height="70" rx="16" class="i-surface"/>
+            <rect x="34" y="40" width="64" height="8" rx="4" class="i-line"/>
+            <rect x="34" y="58" width="108" height="8" rx="4" class="i-line i-line--soft"/>
+            <rect x="34" y="76" width="84" height="8" rx="4" class="i-line i-line--soft"/>
+
+            <path d="M168 48l-18 18 18 18" class="i-stroke"/>
+            <path d="M194 48l18 18-18 18" class="i-stroke"/>
+            <path d="M184 44l-8 48" class="i-stroke i-stroke--thin"/>
+          </svg>
+        </div>
+
+        <div class="what-illus-body">
+          <h3 class="what-illus-title">Sessions de coding</h3>
+          <p class="what-illus-desc">
+            Sessions hands-on pour expérimenter, coder et construire
+            des projets concrets en équipe autour des technologies actuelles.
+          </p>
+          <div class="what-illus-cta">
+            Découvrir <span class="arrow">›</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="what-illus-card">
+        <div class="what-illus" aria-hidden="true">
+          <!-- Illustration: Networking -->
+          <svg viewBox="0 0 260 140" role="img" focusable="false">
+            <circle cx="86" cy="60" r="18" class="i-accent"/>
+            <circle cx="140" cy="54" r="14" class="i-accent i-accent--soft"/>
+            <circle cx="188" cy="62" r="16" class="i-accent i-accent--soft"/>
+
+            <rect x="56" y="84" width="60" height="28" rx="14" class="i-accent i-accent--soft"/>
+            <rect x="118" y="84" width="44" height="28" rx="14" class="i-accent i-accent--soft"/>
+            <rect x="166" y="84" width="54" height="28" rx="14" class="i-accent i-accent--soft"/>
+
+            <rect x="18" y="22" width="78" height="34" rx="14" class="i-bubble"/>
+            <rect x="164" y="22" width="78" height="34" rx="14" class="i-bubble"/>
+            <circle cx="42" cy="39" r="3" class="i-dot"/>
+            <circle cx="56" cy="39" r="3" class="i-dot"/>
+            <circle cx="70" cy="39" r="3" class="i-dot"/>
+          </svg>
+        </div>
+
+        <div class="what-illus-body">
+          <h3 class="what-illus-title">Networking et echanges</h3>
+          <p class="what-illus-desc">
+            Moments d'échange entre étudiants, développeurs et entreprises
+            pour créer des opportunités, partager des idées et élargir son réseau.
+          </p>
+          <div class="what-illus-cta">
+            Découvrir <span class="arrow">›</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section section-soft events-2026" id="evenements">
+  <div class="container">
+    <header class="events-head">
+      <h2 class="events-title">Événements passés</h2>
+    </header>
+
+    <div class="events-carousel" aria-label="Carrousel des événements passés">
+      <button class="events-nav events-nav--prev" type="button" aria-label="Événement précédent">
+        ‹
+      </button>
+
+      <div class="events-viewport" id="eventsViewport">
+        <div class="events-track" id="eventsTrack">
+
+          <!-- 1 -->
+          <article class="event-slide" data-index="0">
+            <div class="event-card2">
+              <div class="event-media">
+                <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=1600&auto=format&fit=crop" alt="AI et robotique">
+              </div>
+              <div class="event-body">
+                <h3 class="event-title2">IA & Robotique : du prototype à l’industrialisation</h3>
+                <p class="event-desc2">Conférence avec démos et retours terrain sur l’IA embarquée, avec M. BIJJI qui compte devenir un robot.</p>
+                <p class="event-meta2">12 octobre 2025 · Belfort · Partenaire : Google</p>
+                <a href="#" class="btn-secondary">Voir plus</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2 -->
+          <article class="event-slide" data-index="1">
+            <div class="event-card2">
+              <div class="event-media">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop" alt="Cloud et architecture">
+              </div>
+              <div class="event-body">
+                <h3 class="event-title2">Cloud & Architecture moderne (Clean / Microservices)</h3>
+                <p class="event-desc2">La croisière s'amuse dans le cloud et son atelier orienté conception, APIs et bonnes pratiques de déploiement sur des stacks modernes.</p>
+                <p class="event-meta2">5 juin 2025 · Sevenans · Partenaire : Capgemini</p>
+                <a href="#" class="btn-secondary">Voir plus</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3 -->
+          <article class="event-slide" data-index="2">
+            <div class="event-card2">
+              <div class="event-media">
+                <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1600&auto=format&fit=crop" alt="Data & IA">
+              </div>
+              <div class="event-body">
+                <h3 class="event-title2">Data & IA : pipeline, qualité et cas d’usage</h3>
+                <p class="event-desc2">Session pratique sur la préparation de données, l’évaluation et la mise en production écoresponsable de Amir Hajjam.</p>
+                <p class="event-meta2">21 mars 2025 · Belfort · Partenaire : Crédit Mutuel</p>
+                <a href="#" class="btn-secondary">Voir plus</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4 -->
+          <article class="event-slide" data-index="3">
+            <div class="event-card2">
+              <div class="event-media">
+                <img src="https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=1600&auto=format&fit=crop" alt="Cybersécurité">
+              </div>
+              <div class="event-body">
+                <h3 class="event-title2">Cybersécurité : bonnes pratiques & pentest intro</h3>
+                <p class="event-desc2">Conférence + mini-lab sur les vulnérabilités courantes, l’hygiène numérique et les bases du pentest.</p>
+                <p class="event-meta2">7 février 2025 · Sevenans · Partenaire : FORVIA</p>
+                <a href="#" class="btn-secondary">Voir plus</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5 -->
+          <article class="event-slide" data-index="4">
+            <div class="event-card2">
+              <div class="event-media">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop" alt="Mobile & UX">
+              </div>
+              <div class="event-body">
+                <h3 class="event-title2">Mobile & UX : performance, accessibilité, design system</h3>
+                <p class="event-desc2">Atelier sur l’optimisation, l’accessibilité et la cohérence UI (design tokens, composants, tests).</p>
+                <p class="event-meta2">18 novembre 2024 · Belfort · Partenaire : UTBM</p>
+                <a href="#" class="btn-secondary">Voir plus</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <button class="events-nav events-nav--next" type="button" aria-label="Événement suivant">
+        ›
+      </button>
+
+      <div class="events-footer">
+        <a class="btn-primary events-all" href="#evenements-tous">Découvrir tous les événements</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section why-join why-decor" id="pourquoi">
+  <div class="container">
+
+    <header class="why-head">
+      <h2 class="why-title">Pourquoi rejoindre</h2>
+    </header>
+
+    <div class="why-zigzag" aria-label="Pourquoi rejoindre">
+      <article class="why-z-item why-z-item--left">
+        <h3 class="why-z-title">Réalisez des projets concrets</h3>
+        <p class="why-z-desc">
+          Hackathons, défis technologiques et sujets appliqués proposés par l’écosystème local.
+          Tu construis du concret et tu progresses rapidement.
+        </p>
+      </article>
+
+      <article class="why-z-item why-z-item--center">
+        <h3 class="why-z-title">Intégrez une communauté vivante</h3>
+        <p class="why-z-desc">
+          Rencontres avec entreprises, experts et chercheurs pour accélérer ton évolution.
+          Des échanges qui ouvrent des opportunités.
+        </p>
+      </article>
+
+      <article class="why-z-item why-z-item--right">
+        <h3 class="why-z-title">Contrôlez votre progression</h3>
+        <p class="why-z-desc">
+          Un cadre régulier pour apprendre, pratiquer et contribuer à des événements techniques.
+          Tu montes en compétence étape par étape.
+        </p>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="cta-final join-landing" id="rejoindre">
+  <div class="container join-landing-inner">
+
+    <!-- Étudiants -->
+    <div class="join-col join-col--student">
+      <h2 class="join-title">Vous êtes étudiant</h2>
+      <p class="join-subtitle">
+        Un espace pour apprendre, participer et construire des projets concrets avec la communauté.
+      </p>
+
+      <ul class="join-list">
+        <li><b>Suivez vos inscriptions</b> : événements, sessions et candidatures au même endroit.</li>
+        <li><b>Explorez des sujets</b> proposés par des pros et trouvez ceux qui matchent votre profil.</li>
+        <li><b>Valorisez vos projets</b> : historique, contributions et portfolio accessible depuis votre dashboard.</li>
+        <li><b>Accédez aux offres</b> : opportunités, stages et alternances directement liées aux événements.</li>
+      </ul>
+
+      <div class="join-btn-wrap">
+        <a href="#" class="btn-primary join-btn">Rejoindre le GDG</a>
+      </div>
+    </div>
+
+    <!-- Séparateur -->
+    <div class="join-sep" aria-hidden="true"></div>
+
+    <!-- Entreprises -->
+    <div class="join-col join-col--company">
+      <h2 class="join-title">Vous êtes une entreprise</h2>
+      <p class="join-subtitle">
+        Publiez des sujets, recrutez plus efficacement et rencontrez des talents en contexte réel.
+      </p>
+
+      <ul class="join-list">
+        <li><b>Créez et pilotez vos sujets</b> : dépôt, validation et suivi au même endroit.</li>
+        <li><b>Recevez des candidatures qualifiées</b> et gérez vos échanges depuis votre dashboard pro.</li>
+        <li><b>Publiez vos offres</b> (stage/alternance/CDI) avec visibilité auprès d’une audience ciblée.</li>
+        <li><b>Activez des partenariats</b> : présence aux événements et mise en avant de votre organisation.</li>
+      </ul>
+
+      <div class="join-btn-wrap">
+        <a href="#" class="btn-primary join-btn">Rejoindre le GDG</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<footer class="footer">
+  <div class="container">
+    <p>Copyright 2026 GDG UTBM</p>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

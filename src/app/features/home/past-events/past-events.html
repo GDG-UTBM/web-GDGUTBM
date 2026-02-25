@@ -1,66 +1,65 @@
-<section class="section-spacing bg-gdg-surface">
+<section class="section section-soft events-2026" id="evenements">
   <div class="container-custom">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-semibold mb-4">
-        {{ languageService.isFrench() ? 'Événements' : 'Events' }}
-      </h2>
-      <p class="text-gdg-muted max-w-2xl mx-auto">
-        {{ languageService.isFrench()
-        ? 'Découvrez nos événements passés et à venir.'
-        : 'Discover our past and upcoming events.'
-        }}
-      </p>
-    </div>
+    <header class="events-head">
+      <h2 class="events-title">{{ languageService.isFrench() ? 'Événements passés' : 'Past events' }}</h2>
+    </header>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      @for (event of displayedEvents(); track event.id) {
-        <div class="bg-white border border-gdg-line rounded-r24 overflow-hidden hover:shadow-lg transition-all group">
-          <div class="relative h-48">
-            @if (event.image_url) {
-              <img [src]="event.image_url" [alt]="event.title_fr" class="w-full h-full object-cover">
-            } @else {
-              <div class="w-full h-full bg-gdg-line flex items-center justify-center text-3xl">📅</div>
-            }
-            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-gdg-text text-xs px-3 py-1 rounded-full">
-              {{ event.date | date:'dd/MM/yyyy' }}
-            </div>
-            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-gdg-text text-xs px-3 py-1 rounded-full">
-              {{ event.type ? (languageService.isFrench() ? (event.type === 'conference' ? 'Conférence' : event.type === 'workshop' ? 'Atelier' : event.type === 'meetup' ? 'Meetup' : 'Coding') : event.type) : (languageService.isFrench() ? 'Événement' : 'Event') }}
-            </div>
-          </div>
-          <div class="p-5">
-            <h3 class="font-semibold text-lg mb-2 group-hover:text-gdg-blue transition-colors">
-              {{ languageService.isFrench() ? event.title_fr : event.title_en }}
-            </h3>
-            <p class="text-sm text-gdg-muted line-clamp-2">
-              {{ languageService.isFrench() ? event.description_fr : event.description_en }}
-            </p>
-            <div class="mt-3 flex items-center text-xs text-gdg-muted">
-              <span>{{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}</span>
-            </div>
-            <div class="mt-4 flex items-center justify-between">
-              <button class="text-gdg-blue text-sm font-medium hover:underline" [routerLink]="['/events', event.id]">
-                {{ languageService.isFrench() ? 'Voir plus →' : 'Learn more →' }}
-              </button>
-              @if (getEventStatus(event) === 'upcoming') {
-                <button class="btn-primary text-xs px-3 py-2" (click)="openParticipation(event)">
-                  {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
-                </button>
-              } @else {
-                <button class="text-xs px-3 py-1 rounded-full border border-gdg-line text-gdg-muted" (click)="openEventDetail(event)">
-                  {{ languageService.isFrench() ? 'Aperçu' : 'Preview' }}
-                </button>
-              }
-            </div>
-          </div>
-        </div>
-      }
-    </div>
-
-    <div class="text-center mt-12">
-      <button (click)="goToAllEvents()" class="btn-secondary px-8 py-3">
-        {{ languageService.isFrench() ? 'Voir tous les événements' : 'View all events' }}
+    <div class="events-carousel" aria-label="Carrousel des événements passés">
+      <button class="events-nav events-nav--prev" type="button" aria-label="Événement précédent" (click)="goPrev()">
+        ‹
       </button>
+
+      <div class="events-viewport" #eventsViewport>
+        <div class="events-track" #eventsTrack>
+          @for (event of displayedEvents(); track event.id) {
+            <article class="event-slide">
+              <div class="event-card2">
+                <div class="event-media">
+                  @if (event.image_url) {
+                    <img [src]="event.image_url" [alt]="event.title_fr">
+                  } @else {
+                    <div class="event-media-fallback">GDG</div>
+                  }
+                </div>
+                <div class="event-body">
+                  <h3 class="event-title2">{{ languageService.isFrench() ? event.title_fr : event.title_en }}</h3>
+                  <p class="event-desc2">{{ languageService.isFrench() ? event.description_fr : event.description_en }}</p>
+                  <p class="event-meta2">
+                    {{ event.date | date:'dd/MM/yyyy' }} · {{ event.date | date:'HH:mm' }} · {{ event.location || (languageService.isFrench() ? 'Lieu à préciser' : 'Location TBA') }}
+                    @if (event.partner) { · {{ event.partner }} }
+                    @if (eventLink(event)) { · <a [href]="eventLink(event)" target="_blank" rel="noopener">{{ languageService.isFrench() ? 'Lien' : 'Link' }}</a> }
+                    @else { · {{ languageService.isFrench() ? 'Lien : -' : 'Link: -' }} }
+                  </p>
+                  <div class="event-links">
+                    <a [routerLink]="['/events', event.id]" class="btn-secondary">
+                      {{ languageService.isFrench() ? 'Voir plus' : 'Learn more' }}
+                    </a>
+                    @if (getEventStatus(event) === 'upcoming') {
+                      <button class="btn-primary" (click)="openParticipation(event)">
+                        {{ languageService.isFrench() ? 'Participer' : 'Participate' }}
+                      </button>
+                    } @else {
+                      <button class="btn-secondary" (click)="openEventDetail(event)">
+                        {{ languageService.isFrench() ? 'Aperçu' : 'Preview' }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+
+      <button class="events-nav events-nav--next" type="button" aria-label="Événement suivant" (click)="goNext()">
+        ›
+      </button>
+
+      <div class="events-footer">
+        <button class="btn-primary events-all" (click)="goToAllEvents()">
+          {{ languageService.isFrench() ? 'Découvrir tous les événements' : 'Discover all events' }}
+        </button>
+      </div>
     </div>
   </div>
 </section>

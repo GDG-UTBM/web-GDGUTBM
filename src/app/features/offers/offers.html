@@ -1,0 +1,150 @@
+<div class="offers-page">
+  <section class="page-banner">
+    <div class="container-custom page-banner-inner">
+      <div>
+        <h1 class="page-title">Offres de stage</h1>
+        <p class="page-subtitle">Découvrez les opportunités proposées par notre réseau.</p>
+      </div>
+      <div class="page-kpis">
+        <div class="kpi-pill">
+          <span>Total</span>
+          <strong>{{ totalCount() }}</strong>
+        </div>
+        <div class="kpi-pill">
+          <span>Hybride</span>
+          <strong>{{ remoteCount() }}</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell">
+    <div class="container-custom grid">
+      <aside class="panel">
+        <div class="panel-pad">
+          <h3 class="panel-title">Filtres</h3>
+          <div class="fieldset">
+            <div class="field">
+              <label>Localisation</label>
+              <input class="search"
+                     type="text"
+                     placeholder="Belfort, Paris..."
+                     [ngModel]="locationDraft()"
+                     (ngModelChange)="locationDraft.set($event)" />
+            </div>
+            <div class="field">
+              <label>Domaine</label>
+              <select class="select" [ngModel]="domainDraft()" (ngModelChange)="domainDraft.set($event)">
+                <option value="all">Tous</option>
+                <option value="Tech / Web">Tech / Web</option>
+                <option value="Data / IA">Data / IA</option>
+                <option value="Cloud / DevOps">Cloud / DevOps</option>
+                <option value="Design / Produit">Design / Produit</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Type</label>
+              <select class="select" [ngModel]="typeDraft()" (ngModelChange)="typeDraft.set($event)">
+                <option value="all">Tous</option>
+                <option value="Stage">Stage</option>
+                <option value="Alternance">Alternance</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Statut</label>
+              <select class="select" [ngModel]="statusDraft()" (ngModelChange)="statusDraft.set($event)">
+                <option value="open">Ouvertes</option>
+                <option value="closed">Fermées</option>
+                <option value="all">Toutes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Recherche</label>
+              <input class="search"
+                     type="text"
+                     placeholder="Titre, entreprise, tag..."
+                     [ngModel]="searchDraft()"
+                     (ngModelChange)="searchDraft.set($event)" />
+            </div>
+          </div>
+          <div class="filters-actions">
+            <button class="btn-soft" type="button" (click)="resetFilters()">Réinitialiser</button>
+            <button class="btn-soft" type="button" (click)="applyFiltersClick()">Appliquer</button>
+          </div>
+
+          <div class="kpi-stack">
+            <div class="kpi">
+              <div class="kpi-label">Offres actives</div>
+              <div class="kpi-value">{{ totalCount() }}</div>
+              <div class="kpi-sub">Opportunités disponibles</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Mode hybride</div>
+              <div class="kpi-value">{{ remoteCount() }}</div>
+              <div class="kpi-sub">Postes flexibles</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="right">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <strong>Dernières offres</strong>
+            <span>{{ filteredCount() }} sur {{ totalCount() }} opportunités</span>
+          </div>
+          <div class="toolbar-controls">
+            <select class="pill" [ngModel]="sortDraft()" (ngModelChange)="sortDraft.set($event)">
+              <option value="recent">Trier par date</option>
+              <option value="company">Trier par entreprise</option>
+              <option value="title">Trier par titre</option>
+            </select>
+            <button class="btn-soft" type="button" (click)="applyFiltersClick()">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="list">
+          @if (isLoading()) {
+            <div class="empty-state">Chargement des offres...</div>
+          }
+          @for (offer of filteredOffers(); track offer.id) {
+            <article class="offer-card">
+              <div class="offer-logo">
+                <img [src]="offer.logo" [alt]="offer.company" />
+              </div>
+              <div class="offer-body">
+                <div class="offer-top">
+                  <span class="offer-company">{{ offer.company }}</span>
+                  <span class="offer-location">{{ offer.location }}</span>
+                </div>
+                <h3>{{ offer.title }}</h3>
+                <p>{{ offer.description }}</p>
+                <div class="offer-meta">
+                  <span>{{ offer.type }}</span>
+                  <span>{{ offer.duration }}</span>
+                  <span>{{ displayStartDate(offer) }}</span>
+                  <span>{{ offer.mode }}</span>
+                  <span>{{ offer.status === 'closed' ? 'Fermée' : 'Ouverte' }}</span>
+                </div>
+                <div class="offer-tags">
+                  @for (tag of offer.tags; track tag) {
+                    <span>{{ tag }}</span>
+                  }
+                </div>
+              </div>
+              <div class="offer-actions">
+                <a class="btn-primary" [routerLink]="['/offres', offer.id]">Voir l'offre</a>
+              </div>
+            </article>
+          } @empty {
+            <div class="empty-state">
+              Aucune offre ne correspond à vos critères.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-site-footer></app-site-footer>

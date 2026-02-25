@@ -4,14 +4,21 @@
 
 /* Custom SCSS variables based on GDG charte */
 :root {
-  --gdg-bg: #F7F8FA;
-  --gdg-surface: #FFFFFF;
-  --gdg-line: #E5E7EB;
-  --gdg-text: #111827;
-  --gdg-muted: #6B7280;
-  --gdg-dark: #0B1220;
-  --gdg-blue: #4285F4;
-  --gdg-blue-hover: #3367D6;
+  --gdg-bg: #f6f8fc;
+  --gdg-surface: #ffffff;
+  --gdg-line: rgba(16, 24, 40, 0.10);
+  --gdg-text: #0b1324;
+  --gdg-muted: rgba(11, 19, 36, 0.66);
+  --gdg-dark: #0b1324;
+  --gdg-blue: #2f6fed;
+  --gdg-blue-hover: #255fe0;
+  --gdg-focus: rgba(47, 111, 237, 0.55);
+  --r10: 10px;
+  --r12: 12px;
+  --r16: 16px;
+  --r18: 18px;
+  --motion-fast: 160ms;
+  --motion-ease: cubic-bezier(.2,.8,.2,1);
 }
 
 /* Custom animations */

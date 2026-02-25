@@ -1,33 +1,34 @@
-<section class="section-spacing bg-gdg-bg">
+<section class="section what-we-do" id="ce-que-nous-faisons">
   <div class="container-custom">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-semibold mb-4">
-        {{ languageService.isFrench() ? 'Ce que nous faisons' : 'What We Do' }}
-      </h2>
-      <p class="text-gdg-muted max-w-2xl mx-auto">
+    <header class="what-head">
+      <h2 class="what-title">{{ languageService.isFrench() ? 'Ce que nous faisons' : 'What We Do' }}</h2>
+      <p class="what-subtitle">
         {{ languageService.isFrench()
-        ? 'Nous créons des opportunités d\'apprentissage, de réseau et de croissance dans le domaine technologique.'
-        : 'We create opportunities for learning, networking and growth in the technology field.'
-        }}
+        ? 'Des expériences d’apprentissage concrètes, conçues pour progresser ensemble.'
+        : 'Hands-on learning experiences designed to grow together.' }}
       </p>
-    </div>
+    </header>
 
-    <div class="grid md:grid-cols-3 gap-8">
+    <div class="what-grid what-grid--illus">
       @for (activity of activities(); track activity.id) {
-        <div class="group cursor-pointer bg-white border border-gdg-line rounded-r24 p-6 shadow-sm hover:shadow-lg transition-all duration-300"
-             (click)="openActivityDetail(activity)">
-          <div class="w-12 h-12 rounded-full bg-gdg-blue/10 flex items-center justify-center text-2xl mb-4">
-            {{ activity.icon }}
+        <article class="what-illus-card" (click)="openActivityDetail(activity)">
+          <div class="what-illus" aria-hidden="true">
+            <div class="what-illus-icon">{{ activity.icon }}</div>
+            <div class="what-illus-lines">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
-          <h3 class="text-xl font-semibold mb-3">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h3>
-          <p class="text-gdg-muted mb-6">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
-          <div class="flex items-center text-gdg-blue font-medium">
-            <span>{{ languageService.isFrench() ? 'En savoir plus' : 'Learn more' }}</span>
-            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
+
+          <div class="what-illus-body">
+            <h3 class="what-illus-title">{{ languageService.isFrench() ? activity.title_fr : activity.title_en }}</h3>
+            <p class="what-illus-desc">{{ languageService.isFrench() ? activity.description_fr : activity.description_en }}</p>
+            <div class="what-illus-cta">
+              {{ languageService.isFrench() ? 'Découvrir' : 'Discover' }} <span class="arrow">›</span>
+            </div>
           </div>
-        </div>
+        </article>
       }
     </div>
   </div>

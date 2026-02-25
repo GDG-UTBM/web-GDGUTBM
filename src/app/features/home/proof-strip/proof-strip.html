@@ -1,29 +1,45 @@
-<section class="py-14 bg-gradient-to-b from-gdg-surface to-gdg-bg border-y border-gdg-line">
-  <div class="container-custom">
-    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-12">
-      <div class="h-8 md:h-10">
-        <img src="assets/images/logo/logo1.png" alt="Aquantic" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+<section class="proof" aria-label="Preuve sociale">
+  <div class="container-custom proof-wrap">
+    <div class="proof-partners-section" aria-label="Partenaires">
+      <div class="proof-partners-head">
+        <div class="proof-partners-title">{{ languageService.isFrench() ? 'Partenaires' : 'Partners' }}</div>
+        <a class="proof-partner-link" href="#" target="_blank" rel="noopener" aria-label="Lien partenaire">
+          <span class="proof-partner-name">—</span>
+          <span class="proof-partner-cta">{{ languageService.isFrench() ? 'Visiter' : 'Visit' }}</span>
+        </a>
       </div>
-      <div class="h-8 md:h-10">
-        <img src="assets/images/logo/logo3.webp" alt="UTBM" class="h-full opacity-70 hover:opacity-100 transition-opacity">
-      </div>
-      <div class="h-8 md:h-10">
-        <img src="assets/images/logo/logo5.webp" alt="Google" class="h-full opacity-70 hover:opacity-100 transition-opacity">
+
+      <div class="proof-partners-track" id="partnersTrack" role="list">
+        <button class="partner" type="button" role="listitem" data-name="Google" data-url="https://www.google.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+        </button>
+        <button class="partner" type="button" role="listitem" data-name="GDG" data-url="https://gdg.community.dev/">
+          <img src="https://www.svgrepo.com/show/353810/google-developers.svg" alt="GDG">
+        </button>
+        <button class="partner" type="button" role="listitem" data-name="Aquantic" data-url="https://careers.aquantic.io/">
+          <img src="/assets/images/logo/logo1.png" alt="Aquantic">
+        </button>
+        <button class="partner" type="button" role="listitem" data-name="UTBM" data-url="https://www.utbm.fr/">
+          <img src="https://upload.wikimedia.org/wikipedia/fr/b/be/Utbm.svg" alt="UTBM">
+        </button>
+        <button class="partner" type="button" role="listitem" data-name="FORVIA" data-url="https://www.forvia.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/fr/9/93/Logo_Faurecia_groupe_FORVIA.svg" alt="FORVIA">
+        </button>
+        <button class="partner" type="button" role="listitem" data-name="Crédit Mutuel" data-url="https://www.creditmutuel.fr/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Cr%C3%A9dit_Mutuel.svg" alt="Crédit Mutuel">
+        </button>
       </div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
-        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">{{ membersCount() }}+</div>
-        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'membres actifs' : 'active members' }}</p>
+    <div class="proof-card proof-stats" aria-label="Statistiques récentes">
+      <div class="proof-stat">
+        <div class="proof-number">{{ membersCount() }}+</div>
+        <div class="proof-label">{{ languageService.isFrench() ? 'membres actifs' : 'active members' }}</div>
       </div>
-      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
-        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">{{ eventsCount() }}+</div>
-        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'événements organisés' : 'events hosted' }}</p>
-      </div>
-      <div class="text-center bg-white border border-gdg-line rounded-r16 px-6 py-5">
-        <div class="text-4xl md:text-5xl font-bold text-gdg-blue mb-2">12+</div>
-        <p class="text-gdg-muted">{{ languageService.isFrench() ? 'partenaires locaux' : 'local partners' }}</p>
+      <div class="proof-divider" aria-hidden="true"></div>
+      <div class="proof-stat">
+        <div class="proof-number">{{ eventsCount() }}+</div>
+        <div class="proof-label">{{ languageService.isFrench() ? 'événements organisés' : 'events hosted' }}</div>
       </div>
     </div>
   </div>

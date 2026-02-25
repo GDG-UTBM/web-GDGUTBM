@@ -1,0 +1,67 @@
+﻿/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.container {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.section {
+  padding: 84px 0;
+}
+
+.section-soft {
+  background: rgba(255, 255, 255, 0.55);
+  border-top: 1px solid var(--gdg-line);
+  border-bottom: 1px solid var(--gdg-line);
+}
+
+.section-header {
+  margin-bottom: 26px;
+}
+
+.section-header h2 {
+  font-size: 34px;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  color: var(--gdg-muted);
+  margin-top: 8px;
+}
+
+/* grids */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 1024px) {
+  .container { width: min(980px, calc(100% - 40px)); }
+
+  .card-grid,
+  .benefit-grid { grid-template-columns: 1fr; }
+
+  .event-grid { grid-template-columns: 1fr; }
+
+  .section { padding: 72px 0; }
+}
+
+@media (max-width: 640px) {
+  .container { width: calc(100% - 32px); }
+  .section { padding: 60px 0; }
+}

@@ -48,6 +48,7 @@ create table if not exists public.events (
   type text check (type in ('workshop','conference','meetup','coding')),
   status text check (status in ('upcoming','past')),
   video_url text,
+  link text,
   highlights text[],
   created_at timestamptz default now(),
   updated_at timestamptz default now()
@@ -67,6 +68,7 @@ alter table public.events
   add column if not exists type text,
   add column if not exists status text,
   add column if not exists video_url text,
+  add column if not exists link text,
   add column if not exists highlights text[],
   add column if not exists created_at timestamptz,
   add column if not exists updated_at timestamptz;
@@ -162,6 +164,74 @@ alter table public.activities
   add column if not exists created_at timestamptz,
   add column if not exists updated_at timestamptz;
 
+-- Offers
+create table if not exists public.offers (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  company text not null,
+  location text not null,
+  type text not null,
+  duration text,
+  start_date date,
+  start_label text,
+  mode text,
+  description text,
+  tags text[],
+  logo_url text,
+  status text not null default 'open' check (status in ('open','closed')),
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table public.offers
+  add column if not exists title text,
+  add column if not exists company text,
+  add column if not exists location text,
+  add column if not exists type text,
+  add column if not exists duration text,
+  add column if not exists start_date date,
+  add column if not exists start_label text,
+  add column if not exists mode text,
+  add column if not exists description text,
+  add column if not exists tags text[],
+  add column if not exists logo_url text,
+  add column if not exists status text,
+  add column if not exists created_at timestamptz,
+  add column if not exists updated_at timestamptz;
+
+-- Offer applications
+create table if not exists public.offer_applications (
+  id uuid primary key default gen_random_uuid(),
+  offer_id uuid not null references public.offers(id) on delete cascade,
+  user_id uuid references public.profiles(id) on delete set null,
+  email text,
+  full_name text not null,
+  role text not null check (role in ('student','professional')),
+  school text,
+  study_level text,
+  profession text,
+  phone text,
+  message text,
+  status text not null default 'pending' check (status in ('pending','approved','rejected')),
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table public.offer_applications
+  add column if not exists offer_id uuid,
+  add column if not exists user_id uuid,
+  add column if not exists email text,
+  add column if not exists full_name text,
+  add column if not exists role text,
+  add column if not exists school text,
+  add column if not exists study_level text,
+  add column if not exists profession text,
+  add column if not exists phone text,
+  add column if not exists message text,
+  add column if not exists status text,
+  add column if not exists created_at timestamptz,
+  add column if not exists updated_at timestamptz;
+
 -- updated_at trigger
 create or replace function public.set_updated_at()
 returns trigger
@@ -198,10 +268,23 @@ create trigger set_activities_updated_at
 before update on public.activities
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_offers_updated_at on public.offers;
+create trigger set_offers_updated_at
+before update on public.offers
+for each row execute function public.set_updated_at();
+
+drop trigger if exists set_offer_applications_updated_at on public.offer_applications;
+create trigger set_offer_applications_updated_at
+before update on public.offer_applications
+for each row execute function public.set_updated_at();
+
 -- Indexes
 create index if not exists idx_topics_event_id on public.topics(event_id);
 create index if not exists idx_participants_event_id on public.event_participants(event_id);
 create index if not exists idx_marks_event_id on public.event_marks(event_id);
+create index if not exists idx_offers_status on public.offers(status);
+create index if not exists idx_offer_applications_offer_id on public.offer_applications(offer_id);
+create index if not exists idx_offer_applications_status on public.offer_applications(status);
 
 -- Auto-create profile on new auth user
 create or replace function public.handle_new_user()
@@ -242,6 +325,8 @@ alter table public.topics enable row level security;
 alter table public.event_participants enable row level security;
 alter table public.event_marks enable row level security;
 alter table public.activities enable row level security;
+alter table public.offers enable row level security;
+alter table public.offer_applications enable row level security;
 
 -- Profiles policies
 drop policy if exists "profiles_select_all" on public.profiles;
@@ -332,5 +417,43 @@ create policy "activities_admin_manage" on public.activities
 for all using (
   exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
 ) with check (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
+
+-- Offers policies
+drop policy if exists "offers_select_all" on public.offers;
+create policy "offers_select_all" on public.offers
+for select using (true);
+
+drop policy if exists "offers_admin_manage" on public.offers;
+create policy "offers_admin_manage" on public.offers
+for all using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+) with check (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
+
+-- Offer applications policies
+drop policy if exists "offer_applications_select_admin" on public.offer_applications;
+create policy "offer_applications_select_admin" on public.offer_applications
+for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
+
+drop policy if exists "offer_applications_insert_any" on public.offer_applications;
+create policy "offer_applications_insert_any" on public.offer_applications
+for insert with check (true);
+
+drop policy if exists "offer_applications_admin_update" on public.offer_applications;
+create policy "offer_applications_admin_update" on public.offer_applications
+for update using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+) with check (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
+
+drop policy if exists "offer_applications_admin_delete" on public.offer_applications;
+create policy "offer_applications_admin_delete" on public.offer_applications
+for delete using (
   exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
 );

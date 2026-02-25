@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GDG UTBM — Événements</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Page events -->
+  <style>
+    /* ==========================================================================
+       Events Page (layout)
+       ========================================================================== */
+
+    .page-banner {
+      padding: 28px 0 18px;
+      border-bottom: 1px solid var(--gdg-line);
+      background:
+        radial-gradient(900px 220px at 18% 30%, rgba(47,111,237,0.14), transparent 60%),
+        radial-gradient(700px 200px at 80% 20%, rgba(47,111,237,0.10), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.70), rgba(255,255,255,0.55));
+    }
+
+    .page-banner-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: clamp(26px, 2.8vw, 38px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 12px;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 2px;
+      height: 7px;
+      width: min(420px, 100%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(47,111,237,0.65), rgba(47,111,237,0.00));
+      box-shadow: 0 6px 18px rgba(47,111,237,0.18);
+    }
+
+    .page-subtitle {
+      margin: 6px 0 0;
+      color: var(--gdg-muted);
+      font-weight: 600;
+    }
+
+    .events-shell {
+      padding: 26px 0 74px;
+      background: var(--gdg-bg, #f6f8fc);
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ==========================================================================
+       Left panel (calendar + KPIs)
+       ========================================================================== */
+
+    .panel {
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+      overflow: hidden;
+    }
+
+    .panel-pad { padding: 18px; }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .panel-actions {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cal-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: rgba(11,19,36,0.88);
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.85);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 160ms cubic-bezier(.2,.8,.2,1), border-color 160ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(47,111,237,0.22);
+    }
+
+    .btn-soft {
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.85);
+      cursor: pointer;
+      font-weight: 750;
+      color: rgba(11,19,36,0.80);
+      transition: transform 160ms cubic-bezier(.2,.8,.2,1), border-color 160ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .btn-soft:hover {
+      transform: translateY(-1px);
+      border-color: rgba(47,111,237,0.22);
+    }
+
+    .calendar {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      user-select: none;
+    }
+
+    .cal-dow {
+      font-size: 12px;
+      color: rgba(11,19,36,0.46);
+      font-weight: 800;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .cal-day {
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: rgba(11,19,36,0.74);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 160ms cubic-bezier(.2,.8,.2,1), transform 160ms cubic-bezier(.2,.8,.2,1), border-color 160ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .cal-day:hover {
+      transform: translateY(-1px);
+      border-color: rgba(47,111,237,0.18);
+      background: rgba(47,111,237,0.06);
+    }
+
+    .cal-day.is-muted {
+      color: rgba(11,19,36,0.30);
+    }
+
+    .cal-day.is-today {
+      border-color: rgba(47,111,237,0.35);
+    }
+
+    .cal-day.is-selected {
+      background: rgba(47,111,237,0.14);
+      border-color: rgba(47,111,237,0.28);
+      color: rgba(11,19,36,0.86);
+    }
+
+    .kpi-stack {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .kpi {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: rgba(11,19,36,0.55);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .kpi-value {
+      margin-top: 6px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: rgba(47,111,237,0.98);
+    }
+
+    .kpi-sub {
+      margin-top: 6px;
+      color: rgba(11,19,36,0.62);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    /* ==========================================================================
+       Right panel (events list)
+       ========================================================================== */
+
+    .events-right {
+      display: grid;
+      gap: 14px;
+    }
+
+    .events-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+    }
+
+    .toolbar-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .toolbar-title strong {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .toolbar-title span {
+      color: rgba(11,19,36,0.60);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    .toolbar-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search {
+      width: min(420px, 40vw);
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+      padding: 0 12px;
+      outline: none;
+      font: inherit;
+    }
+
+    .pill {
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.78);
+      padding: 0 12px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .events-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .event-row {
+      border-radius: 22px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.90);
+      box-shadow: 0 18px 60px rgba(15,23,42,0.06);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 180px;
+      transition: transform 200ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms cubic-bezier(.2,.8,.2,1), border-color 200ms cubic-bezier(.2,.8,.2,1);
+      cursor: pointer;
+    }
+
+    .event-row:hover {
+      transform: translateY(-3px);
+      border-color: rgba(47,111,237,0.22);
+      box-shadow: 0 30px 90px rgba(15,23,42,0.10);
+    }
+
+    .event-cover {
+      position: relative;
+      background: #0b1324;
+    }
+
+    .event-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .event-cover::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg, rgba(11,19,36,0.65) 0%, rgba(11,19,36,0.00) 60%);
+      pointer-events:none;
+    }
+
+    .event-badge {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight: 850;
+      font-size: 12px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(16,24,40,0.10);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(47,111,237,0.95);
+      box-shadow: 0 0 0 6px rgba(47,111,237,0.12);
+    }
+
+    .event-body {
+      padding: 16px 18px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .event-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+
+    .event-desc {
+      margin: 0;
+      color: rgba(11,19,36,0.62);
+      line-height: 1.65;
+      max-width: 90ch;
+    }
+
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      color: rgba(11,19,36,0.58);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(16,24,40,0.10);
+      background: rgba(255,255,255,0.72);
+    }
+
+    .event-cta {
+      margin-top: 4px;
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .link-more {
+      font-weight: 850;
+      color: rgba(47,111,237,0.98);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-more::after {
+      content: "›";
+      font-size: 18px;
+      transform: translateY(-1px);
+      transition: transform 160ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .event-row:hover .link-more::after {
+      transform: translate(2px, -1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .events-grid { grid-template-columns: 1fr; }
+      .search { width: min(520px, 52vw); }
+    }
+
+    @media (max-width: 640px) {
+      .page-banner { padding: 22px 0 12px; }
+      .events-shell { padding: 18px 0 54px; }
+      .events-toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar-controls { justify-content: space-between; }
+      .search { width: 100%; }
+      .event-row { grid-template-columns: 1fr; }
+      .event-cover { height: 170px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+
+    <!-- Logo -->
+    <a class="brand" href="index.html">
+      <img class="brand-mark"
+           src="https://www.svgrepo.com/show/353810/google-developers.svg"
+           alt="GDG logo">
+      <span class="brand-text">
+        <strong>GDG</strong> <span class="brand-light">UTBM</span>
+      </span>
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="nav" aria-label="Navigation principale">
+        <a href="evenements.html">Événements</a>
+        <a href="sujets.html">Sujets</a>
+        <a href="offres.html">Offres</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="header-actions">
+
+      <!-- Lang switch -->
+      <div class="lang-switch" aria-label="Choix de langue">
+        <button class="active" type="button">FR</button>
+        <span class="lang-sep" aria-hidden="true"></span>
+        <button type="button">EN</button>
+      </div>
+
+      <a href="#rejoindre" class="btn-secondary header-join">Nous rejoindre</a>
+
+      <!-- Burger (mobile) -->
+      <button class="burger" type="button"
+              aria-label="Ouvrir le menu"
+              aria-expanded="false"
+              aria-controls="mobileMenu">
+        <span class="burger-icon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Drawer mobile -->
+  <div id="mobileMenu" class="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" data-close aria-hidden="true"></div>
+
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+
+      <div class="drawer-head">
+        <a class="drawer-brand" href="#">
+          <img class="drawer-brand-mark"
+               src="https://www.svgrepo.com/show/353810/google-developers.svg"
+               alt="GDG logo">
+          <span class="drawer-brand-text"><strong>GDG</strong> <span class="drawer-brand-light">UTBM</span></span>
+        </a>
+
+        <button class="drawer-close" type="button" aria-label="Fermer le menu" data-close>
+          ×
+        </button>
+      </div>
+
+      <div class="drawer-sep" aria-hidden="true"></div>
+
+      <nav class="drawer-nav" aria-label="Navigation mobile">
+        <a href="evenements.html">Événements</a>
+        <a href="sujets.html">Sujets</a>
+        <a href="offres.html">Offres</a>
+
+        <a href="#rejoindre" class="btn-secondary drawer-join">Nous rejoindre</a>
+      </nav>
+
+    </div>
+  </div>
+</header>
+
+  <section class="page-banner" aria-label="Bannière page Événements">
+    <div class="container page-banner-inner">
+      <div>
+        <h1 class="page-title">Événements</h1>
+        <p class="page-subtitle">Calendrier, statistiques et liste complète.</p>
+      </div>
+    </div>
+  </section>
+
+  <main class="events-shell">
+    <div class="container">
+      <div class="events-grid">
+
+        <!-- LEFT -->
+        <aside class="panel">
+          <div class="panel-pad">
+            <h2 class="panel-title">Activity Calendar</h2>
+
+            <div class="panel-actions">
+              <button class="btn-soft" id="btnToday" type="button">Back to Today</button>
+
+              <div class="cal-nav">
+                <button class="icon-btn" id="btnPrev" type="button" aria-label="Previous month">‹</button>
+                <span id="calLabel">October 2025</span>
+                <button class="icon-btn" id="btnNext" type="button" aria-label="Next month">›</button>
+              </div>
+            </div>
+
+            <div class="calendar" id="calendar">
+              <!-- JS -->
+            </div>
+
+            <div class="kpi-stack">
+              <div class="kpi">
+                <div class="kpi-label" id="kpiMonthLabel">Événements (mois)</div>
+                <div class="kpi-value" id="kpiMonthValue">0</div>
+                <div class="kpi-sub" id="kpiMonthSub">sur le mois sélectionné</div>
+              </div>
+
+              <div class="kpi">
+                <div class="kpi-label" id="kpiYearLabel">Événements (année)</div>
+                <div class="kpi-value" id="kpiYearValue">0</div>
+                <div class="kpi-sub" id="kpiYearSub">sur l’année sélectionnée</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT -->
+        <section class="events-right">
+          <div class="events-toolbar">
+            <div class="toolbar-title">
+              <strong id="dayTitle">Thu, October 9, 2025</strong>
+              <span id="daySub"></span>
+            </div>
+
+            <div class="toolbar-controls">
+              <input class="search" id="search" type="search" placeholder="Rechercher un événement…" />
+              <button class="pill" id="filterAll" type="button">Tous</button>
+              <button class="pill" id="filterMonth" type="button">Ce mois</button>
+            </div>
+          </div>
+
+          <div class="events-list" id="eventsList">
+            <!-- JS -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+
+  <script>
+    // =========================================================================
+    // Mock events
+    // =========================================================================
+    const EVENTS = [
+      {
+        id: "e1",
+        date: "2025-10-09",
+        time: "18:30 - 20:30",
+        title: "Cloud & DevOps : CI/CD moderne sur GitHub Actions",
+        desc: "Atelier hands-on : pipelines, secrets, environnements, déploiement preview et bonnes pratiques pour livrer plus vite sans casser.",
+        location: "Belfort",
+        partner: "Capgemini",
+        type: "Workshop",
+        cover: "https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=1600&auto=format&fit=crop"
+      },
+      {
+        id: "e2",
+        date: "2025-10-14",
+        time: "19:00 - 21:00",
+        title: "IA appliquée : copilotes, RAG et cas d’usage entreprise",
+        desc: "Conférence + démo : RAG, sources, évaluation, coûts, et comment passer du POC au produit sans se perdre.",
+        location: "Sevenans",
+        partner: "Google",
+        type: "Talk",
+        cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop"
+      },
+      {
+        id: "e3",
+        date: "2025-10-24",
+        time: "18:00 - 20:00",
+        title: "Mobile & UX : performance, accessibilité, design system",
+        desc: "Atelier sur l’optimisation, l’accessibilité et la cohérence UI (design tokens, composants, tests) pour des apps plus fiables.",
+        location: "Belfort",
+        partner: "UTBM",
+        type: "Workshop",
+        cover: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1600&auto=format&fit=crop"
+      },
+      {
+        id: "e4",
+        date: "2025-11-05",
+        time: "18:30 - 20:00",
+        title: "Cybersécurité : bonnes pratiques & pentest intro",
+        desc: "Conférence + mini-lab : vulnérabilités courantes, hygiène numérique, OWASP Top 10 et bases du pentest en environnement contrôlé.",
+        location: "Sevenans",
+        partner: "FORVIA",
+        type: "Talk",
+        cover: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop"
+      },
+      {
+        id: "e5",
+        date: "2025-12-03",
+        time: "18:00 - 21:00",
+        title: "Hacknight : build & ship en 3h (front + API)",
+        desc: "Session de coding en équipe : on choisit un mini-sujet, on prototype, on déploie, et on partage les retours d’expérience.",
+        location: "Belfort",
+        partner: "Crédit Mutuel",
+        type: "Coding",
+        cover: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop"
+      }
+    ];
+
+    // =========================================================================
+    // Calendar state
+    // =========================================================================
+    const $ = (s) => document.querySelector(s);
+    const calendarEl = $("#calendar");
+    const calLabel = $("#calLabel");
+    const dayTitle = $("#dayTitle");
+    const daySub = $("#daySub");
+    const listEl = $("#eventsList");
+
+    const kpiMonthValue = $("#kpiMonthValue");
+    const kpiYearValue = $("#kpiYearValue");
+    const kpiMonthLabel = $("#kpiMonthLabel");
+    const kpiYearLabel = $("#kpiYearLabel");
+
+    const searchEl = $("#search");
+    const filterAll = $("#filterAll");
+    const filterMonth = $("#filterMonth");
+
+    let viewDate = new Date(); // mois affiché
+    let selectedDate = null;   // date sélectionnée (YYYY-MM-DD)
+    let mode = "all";          // all | month
+
+    const fmtMonth = (d) => d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    const fmtDayTitle = (d) => d.toLocaleDateString("en-US", { weekday:"short", month:"long", day:"numeric", year:"numeric" });
+
+    const toYMD = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${dd}`;
+    };
+
+    const isSameMonth = (ymd, d) => {
+      const [y,m] = ymd.split("-").map(Number);
+      return y === d.getFullYear() && (m-1) === d.getMonth();
+    };
+
+    const countMonth = (d) => {
+      const y = d.getFullYear();
+      const m = d.getMonth()+1;
+      const mm = String(m).padStart(2,"0");
+      return EVENTS.filter(e => e.date.startsWith(`${y}-${mm}-`)).length;
+    };
+
+    const countYear = (d) => {
+      const y = d.getFullYear();
+      return EVENTS.filter(e => e.date.startsWith(`${y}-`)).length;
+    };
+
+    function renderKPIs() {
+      kpiMonthValue.textContent = String(countMonth(viewDate));
+      kpiYearValue.textContent = String(countYear(viewDate));
+      kpiMonthLabel.textContent = `Événements (${viewDate.toLocaleDateString("fr-FR",{month:"long"})})`;
+      kpiYearLabel.textContent = `Événements (${viewDate.getFullYear()})`;
+    }
+
+    function renderCalendar() {
+      calendarEl.innerHTML = "";
+
+      // DOW row
+      const dows = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+      dows.forEach(d => {
+        const el = document.createElement("div");
+        el.className = "cal-dow";
+        el.textContent = d;
+        calendarEl.appendChild(el);
+      });
+
+      const year = viewDate.getFullYear();
+      const month = viewDate.getMonth();
+
+      const first = new Date(year, month, 1);
+      const startDay = first.getDay(); // 0 Sun
+      const daysInMonth = new Date(year, month+1, 0).getDate();
+
+      // previous month days to fill
+      const prevDays = startDay; // number of cells before 1st
+      const prevMonthDays = new Date(year, month, 0).getDate();
+
+      const todayYMD = toYMD(new Date());
+
+      const cells = [];
+      for (let i = prevDays; i > 0; i--) {
+        cells.push({ day: prevMonthDays - i + 1, muted: true, date: new Date(year, month-1, prevMonthDays - i + 1) });
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        cells.push({ day: d, muted: false, date: new Date(year, month, d) });
+      }
+      while (cells.length % 7 !== 0) {
+        const nextDay = cells.length - (prevDays + daysInMonth) + 1;
+        cells.push({ day: nextDay, muted: true, date: new Date(year, month+1, nextDay) });
+      }
+
+      // label
+      calLabel.textContent = fmtMonth(viewDate);
+
+      cells.forEach(c => {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "cal-day" + (c.muted ? " is-muted" : "");
+        el.textContent = c.day;
+
+        const ymd = toYMD(c.date);
+        if (ymd === todayYMD) el.classList.add("is-today");
+        if (selectedDate && ymd === selectedDate) el.classList.add("is-selected");
+
+        el.addEventListener("click", () => {
+          // si clic sur jour hors mois, on change de mois
+          if (c.muted) {
+            viewDate = new Date(c.date.getFullYear(), c.date.getMonth(), 1);
+          }
+          selectedDate = ymd;
+          dayTitle.textContent = fmtDayTitle(new Date(ymd));
+          daySub.textContent = "";
+          renderCalendar();
+          renderKPIs();
+          renderList();
+        });
+
+        calendarEl.appendChild(el);
+      });
+
+      renderKPIs();
+    }
+
+    function renderList() {
+      const q = (searchEl.value || "").trim().toLowerCase();
+
+      let items = [...EVENTS];
+
+      // date selection filter
+      if (selectedDate) {
+        items = items.filter(e => e.date === selectedDate);
+      } else if (mode === "month") {
+        items = items.filter(e => isSameMonth(e.date, viewDate));
+      }
+
+      // search
+      if (q) {
+        items = items.filter(e =>
+          e.title.toLowerCase().includes(q) ||
+          e.desc.toLowerCase().includes(q) ||
+          e.partner.toLowerCase().includes(q) ||
+          e.location.toLowerCase().includes(q)
+        );
+      }
+
+      listEl.innerHTML = "";
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "panel panel-pad";
+        empty.innerHTML = `<strong>Aucun événement</strong><p style="margin:8px 0 0; color:rgba(11,19,36,0.62)">Change de date ou de filtre.</p>`;
+        listEl.appendChild(empty);
+        return;
+      }
+
+      items
+        .sort((a,b) => a.date.localeCompare(b.date))
+        .forEach(e => {
+          const row = document.createElement("article");
+          row.className = "event-row";
+          row.innerHTML = `
+            <div class="event-cover">
+              <img src="${e.cover}" alt="">
+              <div class="event-badge"><span class="badge-dot"></span>${e.type}</div>
+            </div>
+            <div class="event-body">
+              <h3 class="event-title">${e.title}</h3>
+              <p class="event-desc">${e.desc}</p>
+
+              <div class="event-meta">
+                <span class="meta-chip">🕒 ${e.time}</span>
+                <span class="meta-chip">📍 ${e.location}</span>
+                <span class="meta-chip">🤝 ${e.partner}</span>
+                <span class="meta-chip">📅 ${e.date}</span>
+              </div>
+
+              <div class="event-cta">
+                <a class="link-more" href="#">En savoir plus</a>
+              </div>
+            </div>
+          `;
+          listEl.appendChild(row);
+        });
+    }
+
+    // init
+    $("#btnPrev").addEventListener("click", () => {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1);
+      selectedDate = null;
+      dayTitle.textContent = fmtDayTitle(new Date());
+      daySub.textContent = "";
+      renderCalendar();
+      renderList();
+    });
+
+    $("#btnNext").addEventListener("click", () => {
+      viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1);
+      selectedDate = null;
+      dayTitle.textContent = fmtDayTitle(new Date());
+      daySub.textContent = "";
+      renderCalendar();
+      renderList();
+    });
+
+    $("#btnToday").addEventListener("click", () => {
+      const now = new Date();
+      viewDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      selectedDate = toYMD(now);
+      dayTitle.textContent = fmtDayTitle(now);
+      daySub.textContent = "";
+      renderCalendar();
+      renderList();
+    });
+
+    searchEl.addEventListener("input", renderList);
+
+    filterAll.addEventListener("click", () => {
+      mode = "all";
+      selectedDate = null;
+      renderList();
+    });
+
+    filterMonth.addEventListener("click", () => {
+      mode = "month";
+      selectedDate = null;
+      renderList();
+    });
+
+    // first render
+    (function init() {
+      const now = new Date();
+      viewDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      dayTitle.textContent = fmtDayTitle(now);
+      renderCalendar();
+      renderList();
+    })();
+  </script>
+</body>
+</html>

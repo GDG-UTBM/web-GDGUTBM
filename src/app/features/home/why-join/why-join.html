@@ -1,0 +1,36 @@
+<section class="section why-join why-decor" id="pourquoi">
+  <div class="container-custom">
+    <header class="why-head">
+      <h2 class="why-title">{{ languageService.isFrench() ? 'Pourquoi rejoindre' : 'Why join' }}</h2>
+    </header>
+
+    <div class="why-zigzag" aria-label="Pourquoi rejoindre">
+      <article class="why-z-item why-z-item--left">
+        <h3 class="why-z-title">{{ languageService.isFrench() ? 'Réalisez des projets concrets' : 'Build real projects' }}</h3>
+        <p class="why-z-desc">
+          {{ languageService.isFrench()
+          ? 'Hackathons, défis technologiques et sujets appliqués proposés par l’écosystème local.'
+          : 'Hackathons, challenges and applied topics from the local ecosystem.' }}
+        </p>
+      </article>
+
+      <article class="why-z-item why-z-item--center">
+        <h3 class="why-z-title">{{ languageService.isFrench() ? 'Intégrez une communauté vivante' : 'Join a vibrant community' }}</h3>
+        <p class="why-z-desc">
+          {{ languageService.isFrench()
+          ? 'Rencontres avec entreprises, experts et chercheurs pour accélérer votre évolution.'
+          : 'Meet companies, experts and researchers to accelerate your growth.' }}
+        </p>
+      </article>
+
+      <article class="why-z-item why-z-item--right">
+        <h3 class="why-z-title">{{ languageService.isFrench() ? 'Contrôlez votre progression' : 'Own your progress' }}</h3>
+        <p class="why-z-desc">
+          {{ languageService.isFrench()
+          ? 'Un cadre régulier pour apprendre, pratiquer et contribuer à des événements techniques.'
+          : 'A steady rhythm to learn, practice and contribute to technical events.' }}
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
