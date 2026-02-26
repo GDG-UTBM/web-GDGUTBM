@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
-import {adminGuard} from './core/guards/admin.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard, roleChildGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
@@ -7,7 +9,7 @@ export const routes: Routes = [
   { path: 'events', loadComponent: () => import('./features/events/events').then(m => m.EventsComponent) },
   { path: 'offres', loadComponent: () => import('./features/offers/offers').then(m => m.OffersComponent) },
   { path: 'offres/:id', loadComponent: () => import('./features/offers/offer-detail/offer-detail').then(m => m.OfferDetailComponent) },
-  { path: 'profile', loadComponent: () => import('./features/account/profile/profile').then(m => m.ProfileComponent) },
+  { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./features/account/profile/profile').then(m => m.ProfileComponent) },
   { path: 'reset-password', loadComponent: () => import('./features/auth/password-recovery/password-recovery').then(m => m.PasswordRecoveryComponent) },
   {
     path: 'events/:id',
@@ -19,6 +21,9 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin-layout/admin-layout').then(m => m.AdminLayoutComponent),
+    canActivate: [roleGuard],
+    canActivateChild: [roleChildGuard],
+    data: { roles: ['admin'] },
     children: [
       { path: '', loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent) },
       { path: 'users', loadComponent: () => import('./features/admin/admin-users/admin-users').then(m => m.AdminUsersComponent) },
@@ -30,6 +35,8 @@ export const routes: Routes = [
   },
   {
     path: 'adminTest',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
     loadComponent: () => import('./features/admin/admin-topics/admin-topics').then(m => m.AdminTopicsComponent)
   },
   { path: '**', redirectTo: '' }

@@ -8,10 +8,8 @@ export const adminGuard: CanActivateFn = async (route, state) => {
 
   const profile = await authService.ensureProfileLoaded();
 
-  if (profile && profile.role === 'professional') {
+  if (profile && profile.role === 'admin') {
     return true;
   }
-  console.log('Admin guard', profile);
-
   return router.parseUrl('/');
 };

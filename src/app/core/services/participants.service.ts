@@ -20,6 +20,9 @@ export interface EventParticipant {
     id: string;
     title_fr: string;
     title_en: string;
+    date?: string;
+    location?: string | null;
+    link?: string | null;
   };
 }
 
@@ -43,7 +46,7 @@ export class ParticipantsService {
       .from('event_participants')
       .select(`
         *,
-        event:events(id, title_fr, title_en, date, location)
+        event:events(id, title_fr, title_en, date, location, link)
       `)
       .order('created_at', { ascending: false });
 

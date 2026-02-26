@@ -75,10 +75,10 @@ export class AdminDashboardComponent implements OnInit {
     return this.participants().filter(p => p.status === 'pending').length;
   }
 
-  async updateParticipantStatus(id: string, status: 'approved' | 'rejected') {
+  async updateParticipantStatus(participant: any, status: 'approved' | 'rejected') {
     try {
-      await this.participantsService.updateStatus(id, status);
-      await this.notificationsService.sendParticipationStatusEmail({ participant_id: id, status });
+      await this.participantsService.updateStatus(participant.id, status);
+      await this.notificationsService.sendParticipationStatusEmail({ participant_id: participant.id, status });
     } catch (error) {
       console.error('Error updating participant status:', error);
       alert(this.languageService.isFrench() ? 'Erreur lors de la notification.' : 'Error sending notification.');
