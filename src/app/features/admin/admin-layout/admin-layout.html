@@ -4,28 +4,28 @@
     <div class="p-6">
       <h2 class="text-xl font-bold text-gdg-text">GDG Admin</h2>
     </div>
-    <nav class="px-4 space-y-2">
-      <a routerLink="/admin" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" [routerLinkActiveOptions]="{exact:true}" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+    <nav class="px-4 space-y-2 admin-nav">
+      <a routerLink="/admin" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">📊</span>
         {{ languageService.isFrench() ? 'Tableau de bord' : 'Dashboard' }}
       </a>
-      <a routerLink="/admin/users" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+      <a routerLink="/admin/users" routerLinkActive="is-active" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">👥</span>
         {{ languageService.isFrench() ? 'Utilisateurs' : 'Users' }}
       </a>
-      <a routerLink="/admin/topics" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+      <a routerLink="/admin/topics" routerLinkActive="is-active" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">📝</span>
         {{ languageService.isFrench() ? 'Sujets' : 'Topics' }}
       </a>
-      <a routerLink="/admin/events" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+      <a routerLink="/admin/events" routerLinkActive="is-active" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">📅</span>
         {{ languageService.isFrench() ? 'Événements' : 'Events' }}
       </a>
-      <a routerLink="/admin/offres" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+      <a routerLink="/admin/offres" routerLinkActive="is-active" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">💼</span>
         {{ languageService.isFrench() ? 'Offres' : 'Offers' }}
       </a>
-      <a routerLink="/admin/activities" routerLinkActive="bg-gdg-blue/10 text-gdg-blue" class="flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
+      <a routerLink="/admin/activities" routerLinkActive="is-active" class="admin-link flex items-center px-4 py-3 rounded-r10 text-gdg-text hover:bg-gdg-bg transition-colors">
         <span class="mr-3">⚡</span>
         {{ languageService.isFrench() ? 'Activités' : 'Activities' }}
       </a>
